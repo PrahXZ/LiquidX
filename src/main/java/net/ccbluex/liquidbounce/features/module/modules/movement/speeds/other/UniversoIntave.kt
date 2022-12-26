@@ -6,7 +6,7 @@ import net.ccbluex.liquidbounce.utils.MovementUtils
 import net.minecraft.client.settings.GameSettings
 
 
-class UniversoIntave : SpeedMode("UniversoTEST") {
+class UniversoIntave : SpeedMode("LegitUniverso") {
 
     private var wasTimer = false
 
