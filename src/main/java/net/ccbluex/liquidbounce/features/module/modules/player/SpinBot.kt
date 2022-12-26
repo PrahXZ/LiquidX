@@ -17,7 +17,7 @@ import net.ccbluex.liquidbounce.features.value.BoolValue
 import net.ccbluex.liquidbounce.features.value.ListValue
 import net.ccbluex.liquidbounce.features.value.IntegerValue
 
-@ModuleInfo(name = "SpinBot", category = ModuleCategory.PLAYER)
+@ModuleInfo(name = "Derp", category = ModuleCategory.PLAYER)
 class SpinBot : Module() {
     private val yawModeValue = ListValue("YawMode", arrayOf("Jitter", "Spin", "Back", "BackJitter"), "Spin")
     private val pitchModeValue = ListValue("PitchMode", arrayOf("Down", "Up", "Jitter", "AnotherJitter"), "Down")

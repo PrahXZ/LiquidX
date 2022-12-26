@@ -12,7 +12,7 @@ import java.time.OffsetDateTime
 import kotlin.concurrent.thread
 
 object DiscordRPC {
-    private val ipcClient = IPCClient(1021236965108109333)
+    private val ipcClient = IPCClient(708831176907030558)
     private val timestamp = OffsetDateTime.now()
     private var running = false
     private var fdpwebsite = "fdpinfo.github.io - "
@@ -50,8 +50,8 @@ object DiscordRPC {
         val builder = RichPresence.Builder()
         val discordRPCModule = LiquidBounce.moduleManager[DiscordRPCModule::class.java]!!
         builder.setStartTimestamp(timestamp)
-        builder.setLargeImage(if (discordRPCModule.animated.get()){"https://skiddermc.github.io/repo/skiddermc/FDPclient/dcrpc/fdp.gif"} else {"https://skiddermc.github.io/repo/skiddermc/FDPclient/dcrpc/fdp.png"})
-        builder.setDetails(fdpwebsite + LiquidBounce.CLIENT_VERSION)
+        builder.setLargeImage(if (discordRPCModule.animated.get()){"https://prahxz.github.io/Damar.gif"} else {"univelso2"})
+        builder.setDetails("LiquidX on TOP")
         ServerUtils.getRemoteIp().also {
             val str = (if(discordRPCModule.showServerValue.get()) "Server: $it\n" else "\n") + (if(discordRPCModule.showNameValue.get()) "Username: ${if(mc.thePlayer != null) mc.thePlayer.name else mc.session.username}\n" else "\n") + (if(discordRPCModule.showHealthValue.get()) "HP: ${mc.thePlayer.health}\n" else "\n") + (if(discordRPCModule.showOtherValue.get()) "PlayTime: ${if(mc.isSingleplayer) "SinglePlayer\n" else SessionUtils.getFormatSessionTime()} Kills: ${StatisticsUtils.getKills()} Deaths: ${StatisticsUtils.getDeaths()}\n" else "\n")
             builder.setState(if(it.equals("idling", true)) "Idling" else str)

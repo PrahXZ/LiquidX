@@ -23,7 +23,7 @@ import kotlin.concurrent.schedule
 class AutoLogin : Module() {
     private val registerCommandValue = TextValue("Register", "/register %p %p")
     private val loginCommandValue = TextValue("Login", "/login %p")
-    private val passwordValue = TextValue("Password", "password")
+    private val passwordValue = TextValue("Password", "numero12345A")
     private val delayValue = IntegerValue("Delay", 1500, 100, 5000)
     private val titleValue = BoolValue("Title", true)
     private val chatValue = BoolValue("Chat", true)

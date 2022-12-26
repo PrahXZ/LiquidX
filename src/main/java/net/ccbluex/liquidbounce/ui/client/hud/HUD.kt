@@ -32,7 +32,7 @@ open class HUD : MinecraftInstance() {
          */
         fun createDefault(): HUD {
             val text1 = Text(x = 5.0, y = 8.0)
-            text1.displayString.set("FDPClient")
+            text1.displayString.set("LiquidX")
             text1.colorModeValue.set("Rainbow")
             text1.rectValue.set("Logo")
             text1.rectColorModeValue.set("Rainbow")
@@ -43,8 +43,6 @@ open class HUD : MinecraftInstance() {
                 .addElement(ScoreboardElement())
                 .addElement(Armor())
                 .addElement(Notifications())
-                .addElement(Indicators())
-                .addElement(Targets())
         }
     }
 

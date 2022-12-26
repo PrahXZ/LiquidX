@@ -21,8 +21,8 @@ import net.minecraft.client.network.NetworkPlayerInfo;
 @ModuleInfo(name = "NameProtect", category = ModuleCategory.CLIENT)
 public class NameProtect extends Module {
 
-    private final TextValue fakeNameValue = new TextValue("FakeName", "&cProtected User");
-    private final TextValue allFakeNameValue = new TextValue("AllPlayersFakeName", "FDP");
+    private final TextValue fakeNameValue = new TextValue("FakeName", "&cPlayer");
+    private final TextValue allFakeNameValue = new TextValue("AllPlayersFakeName", "LiquidX User");
     public final BoolValue selfValue = new BoolValue("Yourself", true);
     public final BoolValue tagValue = new BoolValue("Tag", false);
     public final BoolValue allPlayersValue = new BoolValue("AllPlayers", false);

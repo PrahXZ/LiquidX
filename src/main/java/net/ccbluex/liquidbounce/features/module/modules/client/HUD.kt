@@ -39,8 +39,8 @@ object HUD : Module() {
     val betterChatRectValue = BoolValue("BetterChatRect", true)
     val chatCombineValue = BoolValue("ChatCombine", true)
     val chatAnimValue = BoolValue("ChatAnimation", true)
-    val HealthValue = BoolValue("Health", true)
-    val waterMark = BoolValue("Watermark", true)
+    val HealthValue = BoolValue("Health", false)
+    val waterMark = BoolValue("Watermark", false)
     val rainbowStartValue = FloatValue("RainbowStart", 0.55f, 0f, 1f)
     val rainbowStopValue = FloatValue("RainbowStop", 0.85f, 0f, 1f)
     val rainbowSaturationValue = FloatValue("RainbowSaturation", 0.45f, 0f, 1f)
@@ -71,14 +71,14 @@ object HUD : Module() {
     private fun renderWatermark() {
         var width = 3
         mc.fontRendererObj.drawStringWithShadow(
-            "FDP",
+            "Liquid",
             3.0f,
             3.0f,
             rainbow().rgb
         )
-        width += mc.fontRendererObj.getStringWidth("FDP")
+        width += mc.fontRendererObj.getStringWidth("Liquid")
         mc.fontRendererObj.drawStringWithShadow(
-            "CLIENT",
+            "X",
             width.toFloat(),
             3.0f,
             -1
@@ -90,7 +90,7 @@ object HUD : Module() {
         LiquidBounce.hud.update()
         if (mc.currentScreen == null && lastFontEpsilon != fontEpsilonValue.get()) {
             lastFontEpsilon = fontEpsilonValue.get()
-            alert("You need to reload FDPClient to apply changes!")
+            alert("You need to reload LiquidX to apply changes!")
         }
     }
 

@@ -39,12 +39,12 @@ object LiquidBounce {
 
     // Client information
 
-    const val CLIENT_NAME = "FDPClient"
+    const val CLIENT_NAME = "LiquidX"
 
     var Darkmode = true
-    const val COLORED_NAME = "§7[§f!§7] §b§lFDPCLIENT §f» "
-    const val CLIENT_CREATOR = "CCBlueX, Zywl & SkidderMC TEAM"
-    const val CLIENT_WEBSITE = "fdpinfo.github.io"
+    const val COLORED_NAME = "§3§lLiquidX §8» "
+    const val CLIENT_CREATOR = "Prah"
+    const val CLIENT_WEBSITE = "PRAH RETURNS (Nini loves me) 💕💕💕"
     
     @JvmField
     val gitInfo = Properties().also {
@@ -52,18 +52,18 @@ object LiquidBounce {
         if (inputStream != null) {
             it.load(inputStream)
         } else {
-            it["git.branch"] = "Main" 
+            it["git.branch"] = "main"
         }
     }
 
     @JvmField
 
-    val CLIENT_VERSION = "v5.1.5"
+    val CLIENT_VERSION = "v2.0"
 
 
     @JvmField
     val CLIENT_BRANCH = (gitInfo["git.branch"] ?: "unknown").let {
-        if (it == "main") "Main" else it
+        if (it == "main") "Nini's version" else it
     }
 
     var isStarting = true
@@ -89,7 +89,7 @@ object LiquidBounce {
     lateinit var keyBindManager: KeyBindManager
 
     // Menu Background
-    var background: ResourceLocation? = ResourceLocation("fdpclient/background.png")
+    var background: ResourceLocation? = ResourceLocation("fdpclient/background.jpg")
 
     val launchFilters = mutableListOf<EnumLaunchFilter>()
     private val dynamicLaunchOptions: Array<LaunchOption>

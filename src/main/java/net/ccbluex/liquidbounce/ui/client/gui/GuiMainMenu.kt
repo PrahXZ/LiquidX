@@ -5,6 +5,7 @@
  */
 package net.ccbluex.liquidbounce.ui.client.gui
 
+import net.ccbluex.liquidbounce.launch.data.modernui.mainmenu.rebornGuiMainMenu
 import net.ccbluex.liquidbounce.ui.client.gui.mainmenu.*
 import net.minecraft.client.gui.*
 import net.minecraft.client.settings.GameSettings
@@ -24,7 +25,7 @@ class GuiMainMenu : GuiScreen(), GuiYesNoCallback {
         if (isFastRenderEnabled()){
             mc.displayGuiScreen(ClassicGuiMainMenu())
         } else {
-            mc.displayGuiScreen(ModernGuiMainMenu())
+            mc.displayGuiScreen(rebornGuiMainMenu())
         }
         drawBackground(1)
     }

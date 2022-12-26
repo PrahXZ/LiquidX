@@ -1,6 +1,7 @@
 package net.ccbluex.liquidbounce.ui.client.gui.mainmenu
 
 import net.ccbluex.liquidbounce.LiquidBounce
+import net.ccbluex.liquidbounce.launch.data.modernui.mainmenu.rebornGuiMainMenu
 import net.minecraft.client.gui.GuiButton
 import net.minecraft.client.gui.GuiScreen
 import java.awt.Color
@@ -24,8 +25,8 @@ class GuiMainSelectMenu : GuiScreen() {
 
     override fun actionPerformed(button: GuiButton) {
         when (button.id) {
-            0 -> mc.displayGuiScreen(ModernGuiMainMenu())
-            1 -> mc.displayGuiScreen(ClassicGuiMainMenu())
+            0 -> mc.displayGuiScreen(rebornGuiMainMenu())
+            1 -> mc.displayGuiScreen(rebornGuiMainMenu())
         }
     }
 

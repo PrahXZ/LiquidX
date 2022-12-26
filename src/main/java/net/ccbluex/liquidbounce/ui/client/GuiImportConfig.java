@@ -8,7 +8,6 @@ package net.ccbluex.liquidbounce.ui.client;
 import net.ccbluex.liquidbounce.LiquidBounce;
 import net.ccbluex.liquidbounce.features.module.modules.client.button.FlatButtonRenderer;
 import net.ccbluex.liquidbounce.font.FontLoaders;
-import net.ccbluex.liquidbounce.ui.client.gui.modernui.GuiScriptLoadMenu;
 import net.ccbluex.liquidbounce.ui.client.gui.scriptOnline.ScriptSubscribe;
 import net.ccbluex.liquidbounce.ui.client.gui.scriptOnline.Subscriptions;
 import net.ccbluex.liquidbounce.ui.client.hud.element.elements.Notification;
@@ -61,7 +60,6 @@ public class GuiImportConfig extends GuiScreen
                             LiquidBounce.hud.addNotification(new Notification("Script Manager", "Added Subscribe: " + name + " | " + url + " (" + (System.currentTimeMillis() - startTime) + "ms)", NotifyType.SUCCESS, 1500, 500));
                             message = "Done!";
                             ClientUtils.INSTANCE.setTitle();
-                            mc.displayGuiScreen(new GuiScriptLoadMenu());
                         }catch (Exception e){
                             e.printStackTrace();
                             Subscriptions.subscribes.clear();
