@@ -581,6 +581,7 @@ class KillAura : Module() {
         }
 
         discoveredTargets.forEach {
+            if(it != currentTarget) return
             when (markValue.get().lowercase()) {
                 "liquid" -> {
                     RenderUtils.drawPlatform(

@@ -108,11 +108,7 @@ class ScoreboardElement(
             val team = scoreboard.getPlayersTeam(score.playerName)
 
             var name = ScorePlayerTeam.formatPlayerName(team, score.playerName)
-            val scorePoints = "${EnumChatFormatting.RED}${score.scorePoints}"
-
-            val width = 0
             val height = maxHeight - index * fontRenderer.FONT_HEIGHT
-            val rectHeight = 0 //maxHeight + fontRenderer.FONT_HEIGHT + 10f
             GlStateManager.resetColor()
 
             var listColor = textColor
