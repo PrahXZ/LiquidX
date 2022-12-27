@@ -8,7 +8,6 @@ package net.ccbluex.liquidbounce.features.module.modules.client.button
 import net.ccbluex.liquidbounce.utils.render.ColorUtils
 import net.ccbluex.liquidbounce.utils.render.RenderUtils
 import net.ccbluex.liquidbounce.utils.render.shadowRenderUtils
-import net.ccbluex.liquidbounce.features.module.modules.client.UIEffects
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiButton
 import org.lwjgl.opengl.GL11
@@ -36,9 +35,6 @@ class RiseButtonRenderer(button: GuiButton) : AbstractButtonRenderer(button) {
             GL11.glDisable(2848)
             GL11.glShadeModel(7424)
             GL11.glColor4f(1f, 1f, 1f, 1f)
-            if (UIEffects.buttonShadowValue.equals(true)){
-            shadowRenderUtils.drawShadowWithCustomAlpha(button.xPosition.toFloat(), button.yPosition.toFloat(), button.width.toFloat(), button.height.toFloat(), 240f)
-            }
         }
     }
 }

@@ -7,7 +7,6 @@ package net.ccbluex.liquidbounce.features.module.modules.client.button
 
 import net.ccbluex.liquidbounce.utils.render.EaseUtils
 import net.ccbluex.liquidbounce.utils.render.RenderUtils
-import net.ccbluex.liquidbounce.features.module.modules.client.UIEffects
 import net.ccbluex.liquidbounce.utils.render.shadowRenderUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiButton
@@ -133,7 +132,7 @@ class BetterButtonRenderer(button: GuiButton) : AbstractButtonRenderer(button) {
                 )
             }
             GL11.glPopMatrix()
-            if (UIEffects.buttonShadowValue.equals(true)) shadowRenderUtils.drawShadowWithCustomAlpha(button.xPosition.toFloat(), button.yPosition.toFloat(), button.width.toFloat(), button.height.toFloat(), 240f)
-        }
+
+    }
     }
 }

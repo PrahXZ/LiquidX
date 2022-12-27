@@ -133,7 +133,7 @@ class ScoreboardElement(
     
 
         
-        shadowRenderUtils.drawShadowWithCustomAlpha(l1 - 7f, -5f, -l1+16f, maxHeight + fontRenderer.FONT_HEIGHT + 10f, 255f)
+
         scoreCollection.forEachIndexed { index, score ->
             val team = scoreboard.getPlayersTeam(score.playerName)
 
