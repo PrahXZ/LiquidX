@@ -15,9 +15,9 @@ import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.features.module.modules.combat.BowAimbot
 import net.ccbluex.liquidbounce.features.module.modules.combat.KillAura
 import net.ccbluex.liquidbounce.features.module.modules.movement.Fly
-import net.ccbluex.liquidbounce.features.module.modules.movement.Sprint
 import net.ccbluex.liquidbounce.features.module.modules.world.ChestAura
 import net.ccbluex.liquidbounce.features.module.modules.world.Fucker
+import net.ccbluex.liquidbounce.features.module.modules.world.Nuker
 import net.ccbluex.liquidbounce.features.module.modules.world.Scaffold
 import net.ccbluex.liquidbounce.features.value.BoolValue
 import net.ccbluex.liquidbounce.features.value.ListValue
@@ -26,7 +26,7 @@ import net.minecraft.network.play.client.C03PacketPlayer
 
 @ModuleInfo(name = "Rotations", category = ModuleCategory.CLIENT)
 object Rotations : Module() {
-    val modeValue = ListValue("Mode", arrayOf("Head", "Body"), "Body")
+    val bodyValue = BoolValue("Body", true)
     val fixedValue = ListValue("SensitivityFixed", arrayOf("None", "Old", "New"), "New")
     val nanValue = BoolValue("NaNCheck", true)
 
@@ -34,37 +34,39 @@ object Rotations : Module() {
 
     @EventTarget
     fun onRender3D(event: Render3DEvent) {
-        if (modeValue.get().equals("head", true) && RotationUtils.serverRotation != null)
-            mc.thePlayer.rotationYawHead = RotationUtils.serverRotation.yaw
+        if (RotationUtils.serverRotation != null && !bodyValue.get())
+            mc.thePlayer?.rotationYawHead = RotationUtils.serverRotation.yaw
     }
+
     @EventTarget
     fun onPacket(event: PacketEvent) {
-        if (modeValue.get().equals("head", true) || !shouldRotate() || mc.thePlayer == null) {
-            playerYaw = null
+        val thePlayer = mc.thePlayer
+
+        if (!bodyValue.get() || !shouldRotate() || thePlayer == null)
             return
-        }
 
         val packet = event.packet
-        if (packet is C03PacketPlayer && packet.rotating) {
-            playerYaw = packet.yaw
+
+        if (packet is C03PacketPlayer.C06PacketPlayerPosLook || packet is C03PacketPlayer.C05PacketPlayerLook) {
+            playerYaw = (packet as C03PacketPlayer).yaw
             mc.thePlayer.renderYawOffset = packet.getYaw()
             mc.thePlayer.rotationYawHead = packet.getYaw()
         } else {
             if (playerYaw != null)
-                mc.thePlayer.renderYawOffset = this.playerYaw!!
-            mc.thePlayer.rotationYawHead = mc.thePlayer.renderYawOffset
+                thePlayer.renderYawOffset = this.playerYaw!!
+
+            thePlayer.rotationYawHead = thePlayer.renderYawOffset
         }
     }
 
     private fun getState(module: Class<out Module>) = LiquidBounce.moduleManager[module]!!.state
 
-    fun shouldRotate(): Boolean {
+    private fun shouldRotate(): Boolean {
         val killAura = LiquidBounce.moduleManager.getModule(KillAura::class.java) as KillAura
-        val sprint = LiquidBounce.moduleManager.getModule(Sprint::class.java) as Sprint
         return getState(Scaffold::class.java) ||
-                (getState(Sprint::class.java) && sprint.allDirectionsValue.get()) ||
-                (getState(KillAura::class.java) && killAura.target != null) ||
-                getState(BowAimbot::class.java) || getState(Fucker::class.java) ||
-                getState(ChestAura::class.java) || getState(Fly::class.java)
+                (getState(KillAura::class.java) && killAura.target != null) || getState(BowAimbot::class.java) ||
+                getState(Fucker::class.java) || getState(Nuker::class.java) ||
+                getState(ChestAura::class.java)||
+                getState(Fly::class.java)
     }
 }
