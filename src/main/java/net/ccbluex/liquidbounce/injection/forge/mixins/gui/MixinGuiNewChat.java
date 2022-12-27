@@ -194,13 +194,13 @@ public abstract class MixinGuiNewChat {
                                     if (canFont)
                                         FontLoaders.C16.DisplayFont(chatline.getChatComponent().getFormattedText(), (float) i2, (float) (j2 - 8), new Color(255, 255, 255).getRGB(), FontLoaders.C16);
                                     else {
-                                        this.mc.fontRendererObj.drawString(chatline.getChatComponent().getFormattedText(), (float) i2, (float) (j2 - 8), 16777215 + (l1 << 24), false);
-                                    }
+                                        this.mc.fontRendererObj.drawString(chatline.getChatComponent().getFormattedText(), (float) i2, (float) (j2 - 8), 16777215 + (l1 << 24), hud.getChatShadowValue().get());
+                                }
                                 }else{
                                     if (canFont)
                                         FontLoaders.C16.DisplayFont2(FontLoaders.C16,chatline.getChatComponent().getFormattedText(), (float) i2, (float) (j2 - 8), new Color(255, 255, 255).getRGB(),true);
                                     else {
-                                        this.mc.fontRendererObj.drawStringWithShadow(chatline.getChatComponent().getFormattedText(), (float) i2, (float) (j2 - 8), 16777215 + (l1 << 24));
+                                        this.mc.fontRendererObj.drawString(chatline.getChatComponent().getFormattedText(), (float) i2, (float) (j2 - 8), 16777215 + (l1 << 24), hud.getChatShadowValue().get());
                                     }
                                 }
                                 GlStateManager.disableAlpha();

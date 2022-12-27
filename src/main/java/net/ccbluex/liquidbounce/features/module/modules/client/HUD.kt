@@ -36,6 +36,7 @@ object HUD : Module() {
     private val blurValue = BoolValue("Blur", false)
     val fontChatValue = BoolValue("FontChat", false)
     val chatRectValue = BoolValue("ChatRect", true)
+    val chatShadowValue = BoolValue("ChatShadow", true)
     val betterChatRectValue = BoolValue("BetterChatRect", true)
     val chatCombineValue = BoolValue("ChatCombine", true)
     val chatAnimValue = BoolValue("ChatAnimation", true)
