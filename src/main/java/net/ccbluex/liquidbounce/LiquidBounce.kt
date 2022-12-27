@@ -23,7 +23,6 @@ import net.ccbluex.liquidbounce.ui.client.gui.scriptOnline.Subscriptions
 import net.ccbluex.liquidbounce.script.ScriptManager
 import net.ccbluex.liquidbounce.ui.cape.GuiCapeManager
 import net.ccbluex.liquidbounce.ui.client.hud.HUD
-import net.ccbluex.liquidbounce.ui.client.keybind.KeyBindManager
 import net.ccbluex.liquidbounce.ui.font.Fonts
 import net.ccbluex.liquidbounce.ui.i18n.LanguageManager
 import net.ccbluex.liquidbounce.ui.sound.TipSoundManager
@@ -86,7 +85,6 @@ object LiquidBounce {
     // Some UI things
     lateinit var hud: HUD
     lateinit var mainMenu: GuiScreen
-    lateinit var keyBindManager: KeyBindManager
 
     // Menu Background
     var background: ResourceLocation? = ResourceLocation("fdpclient/background.jpg")
@@ -173,8 +171,6 @@ object LiquidBounce {
 
         tipSoundManager = TipSoundManager()
 
-        // KeyBindManager
-        keyBindManager = KeyBindManager()
 
         combatManager = CombatManager()
         eventManager.registerListener(combatManager)
