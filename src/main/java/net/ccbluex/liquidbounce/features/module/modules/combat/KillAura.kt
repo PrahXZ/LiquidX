@@ -118,7 +118,7 @@ class KillAura : Module() {
     private val noBadPacketsValue = BoolValue("NoBadPackets", false)
 
     // AutoBlock
-    val autoBlockValue = ListValue("AutoBlock", arrayOf("Range", "Fake", "Off"), "Off")
+    val autoBlockValue = ListValue("AutoBlock", arrayOf("Range", "Verus", "Fake", "Off"), "Off")
 
     // vanilla will send block packet at pre
     private val blockTimingValue =
@@ -339,14 +339,24 @@ class KillAura : Module() {
             }
             // AutoBlock
             if (autoBlockValue.equals("Range") && discoveredTargets.isNotEmpty() && (!autoBlockPacketValue.equals("AfterAttack")
-                        || discoveredTargets.any { mc.thePlayer.getDistanceToEntityBox(it) > maxRange }) && canBlock
-            ) {
+                        || discoveredTargets.any { mc.thePlayer.getDistanceToEntityBox(it) > maxRange }) && canBlock) {
                 val target = this.target ?: discoveredTargets.first()
                 if (mc.thePlayer.getDistanceToEntityBox(target) <= autoBlockRangeValue.get()) {
                     startBlocking(
                         target,
                         interactAutoBlockValue.get() && (mc.thePlayer.getDistanceToEntityBox(target) < maxRange)
                     )
+                } else {
+                    if (!mc.thePlayer.isBlocking) {
+                        stopBlocking()
+                    }
+                }
+            } else if (autoBlockValue.equals("Verus") && discoveredTargets.isNotEmpty() && canBlock) {
+                val target = this.target ?: discoveredTargets.first()
+                if (mc.thePlayer.getDistanceToEntityBox(target) <= maxRange) {
+                    startBlocking(
+                            target,
+                            false)
                 } else {
                     if (!mc.thePlayer.isBlocking) {
                         stopBlocking()
