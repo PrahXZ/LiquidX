@@ -24,7 +24,7 @@ import net.ccbluex.liquidbounce.features.value.ListValue
 import net.ccbluex.liquidbounce.utils.RotationUtils
 import net.minecraft.network.play.client.C03PacketPlayer
 
-@ModuleInfo(name = "Rotations", category = ModuleCategory.CLIENT)
+@ModuleInfo(name = "Rotations", category = ModuleCategory.CLIENT, defaultOn = true, array = false)
 object Rotations : Module() {
     val bodyValue = BoolValue("Body", true)
     val fixedValue = ListValue("SensitivityFixed", arrayOf("None", "Old", "New"), "New")
