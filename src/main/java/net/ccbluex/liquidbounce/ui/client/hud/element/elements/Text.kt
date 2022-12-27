@@ -50,8 +50,6 @@ class Text(
     }
 
     val displayString = TextValue("DisplayText", "")
-    val shadowValue = BoolValue("Shadow", false)
-    val shadowStrength = FloatValue("Shadow-Strength", 1F, 0.01F, 8F).displayable { shadowValue.get() }
     private val redValue = IntegerValue("Red", 255, 0, 255)
     private val greenValue = IntegerValue("Green", 255, 0, 255)
     private val blueValue = IntegerValue("Blue", 255, 0, 255)
@@ -78,7 +76,7 @@ class Text(
 
     private val display: String
         get() {
-            val textContent = if (displayString.get().isEmpty() && !editMode) {
+            val textContent = if (displayString.get().isEmpty() && editMode) {
                 "Click To Add Text"
             } else {
                 displayString.get()
@@ -208,24 +206,7 @@ class Text(
                 RenderUtils.drawOutLineRect(-4.0, -4.0, (fontRenderer.getStringWidth(displayText) + 3).toDouble(), fontRenderer.FONT_HEIGHT.toDouble() + 1.0, 1.0, Color(18, 18, 18).rgb, Color(0, 0, 0).rgb)
             }
         }
-        if (shadowValue.get()) {
-            GL11.glTranslated(-renderX, -renderY, 0.0)
-            GL11.glPushMatrix()
-            ShadowUtils.shadow(shadowStrength.get(), {
-                GL11.glPushMatrix()
-                GL11.glTranslated(renderX, renderY, 0.0)
-                fontRenderer.drawString(
-                    displayText, 0F*scale, 0F*scale, when (colorModeValue.get().lowercase()) {
-                        "rainbow" -> ColorUtils.hslRainbow(rainbowIndex.get(), indexOffset = 100 * rainbowSpeed.get()).rgb
-                        "skyrainbow" -> ColorUtils.skyRainbow(rainbowIndex.get(), 1F, 1F, rainbowSpeed.get().toDouble()).rgb
-                        "anotherrainbow" -> ColorUtils.fade(color, 100, rainbowIndex.get()).rgb
-                        else -> colorNoAlpha.rgb
-                    }, false)
-                GL11.glPopMatrix()
-            }, {})
-            GL11.glPopMatrix()
-            GL11.glTranslated(renderX, renderY, 0.0)
-        }
+
             fontRenderer.drawString(
                 displayText, 0F, 0F, when (colorModeValue.get().lowercase()) {
                     "rainbow" -> ColorUtils.hslRainbow(rainbowIndex.get(), indexOffset = 100 * rainbowSpeed.get()).rgb
