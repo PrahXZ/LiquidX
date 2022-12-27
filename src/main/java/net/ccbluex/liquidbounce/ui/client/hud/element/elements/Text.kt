@@ -55,7 +55,7 @@ class Text(
     private val blueValue = IntegerValue("Blue", 255, 0, 255)
     private val alphaValue = IntegerValue("Alpha", 255, 0, 255)
     val colorModeValue = ListValue("Color", arrayOf("Custom", "Rainbow", "AnotherRainbow", "SkyRainbow"), "Custom")
-    private val shadow = BoolValue("Shadow", false)
+    val shadow = BoolValue("Shadow", false)
     val rectValue = ListValue("Rect", arrayOf("Normal", "RNormal", "OneTap", "Skeet", "Rounded", "None"), "None")
     val rectColorModeValue = ListValue("RectColor", arrayOf("Custom", "Rainbow", "AnotherRainbow", "SkyRainbow"), "Custom")
     private val rectRedValue = IntegerValue("RectRed", 0, 0, 255)
@@ -66,7 +66,7 @@ class Text(
     private val rectRoundValue = FloatValue("RectRoundingMultiplier", 1.5F, 0.1F, 4F)
     private val rainbowSpeed = IntegerValue("RainbowSpeed", 10, 1, 10)
     private val rainbowIndex = IntegerValue("RainbowIndex", 1, 1, 20)
-    private val fontValue = FontValue("Font", Fonts.font40)
+    val fontValue = FontValue("Font", Fonts.font40)
 
     private var editMode = false
     private var editTicks = 0
@@ -163,7 +163,7 @@ class Text(
         return result.toString()
     }
     fun getClientName(i: Int,i2: Int): String{
-        return "FDPClient".substring(i,i2);
+        return "LiquidX".substring(i,i2);
     }
     /**
      * Draw element

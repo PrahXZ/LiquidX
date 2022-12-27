@@ -41,41 +41,41 @@ class Arraylist(
 ) : Element(x, y, scale, side) {
 
     private val colorModeValue = ListValue("Text-Color", arrayOf("Custom", "Random", "Rainbow", "AnotherRainbow", "Slowly", "SkyRainbow", "Static"), "AnotherRainbow")
-    private val colorRedValue = IntegerValue("Text-R", 0, 0, 255)
-    private val colorGreenValue = IntegerValue("Text-G", 111, 0, 255)
-    private val colorBlueValue = IntegerValue("Text-B", 255, 0, 255)
+    private val colorRedValue = IntegerValue("Text-R", 50, 0, 255)
+    private val colorGreenValue = IntegerValue("Text-G", 150, 0, 255)
+    private val colorBlueValue = IntegerValue("Text-B", 175, 0, 255)
     private val tagColorModeValue = ListValue("Tag-Color", arrayOf("Custom", "Random", "Rainbow", "AnotherRainbow", "Slowly", "SkyRainbow", "Static"), "Custom")
     private val tagColorRedValue = IntegerValue("Tag-R", 195, 0, 255)
     private val tagColorGreenValue = IntegerValue("Tag-G", 195, 0, 255)
     private val tagColorBlueValue = IntegerValue("Tag-B", 195, 0, 255)
     private val speed = IntegerValue("AllSpeed", 0, 0, 400)
     private val rectColorModeValue = ListValue("Rect-Color", arrayOf("Custom", "Random", "Rainbow", "AnotherRainbow", "Slowly", "SkyRainbow", "Static"), "AnotherRainbow")
-    private val rectColorRedValue = IntegerValue("Rect-R", 255, 0, 255)
-    private val rectColorGreenValue = IntegerValue("Rect-G", 255, 0, 255)
+    private val rectColorRedValue = IntegerValue("Rect-R", 0, 0, 255)
+    private val rectColorGreenValue = IntegerValue("Rect-G", 200, 0, 255)
     private val rectColorBlueValue = IntegerValue("Rect-B", 255, 0, 255)
     private val rectColorBlueAlpha = IntegerValue("Rect-Alpha", 255, 0, 255)
     private val saturationValue = FloatValue("Random-Saturation", 0.9f, 0f, 1f)
     private val brightnessValue = FloatValue("Random-Brightness", 1f, 0f, 1f)
     private val tagsValue = ListValue("TagsStyle", arrayOf("-", "|", "()", "[]", "<>", "Space", "None"), "Space")
     private val shadow = BoolValue("ShadowText", true)
-    private val split = BoolValue("SplitName", false)
+    private val split = BoolValue("SplitName", true)
     private val slideInAnimation = BoolValue("SlideInAnimation", true)
     private val noRenderModules = BoolValue("NoRenderModules", false)
     private val backgroundColorModeValue = ListValue("Background-Color", arrayOf("Custom", "Random", "Rainbow", "AnotherRainbow", "Slowly", "SkyRainbow", "Static"), "Custom")
     private val backgroundColorRedValue = IntegerValue("Background-R", 0, 0, 255)
     private val backgroundColorGreenValue = IntegerValue("Background-G", 0, 0, 255)
     private val backgroundColorBlueValue = IntegerValue("Background-B", 0, 0, 255)
-    private val backgroundColorAlphaValue = IntegerValue("Background-Alpha", 0, 0, 255)
-    private val backgroundExpand = IntegerValue("Background-Expand", 2, 0, 10)
+    private val backgroundColorAlphaValue = IntegerValue("Background-Alpha", 85, 0, 255)
+    private val backgroundExpand = IntegerValue("Background-Expand", 1, 0, 10)
     private val rainbowSpeed = IntegerValue("RainbowSpeed", 1, 1, 10)
-    private val rectValue = ListValue("Rect", arrayOf("None", "Left", "Right", "Outline", "Special", "Top"), "None")
+    private val rectValue = ListValue("Rect", arrayOf("None", "Left", "Right", "Outline", "Special", "Top"), "Right")
     private val caseValue = ListValue("Case", arrayOf("Upper", "Normal", "Lower"), "Normal")
     private val spaceValue = FloatValue("Space", 0F, 0F, 5F)
-    private val textHeightValue = FloatValue("TextHeight", 11F, 1F, 20F)
-    private val textYValue = FloatValue("TextY", 1F, 0F, 20F)
-    private val fontValue = FontValue("Font", Fonts.font40)
+    private val textHeightValue = FloatValue("TextHeight", 12.75F, 1F, 20F)
+    private val textYValue = FloatValue("TextY", 2.30F, 0F, 20F)
+    private val fontValue = FontValue("Font", Fonts.fontTenacity40)
     private val fontAlphaValue = IntegerValue("TextAlpha", 255, 0, 255)
-    private val shadowShaderValue = BoolValue("Shadow", true)
+    private val shadowShaderValue = BoolValue("Shadow", false)
     private val shadowNoCutValue = BoolValue("Shadow-NoCut", false)
     private val shadowStrength = IntegerValue("Shadow-Strength", 1, 1, 30)
     private val shadowColorMode = ListValue("Shadow-Color", arrayOf("Background", "Text", "Custom"), "Background")
@@ -109,7 +109,7 @@ class Arraylist(
         module.tag ?: return ""
         return when (tagsValue.get().lowercase()) {
             "-" -> " - ${module.tag}"
-            "|" -> "|${module.tag}"
+            "|" -> "| ${module.tag}"
             "()" -> " (${module.tag})"
             "[]" -> " [${module.tag}]"
             "<>" -> " <${module.tag}>"
