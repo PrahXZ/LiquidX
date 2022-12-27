@@ -113,10 +113,8 @@ open class Module : MinecraftInstance(), Listenable {
             if (!LiquidBounce.isStarting) {
                 if (value) {
                     SoundModule.playSound(true)
-                    LiquidBounce.hud.addNotification(Notification(LanguageManager.getAndFormat("notify.module.title"), LanguageManager.getAndFormat("notify.module.enable", localizedName), NotifyType.SUCCESS))
                 } else {
                     SoundModule.playSound(false)
-                    LiquidBounce.hud.addNotification(Notification(LanguageManager.getAndFormat("notify.module.title"), LanguageManager.getAndFormat("notify.module.disable", localizedName), NotifyType.ERROR))
                 }
             }
 
