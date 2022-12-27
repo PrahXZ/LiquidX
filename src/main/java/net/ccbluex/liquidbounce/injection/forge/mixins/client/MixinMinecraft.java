@@ -17,6 +17,7 @@ import net.ccbluex.liquidbounce.injection.forge.mixins.accessors.MinecraftForgeC
 import net.ccbluex.liquidbounce.utils.CPSCounter;
 import net.ccbluex.liquidbounce.utils.ClientUtils;
 import net.ccbluex.liquidbounce.utils.RotationUtils;
+import net.ccbluex.liquidbounce.utils.render.IconUtils;
 import net.ccbluex.liquidbounce.utils.render.ImageUtils;
 import net.ccbluex.liquidbounce.utils.render.RenderUtils;
 import net.minecraft.block.material.Material;
@@ -254,17 +255,14 @@ public abstract class MixinMinecraft {
         }
     }
 
-//  BufferedImage image = ImageIO.read(this.getClass().getResourceAsStream("/assets/minecraft/fdpclient/icon.png"));
     @Inject(method = "setWindowIcon", at = @At("HEAD"), cancellable = true)
-    private void setWindowIcon(CallbackInfo callbackInfo) throws IOException {
-        if (Util.getOSType() != Util.EnumOS.OSX) {
-            BufferedImage image = ImageIO.read(this.getClass().getResourceAsStream("/assets/minecraft/fdpclient/icon.png"));
-            if (image.getWidth() != 32 || image.getHeight() != 32) {
-                image = ImageUtils.resizeImage(image, 32, 32);
+    private void setWindowIcon(CallbackInfo callbackInfo) {
+        if(Util.getOSType() != Util.EnumOS.OSX) {
+            final ByteBuffer[] liquidXFavicon = IconUtils.getFavicon();
+            if(liquidXFavicon != null) {
+                Display.setIcon(liquidXFavicon);
+                callbackInfo.cancel();
             }
-            Display.setIcon(new ByteBuffer[]{ImageUtils.readImageToBuffer(ImageUtils.resizeImage(image, 16, 16)),
-                    ImageUtils.readImageToBuffer(image)});
-            callbackInfo.cancel();
         }
     }
 
