@@ -25,7 +25,6 @@ class UniversoFly2 : FlyMode("OldUniversoJump") {
         timer.reset()
         mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - 0.2, mc.thePlayer.posZ)
         mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.1, mc.thePlayer.posZ)
-        ClientUtils.displayChatMessage("§8[§6§lUniverso§b§lCraft§8] §fSolo funciona en SkyWars, dura unos 4 segundos o mas.")
     }
 
     override fun onUpdate(event: UpdateEvent) {

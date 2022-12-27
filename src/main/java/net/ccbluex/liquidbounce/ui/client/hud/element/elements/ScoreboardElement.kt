@@ -49,7 +49,7 @@ class ScoreboardElement(
     private val backgroundColorRedValue = IntegerValue("Background-R", 0, 0, 255)
     private val backgroundColorGreenValue = IntegerValue("Background-G", 0, 0, 255)
     private val backgroundColorBlueValue = IntegerValue("Background-B", 0, 0, 255)
-    private val backgroundColorAlphaValue = IntegerValue("Background-Alpha", 0, 0, 255)
+    private val backgroundColorAlphaValue = IntegerValue("Background-Alpha", 90, 0, 255)
 
     private val shadowValue = BoolValue("ShadowText", false)
     private val serverValue = ListValue("ServerIp", arrayOf("None", "ClientName", "Website"), "None")

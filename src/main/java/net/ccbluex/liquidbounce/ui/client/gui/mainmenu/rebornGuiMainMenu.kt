@@ -57,7 +57,7 @@ class rebornGuiMainMenu : GuiScreen(), GuiYesNoCallback {
                         this.height / 2 - 10,
                         130,
                         23,
-                        LanguageManager.get("Sexy-AltManager"),
+                        LanguageManager.get("AltManager"),
                         null,
                         2,
                         Color(20, 20, 20, 130)
@@ -77,13 +77,26 @@ class rebornGuiMainMenu : GuiScreen(), GuiYesNoCallback {
                         Color(20, 20, 20, 130)
                 )
         )
+        this.buttonList.add(
+            TestBtn(
+                0,
+                (this.width / 2) - (640 / 2),
+                this.height / 2 + 50,
+                130,
+                23,
+                "Options",
+                null,
+                2,
+                Color(20, 20, 20, 130)
+            )
+        )
 
 
         this.buttonList.add(
                 TestBtn(
                         4,
                         (this.width / 2) - (640 / 2),
-                        this.height / 2 + 50,
+                        this.height / 2 + 80,
                         130,
                         23,
                         LanguageManager.get("Exit the game"),
@@ -93,40 +106,35 @@ class rebornGuiMainMenu : GuiScreen(), GuiYesNoCallback {
                 )
         )
 
-        this.buttonList.add(
-                TestBtn(
-                        0,
-                        this.width - 640,
-                        252,
-                        25,
-                        25,
-                        I18n.format("menu.options").replace(".", ""),
-                        ResourceLocation("fdpclient/imgs/icon/setting.png"),
-                        2,
-                        Color(20, 20, 20, 130)
-                )
-        )
+       // this.buttonList.add(
+         //       TestBtn(
+           //             0,
+             //           this.width - 640,
+        //         252,
+          //              25,
+            //            25,
+              //          I18n.format("menu.options").replace(".", ""),
+                //        ResourceLocation("fdpclient/imgs/icon/setting.png"),
+                  //      2,
+                    //    Color(20, 20, 20, 130)
+                //)
+        //)
 
-        this.buttonList.add(
-                TestBtn(
-                        104,
-                        this.width - 610,
-                        252,
-                        25,
-                        25,
-                        I18n.format("ui.background"),
-                        ResourceLocation("fdpclient/imgs/icon/wallpaper.png"),
-                        2,
-                        Color(20, 20, 20, 130)
-                )
+       // this.buttonList.add(
+         //       TestBtn(
+           //             104,
+             //           this.width - 610,
+               //         252,
+                 //       25,
+                   //     25,
+                     //   I18n.format("ui.background"),
+                       // ResourceLocation("fdpclient/imgs/icon/wallpaper.png"),
+                        // 2,
+                        // Color(20, 20, 20, 130)
+                //)
 
-        )
-        this.buttonList.add(
-                TestBtn(
-                        514, this.width - 580, 252, 25, 25, "Discord", ResourceLocation("fdpclient/imgs/icon/discord.png"), 2,
-                        Color(20, 20, 20, 130)
-                )
-        )
+        //)
+
 
 
 
@@ -230,21 +238,21 @@ class rebornGuiMainMenu : GuiScreen(), GuiYesNoCallback {
                 this.height.toDouble() / 2 - 88,
                 Color(1, 1, 1, 170).rgb
         )
-        FontLoaders.F16.drawString(
-                LiquidBounce.CLIENT_NAME,
-                10f,
-                this.height - 25f,
-                Color(1, 1, 1, 200).rgb
-        )
-        var versionMsg =
-
-                "Version: " + LiquidBounce.CLIENT_VERSION
-        FontLoaders.F16.drawString(
-                versionMsg,
-                this.width - FontLoaders.F16.getStringWidth(versionMsg) - 622f,
-                this.height - 15f,
-                Color(1, 1, 1, 200).rgb
-        )
+       // FontLoaders.F16.drawString(
+       //         LiquidBounce.CLIENT_NAME,
+        //           10f,
+        //         this.height - 25f,
+        //         Color(1, 1, 1, 200).rgb
+        //  )
+        //  var versionMsg =
+        //
+        //         "Version: " + LiquidBounce.CLIENT_VERSION
+        //   FontLoaders.F16.drawString(
+        //         versionMsg,
+        //         this.width - FontLoaders.F16.getStringWidth(versionMsg) - 622f,
+        //         this.height - 15f,
+        //         Color(1, 1, 1, 200).rgb
+        // )
         super.drawScreen(mouseX, mouseY, partialTicks)
     }
 

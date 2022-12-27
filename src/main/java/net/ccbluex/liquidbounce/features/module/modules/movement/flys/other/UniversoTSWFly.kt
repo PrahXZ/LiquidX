@@ -34,7 +34,6 @@ class UniversoTSWFly : FlyMode("UniversoTSW") {
     override fun onEnable() {
         times = 0
 
-        ClientUtils.displayChatMessage("§8[§6§lUniverso§b§lTSW§8] §fSolo usalo en TeamSkyWars para mas seguridad.")
     }
 
     override fun onUpdate (event: UpdateEvent) {

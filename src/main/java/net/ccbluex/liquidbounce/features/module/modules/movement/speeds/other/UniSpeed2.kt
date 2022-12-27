@@ -11,7 +11,6 @@ class UniSpeed2 : SpeedMode("OldUniversoDEN") {
     private var ticks = 0
 
     override fun onEnable() {
-        ClientUtils.displayChatMessage("§8[§6§lUniverso§b§lDEN§8] §fEs putamente infinito usalo cuanto quieras.")
     }
     override fun onUpdate() {
         ticks++

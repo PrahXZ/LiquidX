@@ -11,7 +11,6 @@ class UniSpeed : SpeedMode("OldUniversoCraft") {
     private var ticks = 0
 
     override fun onEnable() {
-        ClientUtils.displayChatMessage("§8[§6§lUniverso§b§lCraft§8] §fFunciona durante 12 segundos, despues espera 3 segundos para volver activar.")
     }
     override fun onUpdate() {
          ticks++
