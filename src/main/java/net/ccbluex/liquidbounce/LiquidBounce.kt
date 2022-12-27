@@ -42,6 +42,7 @@ object LiquidBounce {
 
     var Darkmode = true
     const val COLORED_NAME = "§3§lLiquidX §8» "
+    const val NORMAL_NAME = "§3§LiquidX §f§lClient"
     const val CLIENT_CREATOR = "Prah"
     const val CLIENT_WEBSITE = "PRAH RETURNS (Nini loves me) 💕💕💕"
     
