@@ -62,7 +62,7 @@ class ScoreboardElement(
 
     private val rainbowBarValue = BoolValue("RainbowBar", false)
     private val shadowValue = BoolValue("ShadowText", false)
-    private val serverValue = ListValue("ServerIp", arrayOf("None", "ClientName", "Website"), "ClientName")
+    private val serverValue = ListValue("ServerIp", arrayOf("None", "ClientName", "Website"), "None")
     private val noPointValue = BoolValue("NoPoints", true)
     private val fontValue = FontValue("Font", Fonts.minecraftFont)
 
@@ -150,7 +150,7 @@ class ScoreboardElement(
                 for (domain in allowedDomains) {
                     if (name.contains(domain, true)) {
                         name = when (serverValue.get().lowercase()) {
-                            "clientname" -> LiquidBounce.COLORED_NAME
+                            "clientname" -> LiquidBounce.NORMAl_NAME
                             "website" -> LiquidBounce.CLIENT_WEBSITE
                             else -> "null"
                         }
