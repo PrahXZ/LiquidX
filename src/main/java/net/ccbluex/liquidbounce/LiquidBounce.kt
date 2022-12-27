@@ -45,6 +45,7 @@ object LiquidBounce {
     const val NORMAL_NAME = "§3§lLiquidX §f§lClient"
     const val CLIENT_CREATOR = "Prah and Halflin"
     const val CLIENT_WEBSITE = "Beta release 2.0"
+    const val CLIENT_IP = "www.liquidx.net"
     
     @JvmField
     val gitInfo = Properties().also {
