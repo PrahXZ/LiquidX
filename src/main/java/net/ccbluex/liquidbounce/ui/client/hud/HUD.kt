@@ -9,11 +9,13 @@ import net.ccbluex.liquidbounce.injection.access.StaticStorage
 import net.ccbluex.liquidbounce.ui.client.hud.designer.GuiHudDesigner
 import net.ccbluex.liquidbounce.ui.client.hud.element.Element
 import net.ccbluex.liquidbounce.ui.client.hud.element.elements.*
+import net.ccbluex.liquidbounce.ui.font.Fonts
 import net.ccbluex.liquidbounce.utils.ClassUtils
 import net.ccbluex.liquidbounce.utils.ClientUtils
 import net.ccbluex.liquidbounce.utils.MinecraftInstance
 import net.minecraft.entity.player.EntityPlayer
 import org.lwjgl.opengl.GL11
+import java.awt.Color
 import kotlin.math.max
 import kotlin.math.min
 
@@ -31,11 +33,13 @@ open class HUD : MinecraftInstance() {
          * Create default HUD
          */
         fun createDefault(): HUD {
-            val text1 = Text(x = 5.0, y = 8.0)
-            text1.displayString.set("LiquidX")
-            text1.colorModeValue.set("Rainbow")
-            text1.rectValue.set("Logo")
-            text1.rectColorModeValue.set("Rainbow")
+            val text1 = Text(x = 4.0, y = 4.0)
+            text1.displayString.set("LiquidX v2.0")
+            text1.setColor(Color(51, 149, 175, 1))
+            text1.shadow.set(true)
+            text1.colorModeValue.set("AnotherRainbow")
+            text1.rectValue.set("None")
+            text1.fontValue.set(Fonts.fontTenacity35)
 
             return HUD()
                 .addElement(text1)
