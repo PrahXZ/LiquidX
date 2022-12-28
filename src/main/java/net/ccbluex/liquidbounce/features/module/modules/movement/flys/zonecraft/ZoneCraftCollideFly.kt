@@ -1,28 +1,21 @@
-package net.ccbluex.liquidbounce.features.module.modules.movement.flys.other
+package net.ccbluex.liquidbounce.features.module.modules.movement.flys.zonecraft
 
 import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.event.*
 import net.ccbluex.liquidbounce.features.module.modules.combat.KillAura
+import net.ccbluex.liquidbounce.features.module.modules.exploit.ABlink
 import net.ccbluex.liquidbounce.features.module.modules.movement.flys.FlyMode
-import net.ccbluex.liquidbounce.script.api.global.Notifications
 import net.ccbluex.liquidbounce.ui.client.hud.element.elements.Notification
 import net.ccbluex.liquidbounce.ui.client.hud.element.elements.NotifyType
-import net.ccbluex.liquidbounce.ui.i18n.LanguageManager
-import net.ccbluex.liquidbounce.utils.ClientUtils
 import net.ccbluex.liquidbounce.utils.MovementUtils
 import net.ccbluex.liquidbounce.utils.Rotation
 import net.ccbluex.liquidbounce.utils.RotationUtils
-import net.ccbluex.liquidbounce.utils.timer.MSTimer
 import net.minecraft.block.BlockAir
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement
-import net.minecraft.stats.StatList
 import net.minecraft.util.AxisAlignedBB
 import net.minecraft.util.BlockPos
-import net.minecraft.util.MathHelper
 
 class ZoneCraftCollideFly: FlyMode("ZoneCraftCollide") {
-
-    private var waitTicks = 0
 
     override fun onEnable() {
         if(mc.thePlayer.posY % 1 != 0.0) {
@@ -30,7 +23,8 @@ class ZoneCraftCollideFly: FlyMode("ZoneCraftCollide") {
             LiquidBounce.hud.addNotification(Notification("Fly", "Necesitas estar en el suelo para volar.", NotifyType.ERROR))
             return
         }
-        waitTicks = 0
+        LiquidBounce.moduleManager[ABlink::class.java]!!.state = true
+        mc.timer.timerSpeed = 2F;
     }
 
     override fun onUpdate(event: UpdateEvent) {
@@ -40,21 +34,9 @@ class ZoneCraftCollideFly: FlyMode("ZoneCraftCollide") {
         }
     }
 
-    override fun onMove(event: MoveEvent) {
-        if (MovementUtils.isMoving()) {
-            if (mc.thePlayer.onGround) {
-                MovementUtils.strafe(0.2f)
-                waitTicks++
-                if (waitTicks >= 3) {
-                    waitTicks = 0
-                    mc.thePlayer.triggerAchievement(StatList.jumpStat)
-                    mc.thePlayer.motionY = 0.0
-                    event.y = 0.41999998688698
-                }
-            } else {
-                MovementUtils.strafe(0.8f)
-            }
-        }
+    override fun onDisable() {
+        mc.timer.timerSpeed = 1F;
+        LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
     }
 
     override fun onBlockBB(event: BlockBBEvent) {
