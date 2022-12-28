@@ -5,6 +5,7 @@ import net.ccbluex.liquidbounce.event.*
 import net.ccbluex.liquidbounce.features.module.modules.combat.KillAura
 import net.ccbluex.liquidbounce.features.module.modules.exploit.ABlink
 import net.ccbluex.liquidbounce.features.module.modules.movement.flys.FlyMode
+import net.ccbluex.liquidbounce.features.value.BoolValue
 import net.ccbluex.liquidbounce.features.value.FloatValue
 import net.ccbluex.liquidbounce.ui.client.hud.element.elements.Notification
 import net.ccbluex.liquidbounce.ui.client.hud.element.elements.NotifyType
@@ -18,6 +19,8 @@ import net.minecraft.util.BlockPos
 
 class ZoneCraftCollideFly: FlyMode("ZoneCraftCollide") {
     private val timer = FloatValue("${valuePrefix}Timer", 2f, 1f, 10f)
+    private val TP = BoolValue("TP-Agressive", false)
+    private val timer2 = BoolValue("Boost", true)
 
     override fun onEnable() {
         if(mc.thePlayer.posY % 1 != 0.0) {
@@ -26,13 +29,28 @@ class ZoneCraftCollideFly: FlyMode("ZoneCraftCollide") {
             return
         }
         LiquidBounce.moduleManager[ABlink::class.java]!!.state = true
-        mc.timer.timerSpeed = timer.get();
+        if (timer2.get()) {
+            mc.timer.timerSpeed = timer.get();
+        }
+        if (TP.get()) {
+            timer2.value = false
+        }
+        if (timer2.get()) {
+            TP.value = false
+        }
     }
 
     override fun onUpdate(event: UpdateEvent) {
         RotationUtils.setTargetRotation(Rotation(mc.thePlayer.rotationYaw, 90f))
         if(LiquidBounce.moduleManager[KillAura::class.java]!!.target == null && !mc.thePlayer.isBlocking) {
             mc.netHandler.networkManager.sendPacket(C08PacketPlayerBlockPlacement(BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1, mc.thePlayer.posZ), 1, null, 0f, 1f, 0f))
+        }
+        if (TP.get()) {
+            if(mc.thePlayer.ticksExisted % 15 < 10) {
+                mc.timer.timerSpeed = 7.25f
+            } else {
+            mc.timer.timerSpeed = 0.9f
+            }
         }
     }
 
