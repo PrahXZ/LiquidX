@@ -330,10 +330,11 @@ class KillAura : Module() {
             }
         }
 
-        if (blockTimingValue.equals("Both") ||
-            (blockTimingValue.equals("Pre") && event.eventState == EventState.PRE) ||
-            (blockTimingValue.equals("Post") && event.eventState == EventState.POST)
-        ) {
+        if (blockTimingValue.equals("Both") && !autoBlockValue.equals("Verus") ||
+                (autoBlockValue.equals("Verus") && event.eventState == EventState.PRE) ||
+                (blockTimingValue.equals("Pre") && event.eventState == EventState.PRE && !autoBlockValue.equals("Verus")) ||
+                (blockTimingValue.equals("Post") && event.eventState == EventState.POST && !autoBlockValue.equals("Verus"))
+                ) {
             if (packetSent && noBadPacketsValue.get()) {
                 return
             }
@@ -351,7 +352,7 @@ class KillAura : Module() {
                         stopBlocking()
                     }
                 }
-            } else if (autoBlockValue.equals("Verus") && discoveredTargets.isNotEmpty() && canBlock) {
+            } else if (autoBlockValue.equals("Verus") && discoveredTargets.isNotEmpty() && canBlock && !autoBlockPacketValue.equals("AfterAttack")) {
                 val target = this.target ?: discoveredTargets.first()
                 if (mc.thePlayer.getDistanceToEntityBox(target) <= maxRange) {
                     startBlocking(
@@ -1062,7 +1063,7 @@ class KillAura : Module() {
 
         // Start blocking after attack
         if (mc.thePlayer.isBlocking || (autoBlockValue.equals("Range") && canBlock)) {
-            if (autoBlockPacketValue.equals("AfterTick")) {
+            if (autoBlockPacketValue.equals("AfterTick") && !autoBlockValue.equals("Verus")) {
                 return
             }
 
@@ -1228,7 +1229,7 @@ class KillAura : Module() {
             return
         }
 
-        if (interact) {
+        if (interact && !autoBlockValue.equals("Verus")) {
             mc.netHandler.addToSendQueue(C02PacketUseEntity(interactEntity, interactEntity.positionVector))
             mc.netHandler.addToSendQueue(C02PacketUseEntity(interactEntity, C02PacketUseEntity.Action.INTERACT))
         }
