@@ -1164,7 +1164,6 @@ class Scaffold : Module() {
             "always", "dynamic" -> true
             "onground" -> mc.thePlayer.onGround
             "offground" -> !mc.thePlayer.onGround
-	    "hypixel" -> mc.thePlayer.onGround
             else -> false
         }
 
