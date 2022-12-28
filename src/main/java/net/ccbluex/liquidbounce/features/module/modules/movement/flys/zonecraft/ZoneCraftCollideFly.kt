@@ -19,8 +19,8 @@ import net.minecraft.util.BlockPos
 
 class ZoneCraftCollideFly: FlyMode("ZoneCraftCollide") {
     private val timer = FloatValue("${valuePrefix}Timer", 2f, 1f, 10f)
-    private val timerconfig = FloatValue("Timer-1", 0.9f,0f, 10f )
-    private val timerconfig2 = FloatValue("Timer-2", 7.5f, 0f, 10f)
+    private val timerconfig = FloatValue("Timer-1", 5f,0f, 10f )
+    private val timerconfig2 = FloatValue("Timer-2", 10f, 0f, 10f)
     private val TP = BoolValue("TP-Agressive", false)
     private val timer2 = BoolValue("Boost", true)
 
