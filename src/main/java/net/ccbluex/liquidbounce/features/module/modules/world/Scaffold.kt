@@ -87,6 +87,7 @@ class Scaffold : Module() {
 
     // Rotations
     private val rotationsValue = ListValue("Rotations", arrayOf("None", "Better", "Vanilla", "AAC", "Test1", "Test2", "Custom", "Advanced"), "AAC")
+    private val alwaysRotateValue = BoolValue("AlwaysRotate", true).displayable { !rotationsValue.equals("None") }
     private val towerrotationsValue = ListValue("TowerRotations", arrayOf("None", "Better", "Vanilla", "AAC", "Test1", "Test2", "Custom"), "AAC")
     private val advancedYawModeValue = ListValue("AdvancedYawRotations", arrayOf("Offset", "Static", "RoundStatic", "Vanilla", "Round", "MoveDirection", "OffsetMove"), "MoveDirection").displayable { rotationsValue.equals("Advanced") }
     private val advancedPitchModeValue = ListValue("AdvancedPitchRotations", arrayOf("Offset", "Static", "Vanilla"), "Static").displayable { rotationsValue.equals("Advanced") }
@@ -479,6 +480,11 @@ class Scaffold : Module() {
             }
         }
         if (towerStatus) move()
+
+        if(alwaysRotateValue.get() && lockRotation == null) {
+            val limitedRotation = RotationUtils.limitAngleChange(RotationUtils.serverRotation, Rotation(mc.thePlayer.rotationYaw-180, 83f), rotationSpeed)
+            RotationUtils.setTargetRotation(limitedRotation, 20)
+        }
 
         // Lock Rotation
         if (rotationsValue.get() != "None" && keepLengthValue.get()> 0 && lockRotation != null && silentRotationValue.get()) {
