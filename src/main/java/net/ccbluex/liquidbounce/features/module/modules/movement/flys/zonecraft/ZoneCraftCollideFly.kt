@@ -5,6 +5,7 @@ import net.ccbluex.liquidbounce.event.*
 import net.ccbluex.liquidbounce.features.module.modules.combat.KillAura
 import net.ccbluex.liquidbounce.features.module.modules.exploit.ABlink
 import net.ccbluex.liquidbounce.features.module.modules.movement.flys.FlyMode
+import net.ccbluex.liquidbounce.features.value.FloatValue
 import net.ccbluex.liquidbounce.ui.client.hud.element.elements.Notification
 import net.ccbluex.liquidbounce.ui.client.hud.element.elements.NotifyType
 import net.ccbluex.liquidbounce.utils.MovementUtils
@@ -16,6 +17,7 @@ import net.minecraft.util.AxisAlignedBB
 import net.minecraft.util.BlockPos
 
 class ZoneCraftCollideFly: FlyMode("ZoneCraftCollide") {
+    private val timer = FloatValue("${valuePrefix}Timer", 2f, 1f, 10f)
 
     override fun onEnable() {
         if(mc.thePlayer.posY % 1 != 0.0) {
@@ -24,7 +26,7 @@ class ZoneCraftCollideFly: FlyMode("ZoneCraftCollide") {
             return
         }
         LiquidBounce.moduleManager[ABlink::class.java]!!.state = true
-        mc.timer.timerSpeed = 2F;
+        mc.timer.timerSpeed = timer.get();
     }
 
     override fun onUpdate(event: UpdateEvent) {
