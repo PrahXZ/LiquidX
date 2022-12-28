@@ -34,10 +34,10 @@ class ZoneCraftCollideFly: FlyMode("ZoneCraftCollide") {
         }
         if (TP.get()) {
             timer2.value = false
-        }
-        if (timer2.get()) {
+        }   else {
             TP.value = false
         }
+
     }
 
     override fun onUpdate(event: UpdateEvent) {

@@ -113,7 +113,7 @@ class KillAura : Module() {
 
     // Bypass
     private val swingValue = ListValue("Swing", arrayOf("Normal", "Packet", "None"), "Normal")
-    private val attackTimingValue = ListValue("AttackTiming", arrayOf("All", "Pre", "Post", "Both"), "All")
+    private val attackTimingValue = ListValue("AttackTiming", arrayOf("All", "Pre", "Post", "Both"), "Pre")
     private val keepSprintValue = BoolValue("KeepSprint", true)
 
     private val noBadPacketsValue = BoolValue("NoBadPackets", false)

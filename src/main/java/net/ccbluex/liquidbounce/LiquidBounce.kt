@@ -44,7 +44,7 @@ object LiquidBounce {
     const val COLORED_NAME = "§3§lLiquidX §8» "
     const val NORMAL_NAME = "§3§lLiquidX §f§lClient"
     const val CLIENT_CREATOR = "Prah and Halflin"
-    const val CLIENT_WEBSITE = "Beta release 2.0"
+    const val CLIENT_WEBSITE = "PRE release b0.2"
     const val CLIENT_IP = "www.liquidx.net"
     
     @JvmField
@@ -64,7 +64,7 @@ object LiquidBounce {
 
     @JvmField
     val CLIENT_BRANCH = (gitInfo["git.branch"] ?: "unknown").let {
-        if (it == "main") "Nini's version" else it
+        if (it == "main") "Sofia's Version" else it
     }
 
     var isStarting = true
