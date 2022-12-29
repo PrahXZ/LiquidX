@@ -5,12 +5,14 @@
  */
 package net.ccbluex.liquidbounce.features.module.modules.world
 
+import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.event.EventTarget
 import net.ccbluex.liquidbounce.event.UpdateEvent
 import net.ccbluex.liquidbounce.features.module.EnumAutoDisableType
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
+import net.ccbluex.liquidbounce.features.module.modules.exploit.ABlink
 import net.ccbluex.liquidbounce.utils.MovementUtils
 import net.ccbluex.liquidbounce.features.value.BoolValue
 import net.ccbluex.liquidbounce.features.value.FloatValue
@@ -18,8 +20,13 @@ import net.ccbluex.liquidbounce.features.value.FloatValue
 @ModuleInfo(name = "Timer", category = ModuleCategory.WORLD, autoDisable = EnumAutoDisableType.RESPAWN)
 class Timer : Module() {
 
-    private val speedValue = FloatValue("Speed", 2F, 0.1F, 10F)
+    private val speedValue = FloatValue("Speed", 2F, 0.1F, 24F)
+    private val verusValue = BoolValue("Verus", false);
     private val onMoveValue = BoolValue("OnMove", true)
+
+    override fun onEnable() {
+        if(verusValue.get()) LiquidBounce.moduleManager[ABlink::class.java]!!.state = true
+    }
 
     override fun onDisable() {
         if (mc.thePlayer == null) {
@@ -27,6 +34,7 @@ class Timer : Module() {
         }
 
         mc.timer.timerSpeed = 1F
+        if(verusValue.get())  LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
     }
 
     @EventTarget
