@@ -39,6 +39,7 @@ import kotlin.concurrent.thread
 class InfiniteAura : Module() {
 
     private val modeValue = ListValue("Mode", arrayOf("Aura", "Click"), "Aura")
+    private val groundValue = BoolValue("Ground", true)
     private val targetsValue = IntegerValue("Targets", 3, 1, 10).displayable { modeValue.equals("Aura") }
     private val cpsValue = IntegerValue("CPS", 1, 1, 10)
     private val distValue = IntegerValue("Distance", 30, 20, 100)
@@ -130,12 +131,12 @@ class InfiniteAura : Module() {
         if(!force && lastDistance > 10) return false // pathfinding has failed
 
         path.forEach {
-            mc.netHandler.addToSendQueue(C04PacketPlayerPosition(it.xCoord, it.yCoord, it.zCoord, true))
+            mc.netHandler.addToSendQueue(C04PacketPlayerPosition(it.xCoord, it.yCoord, it.zCoord, groundValue.get()))
             points.add(it)
         }
 
         if(lastDistance > 3) {
-            mc.netHandler.addToSendQueue(C04PacketPlayerPosition(entity.posX, entity.posY, entity.posZ, true))
+            mc.netHandler.addToSendQueue(C04PacketPlayerPosition(entity.posX, entity.posY, entity.posZ, groundValue.get()))
         }
 
         if (swingValue.get()) {
@@ -145,9 +146,9 @@ class InfiniteAura : Module() {
 
         for (i in path.size - 1 downTo 0) {
             val vec = path[i]
-            mc.netHandler.addToSendQueue(C04PacketPlayerPosition(vec.xCoord, vec.yCoord, vec.zCoord, true))
+            mc.netHandler.addToSendQueue(C04PacketPlayerPosition(vec.xCoord, vec.yCoord, vec.zCoord, groundValue.get()))
         }
-        mc.netHandler.addToSendQueue(C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, true))
+        mc.netHandler.addToSendQueue(C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, groundValue.get()))
 
         return true
     }
@@ -171,7 +172,7 @@ class InfiniteAura : Module() {
             val z = event.packet.getZ() - mc.thePlayer.posZ
             val diff = Math.sqrt(x * x + y * y + z * z)
             event.cancelEvent() // cancel
-            PacketUtils.sendPacketNoEvent(C06PacketPlayerPosLook(event.packet.getX(), event.packet.getY(), event.packet.getZ(), event.packet.getYaw(), event.packet.getPitch(), true))
+            PacketUtils.sendPacketNoEvent(C06PacketPlayerPosLook(event.packet.getX(), event.packet.getY(), event.packet.getZ(), event.packet.getYaw(), event.packet.getPitch(), groundValue.get()))
 
         }
     }
