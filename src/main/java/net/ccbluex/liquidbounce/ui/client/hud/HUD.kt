@@ -40,6 +40,7 @@ open class HUD : MinecraftInstance() {
             text1.colorModeValue.set("AnotherRainbow")
             text1.rectValue.set("None")
             text1.fontValue.set(Fonts.fontTenacity35)
+            text1.scale = 1.75F
 
             return HUD()
                 .addElement(text1)
