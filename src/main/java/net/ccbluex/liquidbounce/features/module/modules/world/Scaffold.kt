@@ -381,8 +381,10 @@ class Scaffold : Module() {
 
         mc.thePlayer.isSprinting = canSprint
 	if (sprintValue.equals("Hypixel")) {
-	    mc.thePlayer.motionX *= 1.19
+        if(mc.thePlayer.onGround) {
+            mc.thePlayer.motionX *= 1.19
             mc.thePlayer.motionZ *= 1.19
+        }
 	}
 
         shouldGoDown = downValue.get() && GameSettings.isKeyDown(mc.gameSettings.keyBindSneak) && blocksAmount > 1

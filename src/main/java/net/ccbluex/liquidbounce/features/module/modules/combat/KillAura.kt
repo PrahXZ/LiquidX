@@ -11,6 +11,7 @@ import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.features.module.modules.client.HUD
+import net.ccbluex.liquidbounce.features.module.modules.client.Target
 import net.ccbluex.liquidbounce.features.module.modules.exploit.ABlink
 import net.ccbluex.liquidbounce.features.module.modules.movement.Fly
 import net.ccbluex.liquidbounce.features.module.modules.movement.TargetStrafe
@@ -136,8 +137,6 @@ class KillAura : Module() {
 
     // Raycast
     private val raycastValue = BoolValue("RayCast", true)
-    private val raycastIgnoredValue = BoolValue("RayCastIgnored", false).displayable { raycastValue.get() }
-    private val livingRaycastValue = BoolValue("LivingRayCast", true).displayable { raycastValue.get() }
 
     // Bypass
     private val aacValue = BoolValue("AAC", true)
@@ -145,9 +144,9 @@ class KillAura : Module() {
 
     // Rotations
     private val rotationModeValue = ListValue(
-        "RotationMode",
-        arrayOf("None", "LiquidBounce", "ForceCenter", "SmoothCenter", "SmoothLiquid", "LockView", "OldMatrix"),
-        "LiquidBounce"
+            "RotationMode",
+            arrayOf("None", "LiquidBounce", "ForceCenter", "SmoothCenter", "SmoothLiquid", "LockView", "OldMatrix"),
+            "LiquidBounce"
     )
     // TODO: RotationMode Bypass Intave
 
@@ -271,6 +270,11 @@ class KillAura : Module() {
         aabb
     }
 
+    private var targetMode: String? = null
+    private var priorityMode: String? = null
+    private var targetMob: Boolean? = false
+    private var targetInvisible: Boolean? = false
+
     /**
      * Enable kill aura module
      */
@@ -278,6 +282,18 @@ class KillAura : Module() {
         strictStrafe = false
         mc.thePlayer ?: return
         mc.theWorld ?: return
+
+        if(raycastValue.get()) {
+            targetMode = targetModeValue.get()
+            priorityMode = priorityValue.get()
+            targetMob = LiquidBounce.moduleManager[Target::class.java]!!.mobValue.get()
+            targetInvisible = LiquidBounce.moduleManager[Target::class.java]!!.invisibleValue.get()
+
+            targetModeValue.set("Single")
+            priorityValue.set("Distance")
+            if(!LiquidBounce.moduleManager[Target::class.java]!!.mobValue.get()) LiquidBounce.moduleManager[Target::class.java]!!.mobValue.set(true)
+            if(!LiquidBounce.moduleManager[Target::class.java]!!.invisibleValue.get()) LiquidBounce.moduleManager[Target::class.java]!!.invisibleValue.set(true)
+        }
 
         updateTarget()
     }
@@ -300,6 +316,13 @@ class KillAura : Module() {
         canSwing = false
         swingTimer.reset()
 
+        if(raycastValue.get()) {
+            targetModeValue.set(targetModeValue.get())
+            priorityValue.set(priorityValue.get())
+            LiquidBounce.moduleManager[Target::class.java]!!.mobValue.set(LiquidBounce.moduleManager[Target::class.java]!!.mobValue.get())
+            LiquidBounce.moduleManager[Target::class.java]!!.invisibleValue.set(LiquidBounce.moduleManager[Target::class.java]!!.invisibleValue.get())
+        }
+
         stopBlocking()
         RotationUtils.setTargetRotationReverse(RotationUtils.serverRotation, 0, 0)
     }
@@ -317,14 +340,14 @@ class KillAura : Module() {
         }
 
         if (attackTimingValue.equals("All") || attackTimingValue.equals("Both") ||
-            (attackTimingValue.equals("Pre") && event.eventState == EventState.PRE) ||
-            (attackTimingValue.equals("Post") && event.eventState == EventState.POST)
+                (attackTimingValue.equals("Pre") && event.eventState == EventState.PRE) ||
+                (attackTimingValue.equals("Post") && event.eventState == EventState.POST)
         ) {
             runAttackLoop()
         }
-        
+
         if (autoBlockValue.equals("Range") && event.eventState == EventState.POST && autoBlockPacketValue.equals("Hypixel")) {
-             if (mc.thePlayer.swingProgressInt == 1) {
+            if (mc.thePlayer.swingProgressInt == 1) {
                 mc.netHandler.addToSendQueue(C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN))
             } else if (mc.thePlayer.swingProgressInt == 2) {
                 mc.netHandler.addToSendQueue(C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()))
@@ -335,18 +358,18 @@ class KillAura : Module() {
                 (autoBlockValue.equals("Verus") && event.eventState == EventState.PRE) ||
                 (blockTimingValue.equals("Pre") && event.eventState == EventState.PRE && !autoBlockValue.equals("Verus")) ||
                 (blockTimingValue.equals("Post") && event.eventState == EventState.POST && !autoBlockValue.equals("Verus"))
-                ) {
+        ) {
             if (packetSent && noBadPacketsValue.get()) {
                 return
             }
             // AutoBlock
             if (autoBlockValue.equals("Range") && discoveredTargets.isNotEmpty() && (!autoBlockPacketValue.equals("AfterAttack")
-                        || discoveredTargets.any { mc.thePlayer.getDistanceToEntityBox(it) > maxRange }) && canBlock) {
+                            || discoveredTargets.any { mc.thePlayer.getDistanceToEntityBox(it) > maxRange }) && canBlock) {
                 val target = this.target ?: discoveredTargets.first()
                 if (mc.thePlayer.getDistanceToEntityBox(target) <= autoBlockRangeValue.get()) {
                     startBlocking(
-                        target,
-                        interactAutoBlockValue.get() && (mc.thePlayer.getDistanceToEntityBox(target) < maxRange)
+                            target,
+                            interactAutoBlockValue.get() && (mc.thePlayer.getDistanceToEntityBox(target) < maxRange)
                     )
                 } else {
                     if (!mc.thePlayer.isBlocking) {
@@ -452,7 +475,7 @@ class KillAura : Module() {
 
     fun update() {
         if (cancelRun || (noInventoryAttackValue.equals("CancelRun") && (mc.currentScreen is GuiContainer ||
-                    System.currentTimeMillis() - containerOpen < noInventoryDelayValue.get()))
+                        System.currentTimeMillis() - containerOpen < noInventoryDelayValue.get()))
         ) {
             return
         }
@@ -469,9 +492,9 @@ class KillAura : Module() {
         currentTarget = target
 
         if (!targetModeValue.equals("Switch") && (currentTarget != null && EntityUtils.isSelected(
-                currentTarget!!,
-                true
-            ))
+                        currentTarget!!,
+                        true
+                ))
         ) {
             target = currentTarget
         }
@@ -501,7 +524,7 @@ class KillAura : Module() {
         }
 
         if (noInventoryAttackValue.equals("CancelRun") && (mc.currentScreen is GuiContainer ||
-                    System.currentTimeMillis() - containerOpen < noInventoryDelayValue.get())
+                        System.currentTimeMillis() - containerOpen < noInventoryDelayValue.get())
         ) {
             target = null
             currentTarget = null
@@ -531,9 +554,9 @@ class KillAura : Module() {
         if (circleValue.get()) {
             GL11.glPushMatrix()
             GL11.glTranslated(
-                mc.thePlayer.lastTickPosX + (mc.thePlayer.posX - mc.thePlayer.lastTickPosX) * mc.timer.renderPartialTicks - mc.renderManager.renderPosX,
-                mc.thePlayer.lastTickPosY + (mc.thePlayer.posY - mc.thePlayer.lastTickPosY) * mc.timer.renderPartialTicks - mc.renderManager.renderPosY,
-                mc.thePlayer.lastTickPosZ + (mc.thePlayer.posZ - mc.thePlayer.lastTickPosZ) * mc.timer.renderPartialTicks - mc.renderManager.renderPosZ
+                    mc.thePlayer.lastTickPosX + (mc.thePlayer.posX - mc.thePlayer.lastTickPosX) * mc.timer.renderPartialTicks - mc.renderManager.renderPosX,
+                    mc.thePlayer.lastTickPosY + (mc.thePlayer.posY - mc.thePlayer.lastTickPosY) * mc.timer.renderPartialTicks - mc.renderManager.renderPosY,
+                    mc.thePlayer.lastTickPosZ + (mc.thePlayer.posZ - mc.thePlayer.lastTickPosZ) * mc.timer.renderPartialTicks - mc.renderManager.renderPosZ
             )
             GL11.glEnable(GL11.GL_BLEND)
             GL11.glEnable(GL11.GL_LINE_SMOOTH)
@@ -543,18 +566,18 @@ class KillAura : Module() {
 
             GL11.glLineWidth(circleThicknessValue.get())
             GL11.glColor4f(
-                circleRedValue.get().toFloat() / 255.0F,
-                circleGreenValue.get().toFloat() / 255.0F,
-                circleBlueValue.get().toFloat() / 255.0F,
-                circleAlphaValue.get().toFloat() / 255.0F
+                    circleRedValue.get().toFloat() / 255.0F,
+                    circleGreenValue.get().toFloat() / 255.0F,
+                    circleBlueValue.get().toFloat() / 255.0F,
+                    circleAlphaValue.get().toFloat() / 255.0F
             )
             GL11.glRotatef(90F, 1F, 0F, 0F)
             GL11.glBegin(GL11.GL_LINE_STRIP)
 
             for (i in 0..360 step 5) { // You can change circle accuracy  (60 - accuracy)
                 GL11.glVertex2f(
-                    cos(i * Math.PI / 180.0).toFloat() * rangeValue.get(),
-                    (sin(i * Math.PI / 180.0).toFloat() * rangeValue.get())
+                        cos(i * Math.PI / 180.0).toFloat() * rangeValue.get(),
+                        (sin(i * Math.PI / 180.0).toFloat() * rangeValue.get())
                 )
             }
 
@@ -587,19 +610,19 @@ class KillAura : Module() {
             when (markValue.get().lowercase()) {
                 "liquid" -> {
                     RenderUtils.drawPlatform(
-                        it,
-                        if (it.hurtTime <= 0) Color(37, 126, 255, 170) else Color(255, 0, 0, 170)
+                            it,
+                            if (it.hurtTime <= 0) Color(37, 126, 255, 170) else Color(255, 0, 0, 170)
                     )
                 }
                 "block" -> {
                     val bb = it.entityBoundingBox
                     it.entityBoundingBox = getAABB(it).expand(0.2, 0.2, 0.2)
                     RenderUtils.drawEntityBox(
-                        it,
-                        if (it.hurtTime <= 0) if (it == target) Color(255, 0, 0, 170) else Color(255, 0, 0, 170) else Color(255, 0, 0, 170),
-                        true,
-                        true,
-                        4f
+                            it,
+                            if (it.hurtTime <= 0) if (it == target) Color(255, 0, 0, 170) else Color(255, 0, 0, 170) else Color(255, 0, 0, 170),
+                            true,
+                            true,
+                            4f
                     )
                     it.entityBoundingBox = bb
                 }
@@ -626,23 +649,23 @@ class KillAura : Module() {
                     val radius = ((bb.maxX - bb.minX) + (bb.maxZ - bb.minZ)) * 0.5f
                     val height = bb.maxY - bb.minY
                     val x =
-                        it.lastTickPosX + (it.posX - it.lastTickPosX) * event.partialTicks - mc.renderManager.viewerPosX
+                            it.lastTickPosX + (it.posX - it.lastTickPosX) * event.partialTicks - mc.renderManager.viewerPosX
                     val y =
-                        (it.lastTickPosY + (it.posY - it.lastTickPosY) * event.partialTicks - mc.renderManager.viewerPosY) + height * drawPercent
+                            (it.lastTickPosY + (it.posY - it.lastTickPosY) * event.partialTicks - mc.renderManager.viewerPosY) + height * drawPercent
                     val z =
-                        it.lastTickPosZ + (it.posZ - it.lastTickPosZ) * event.partialTicks - mc.renderManager.viewerPosZ
+                            it.lastTickPosZ + (it.posZ - it.lastTickPosZ) * event.partialTicks - mc.renderManager.viewerPosZ
                     mc.entityRenderer.disableLightmap()
                     GL11.glLineWidth((radius * 8f).toFloat())
                     GL11.glBegin(GL11.GL_LINE_STRIP)
                     for (i in 0..360 step 10) {
                         RenderUtils.glColor(
-                            Color.getHSBColor(
-                                if (i < 180) {
-                                    HUD.rainbowStartValue.get() + (HUD.rainbowStopValue.get() - HUD.rainbowStartValue.get()) * (i / 180f)
-                                } else {
-                                    HUD.rainbowStartValue.get() + (HUD.rainbowStopValue.get() - HUD.rainbowStartValue.get()) * (-(i - 360) / 180f)
-                                }, 0.7f, 1.0f
-                            )
+                                Color.getHSBColor(
+                                        if (i < 180) {
+                                            HUD.rainbowStartValue.get() + (HUD.rainbowStopValue.get() - HUD.rainbowStartValue.get()) * (i / 180f)
+                                        } else {
+                                            HUD.rainbowStartValue.get() + (HUD.rainbowStopValue.get() - HUD.rainbowStartValue.get()) * (-(i - 360) / 180f)
+                                        }, 0.7f, 1.0f
+                                )
                         )
                         GL11.glVertex3d(x - sin(i * Math.PI / 180F) * radius, y, z + cos(i * Math.PI / 180F) * radius)
                     }
@@ -654,7 +677,7 @@ class KillAura : Module() {
                     GL11.glEnable(GL11.GL_TEXTURE_2D)
                     GL11.glPopMatrix()
                 }
-                "jello" -> { 
+                "jello" -> {
                     val drawTime = (System.currentTimeMillis() % 2000).toInt()
                     val drawMode=drawTime>1000
                     var drawPercent=drawTime/1000.0
@@ -699,14 +722,14 @@ class KillAura : Module() {
                         }
                         val firstPoint=points[0]
                         GL11.glVertex3d(
-                            firstPoint.xCoord - mc.renderManager.viewerPosX, firstPoint.yCoord - moveFace - min - mc.renderManager.viewerPosY,
-                            firstPoint.zCoord - mc.renderManager.viewerPosZ
+                                firstPoint.xCoord - mc.renderManager.viewerPosX, firstPoint.yCoord - moveFace - min - mc.renderManager.viewerPosY,
+                                firstPoint.zCoord - mc.renderManager.viewerPosZ
                         )
                         GL11.glColor4f(1F, 1F, 1F, 0.7F*(i/20F))
                         for (vec3 in points) {
                             GL11.glVertex3d(
-                                vec3.xCoord - mc.renderManager.viewerPosX, vec3.yCoord - moveFace - min - mc.renderManager.viewerPosY,
-                                vec3.zCoord - mc.renderManager.viewerPosZ
+                                    vec3.xCoord - mc.renderManager.viewerPosX, vec3.yCoord - moveFace - min - mc.renderManager.viewerPosY,
+                                    vec3.zCoord - mc.renderManager.viewerPosZ
                             )
                         }
                         GL11.glColor4f(0F,0F,0F,0F)
@@ -745,11 +768,11 @@ class KillAura : Module() {
                     val radius = ((bb.maxX - bb.minX) + (bb.maxZ - bb.minZ)) * 0.5f
                     val height = bb.maxY - bb.minY
                     val x =
-                        it.lastTickPosX + (it.posX - it.lastTickPosX) * event.partialTicks - mc.renderManager.viewerPosX
+                            it.lastTickPosX + (it.posX - it.lastTickPosX) * event.partialTicks - mc.renderManager.viewerPosX
                     val y =
-                        (it.lastTickPosY + (it.posY - it.lastTickPosY) * event.partialTicks - mc.renderManager.viewerPosY) + height * drawPercent
+                            (it.lastTickPosY + (it.posY - it.lastTickPosY) * event.partialTicks - mc.renderManager.viewerPosY) + height * drawPercent
                     val z =
-                        it.lastTickPosZ + (it.posZ - it.lastTickPosZ) * event.partialTicks - mc.renderManager.viewerPosZ
+                            it.lastTickPosZ + (it.posZ - it.lastTickPosZ) * event.partialTicks - mc.renderManager.viewerPosZ
                     val eased = (height / 3) * (if (drawPercent > 0.5) {
                         1 - drawPercent
                     } else {
@@ -761,11 +784,11 @@ class KillAura : Module() {
                     })
                     for (i in 5..360 step 5) {
                         val color = Color.getHSBColor(
-                            if (i < 180) {
-                                HUD.rainbowStartValue.get() + (HUD.rainbowStopValue.get() - HUD.rainbowStartValue.get()) * (i / 180f)
-                            } else {
-                                HUD.rainbowStartValue.get() + (HUD.rainbowStopValue.get() - HUD.rainbowStartValue.get()) * (-(i - 360) / 180f)
-                            }, 0.7f, 1.0f
+                                if (i < 180) {
+                                    HUD.rainbowStartValue.get() + (HUD.rainbowStopValue.get() - HUD.rainbowStartValue.get()) * (i / 180f)
+                                } else {
+                                    HUD.rainbowStartValue.get() + (HUD.rainbowStopValue.get() - HUD.rainbowStartValue.get()) * (-(i - 360) / 180f)
+                                }, 0.7f, 1.0f
                         )
                         val x1 = x - sin(i * Math.PI / 180F) * radius
                         val z1 = z + cos(i * Math.PI / 180F) * radius
@@ -810,9 +833,9 @@ class KillAura : Module() {
                     val side = 4
                     GL11.glPushMatrix()
                     GL11.glTranslated(
-                        it.lastTickPosX + (it.posX - it.lastTickPosX) * event.partialTicks - mc.renderManager.viewerPosX,
-                        (it.lastTickPosY + (it.posY - it.lastTickPosY) * event.partialTicks - mc.renderManager.viewerPosY) + it.height * 1.1,
-                        it.lastTickPosZ + (it.posZ - it.lastTickPosZ) * event.partialTicks - mc.renderManager.viewerPosZ
+                            it.lastTickPosX + (it.posX - it.lastTickPosX) * event.partialTicks - mc.renderManager.viewerPosX,
+                            (it.lastTickPosY + (it.posY - it.lastTickPosY) * event.partialTicks - mc.renderManager.viewerPosY) + it.height * 1.1,
+                            it.lastTickPosZ + (it.posZ - it.lastTickPosZ) * event.partialTicks - mc.renderManager.viewerPosZ
                     )
                     GL11.glRotatef(-it.width, 0.0f, 1.0f, 0.0f)
                     GL11.glRotatef((mc.thePlayer.ticksExisted + mc.timer.renderPartialTicks) * 5, 0f, 1f, 0f)
@@ -945,9 +968,9 @@ class KillAura : Module() {
 
         for (entity in mc.theWorld.loadedEntityList) {
             if (entity !is EntityLivingBase || !EntityUtils.isSelected(
-                    entity,
-                    true
-                ) || (switchMode && prevTargetEntities.contains(entity.entityId))
+                            entity,
+                            true
+                    ) || (switchMode && prevTargetEntities.contains(entity.entityId))
             ) {
                 continue
             }
@@ -1032,11 +1055,11 @@ class KillAura : Module() {
         // Stop blocking
         if (!autoBlockPacketValue.equals("Vanilla") && (mc.thePlayer.isBlocking || blockingStatus)) {
             mc.netHandler.addToSendQueue(
-                C07PacketPlayerDigging(
-                    C07PacketPlayerDigging.Action.RELEASE_USE_ITEM,
-                    BlockPos.ORIGIN,
-                    EnumFacing.DOWN
-                )
+                    C07PacketPlayerDigging(
+                            C07PacketPlayerDigging.Action.RELEASE_USE_ITEM,
+                            BlockPos.ORIGIN,
+                            EnumFacing.DOWN
+                    )
             )
             blockingStatus = false
             if (noBadPacketsValue.get()) {
@@ -1129,23 +1152,23 @@ class KillAura : Module() {
 
         val rotation = when (rotationModeValue.get()) {
             "LiquidBounce", "ForceCenter" -> RotationUtils.limitAngleChange(
-                RotationUtils.serverRotation, directRotation,
-                (Math.random() * (maxTurnSpeedValue.get() - minTurnSpeedValue.get()) + minTurnSpeedValue.get()).toFloat()
+                    RotationUtils.serverRotation, directRotation,
+                    (Math.random() * (maxTurnSpeedValue.get() - minTurnSpeedValue.get()) + minTurnSpeedValue.get()).toFloat()
             )
             "LockView" -> RotationUtils.limitAngleChange(
-                RotationUtils.serverRotation,
-                directRotation,
-                (180.0).toFloat()
+                    RotationUtils.serverRotation,
+                    directRotation,
+                    (180.0).toFloat()
             )
             "SmoothCenter", "SmoothLiquid", "OldMatrix" -> RotationUtils.limitAngleChange(
-                RotationUtils.serverRotation,
-                directRotation,
-                (calculateSpeed).toFloat()
+                    RotationUtils.serverRotation,
+                    directRotation,
+                    (calculateSpeed).toFloat()
             )
             "Test" -> RotationUtils.limitAngleChange(
-                RotationUtils.serverRotation,
-                directRotation,
-                (calculateSpeed).toFloat()
+                    RotationUtils.serverRotation,
+                    directRotation,
+                    (calculateSpeed).toFloat()
             )
             else -> return true
         }
@@ -1154,9 +1177,9 @@ class KillAura : Module() {
             if (rotationRevTickValue.get() > 0 && rotationRevValue.get()) {
                 if (keepDirectionValue.get()) {
                     RotationUtils.setTargetRotationReverse(
-                        rotation,
-                        keepDirectionTickValue.get(),
-                        rotationRevTickValue.get()
+                            rotation,
+                            keepDirectionTickValue.get(),
+                            rotationRevTickValue.get()
                     )
                 } else {
                     RotationUtils.setTargetRotationReverse(rotation, 1, rotationRevTickValue.get())
@@ -1189,29 +1212,7 @@ class KillAura : Module() {
         }
 
         val reach = maxRange.toDouble()
-
-        if (raycastValue.get()) {
-            val raycastedEntity = RaycastUtils.raycastEntity(reach) {
-                (!livingRaycastValue.get() || it is EntityLivingBase && it !is EntityArmorStand) &&
-                        (EntityUtils.isSelected(
-                            it,
-                            true
-                        ) || raycastIgnoredValue.get() || aacValue.get() && mc.theWorld.getEntitiesWithinAABBExcludingEntity(
-                            it,
-                            it.entityBoundingBox
-                        ).isNotEmpty())
-            }
-
-            if (raycastValue.get() && raycastedEntity is EntityLivingBase &&
-                !EntityUtils.isFriend(raycastedEntity)
-            ) {
-                currentTarget = raycastedEntity
-            }
-
-            hitable = if (!rotationModeValue.equals("None")) currentTarget == raycastedEntity else true
-        } else {
-            hitable = RotationUtils.isFaced(currentTarget, reach)
-        }
+        hitable = RotationUtils.isFaced(currentTarget, reach)
     }
 
     /**
@@ -1249,11 +1250,11 @@ class KillAura : Module() {
                 return
             }
             mc.netHandler.addToSendQueue(
-                C07PacketPlayerDigging(
-                    C07PacketPlayerDigging.Action.RELEASE_USE_ITEM,
-                    if (MovementUtils.isMoving()) BlockPos(-1, -1, -1) else BlockPos.ORIGIN,
-                    EnumFacing.DOWN
-                )
+                    C07PacketPlayerDigging(
+                            C07PacketPlayerDigging.Action.RELEASE_USE_ITEM,
+                            if (MovementUtils.isMoving()) BlockPos(-1, -1, -1) else BlockPos.ORIGIN,
+                            EnumFacing.DOWN
+                    )
             )
             blockingStatus = false
             packetSent = true
@@ -1312,24 +1313,24 @@ class KillAura : Module() {
         get() = max(rangeValue.get(), throughWallsRangeValue.get())
 
     private fun getRange(entity: Entity) =
-        (if (mc.thePlayer.getDistanceToEntityBox(entity) >= throughWallsRangeValue.get()) rangeValue.get() else throughWallsRangeValue.get()) - if (mc.thePlayer.isSprinting) rangeSprintReducementValue.get() else 0F
+            (if (mc.thePlayer.getDistanceToEntityBox(entity) >= throughWallsRangeValue.get()) rangeValue.get() else throughWallsRangeValue.get()) - if (mc.thePlayer.isSprinting) rangeSprintReducementValue.get() else 0F
 
     /**
      * HUD Tag
      */
 
-        override val tag: String
-            get() = targetModeValue.get() + ", " + autoBlockValue.get() + ", " + rangeValue.get() + ", " + minCpsValue.get() + " - " + maxCpsValue.get()
+    override val tag: String
+        get() = targetModeValue.get() + ", " + autoBlockValue.get() + ", " + rangeValue.get() + ", " + minCpsValue.get() + " - " + maxCpsValue.get()
 
 
-/*     private val simpleArrayList = BoolValue("SimpleArrayListTag", false)
-    init{ if (simpleArrayList.equals(true)) {
-            var tagVal = get() = "${targetModeValue.get()}, ${priorityValue.get()}, " + "${minCpsValue.get()}-${maxCpsValue.get()}, " + "$maxRange${ if (!autoBlockValue.equals("Off")) { "-${autoBlockRangeValue.get()}"} else {""}}-${discoverRangeValue.get()}"
-        } else {
-            var tagVal = get() = targetModeValue.get()
+    /*     private val simpleArrayList = BoolValue("SimpleArrayListTag", false)
+        init{ if (simpleArrayList.equals(true)) {
+                var tagVal = get() = "${targetModeValue.get()}, ${priorityValue.get()}, " + "${minCpsValue.get()}-${maxCpsValue.get()}, " + "$maxRange${ if (!autoBlockValue.equals("Off")) { "-${autoBlockRangeValue.get()}"} else {""}}-${discoverRangeValue.get()}"
+            } else {
+                var tagVal = get() = targetModeValue.get()
+            }
         }
-    }
-        override val tag: String
-            get() = tagVal   
-*/            
+            override val tag: String
+                get() = tagVal
+    */
 }

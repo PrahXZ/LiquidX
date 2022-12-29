@@ -165,14 +165,14 @@ class InfiniteAura : Module() {
             val capabilities = PlayerCapabilities()
             capabilities.allowFlying = true
             mc.netHandler.addToSendQueue(C13PacketPlayerAbilities(capabilities)) // Packet C13
-                    
+
             val x = event.packet.getX() - mc.thePlayer.posX
             val y = event.packet.getY() - mc.thePlayer.posY
             val z = event.packet.getZ() - mc.thePlayer.posZ
             val diff = Math.sqrt(x * x + y * y + z * z)
             event.cancelEvent() // cancel
             PacketUtils.sendPacketNoEvent(C06PacketPlayerPosLook(event.packet.getX(), event.packet.getY(), event.packet.getZ(), event.packet.getYaw(), event.packet.getPitch(), true))
-                        
+
         }
     }
 
