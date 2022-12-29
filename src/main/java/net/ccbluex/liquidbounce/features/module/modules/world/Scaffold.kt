@@ -126,6 +126,7 @@ class Scaffold : Module() {
 
     // Game
     private val timerValue = FloatValue("Timer", 1f, 0.1f, 5f)
+    private val motionResetValue = ListValue("MotionReset", arrayOf("OFF", "OnEnable", "OnDisable"), "OFF")
     private val motionSpeedEnabledValue = BoolValue("MotionSpeedSet", false)
     private val motionSpeedValue = FloatValue("MotionSpeed", 0.1f, 0.05f, 1f).displayable { motionSpeedEnabledValue.get() }
     private val speedModifierValue = FloatValue("SpeedModifier", 1f, 0f, 2f)
@@ -254,9 +255,13 @@ class Scaffold : Module() {
         lastGroundY = mc.thePlayer.posY.toInt()
         lastPlace = 2
         clickDelay = TimeUtils.randomDelay(extraClickMinDelayValue.get(), extraClickMaxDelayValue.get())
-	delayTimer.reset()
-	zitterTimer.reset()
-	clickTimer.reset()
+	    delayTimer.reset()
+	    zitterTimer.reset()
+	    clickTimer.reset()
+        if(motionResetValue.equals("OnEnable")) {
+            mc.thePlayer.motionX = 0.0
+            mc.thePlayer.motionZ = 0.0
+        }
     }
 
     /**
@@ -874,6 +879,10 @@ class Scaffold : Module() {
         shouldGoDown = false
         RotationUtils.reset()
         if (slot != mc.thePlayer.inventory.currentItem) mc.netHandler.addToSendQueue(C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem))
+        if(motionResetValue.equals("OnDisable")) {
+            mc.thePlayer.motionX = 0.0
+            mc.thePlayer.motionZ = 0.0
+        }
     }
 
     /**
