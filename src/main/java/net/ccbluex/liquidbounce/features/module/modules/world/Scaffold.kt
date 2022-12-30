@@ -7,10 +7,12 @@ package net.ccbluex.liquidbounce.features.module.modules.world
 
 import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.event.*
+import net.ccbluex.liquidbounce.features.module.modules.exploit.ABlink
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.features.module.modules.movement.Speed
+import net.ccbluex.liquidbounce.features.module.modules.movement.flys.other.UniversoCraftFly
 import net.ccbluex.liquidbounce.injection.access.StaticStorage
 import net.ccbluex.liquidbounce.ui.i18n.LanguageManager
 import net.ccbluex.liquidbounce.utils.*
@@ -245,8 +247,11 @@ class Scaffold : Module() {
     private var doSpoof = false
 
     //Universo
-    private val speed1 = 0.9f
-    private val speed2 = 1.1f
+    private val speed1 = 0.83f
+    private val speed2 = 0.9f
+    private val speed3 = 1.1f
+    private val speed4 = 1.4f
+    private val speed5 = 1.3f
     private var wasTimer = false
 
     /**
@@ -373,15 +378,29 @@ class Scaffold : Module() {
                     speedModifierValue.value = speedModifierValue.get()
             }
                 "universocraft" -> {
-                    if(mc.thePlayer.ticksExisted % 15 < 10) {
+                    if(mc.thePlayer.ticksExisted % 20 < 10) {
                         speedModifierValue.set(speed1)
+                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
                         mc.timer.timerSpeed = 1f
                     } else {
                         speedModifierValue.set(speed2)
+                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
                         mc.timer.timerSpeed = 0.9f
                     }
+                    if(mc.thePlayer.ticksExisted % 15 < 10) {
+                        mc.timer.timerSpeed = 0.9f
+                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
+                        speedModifierValue.set(speed3)
+                    }
+                    if(mc.thePlayer.ticksExisted % 30 < 10) {
+                        mc.timer.timerSpeed = 0.8f
+                        speedModifierValue.set (speed4)
+                    }
+                    if(mc.thePlayer.ticksExisted % 25 < 10) {
+                        mc.timer.timerSpeed = 0.8f
+                        speedModifierValue.set (speed5)
+                    }
                 }
-
             }
             when (extraClickValue.get().lowercase()) {
                 "emptyc08" -> sendPacket(C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getStackInSlot(slot)))
@@ -902,6 +921,7 @@ class Scaffold : Module() {
      */
     override fun onDisable() {
         // tolleyStayTick=999
+        LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
         if (mc.thePlayer == null) return
         if (!GameSettings.isKeyDown(mc.gameSettings.keyBindSneak)) {
             mc.gameSettings.keyBindSneak.pressed = false
@@ -913,7 +933,7 @@ class Scaffold : Module() {
             }
 
             "universocraft" -> {
-                speedModifierValue.set(0.90f)
+                speedModifierValue.set(0.85f)
 
             }
         }
