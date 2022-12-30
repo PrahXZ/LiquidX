@@ -35,8 +35,6 @@ import net.minecraft.client.gui.inventory.GuiInventory
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.item.EntityArmorStand
-import net.minecraft.entity.monster.EntityZombie
 import net.minecraft.item.ItemAxe
 import net.minecraft.item.ItemPickaxe
 import net.minecraft.item.ItemSword
@@ -138,7 +136,6 @@ class KillAura : Module() {
 
     // Raycast
     private val raycastValue = BoolValue("RayCast", false)
-    private val raycastAntiBotValue = BoolValue("RayCast-BuzzAntiBot", false).displayable { raycastValue.get() }
 
     // Bypass
     private val aacValue = BoolValue("AAC", true)
@@ -276,8 +273,6 @@ class KillAura : Module() {
     private var priorityMode: String? = null
     private var targetMob: Boolean? = false
     private var targetInvisible: Boolean? = false
-
-    private var entityList: MutableList<Entity>? = null
 
     /**
      * Enable kill aura module
@@ -478,16 +473,6 @@ class KillAura : Module() {
     }
 
     fun update() {
-        if(raycastAntiBotValue.get()) {
-            entityList = mc.theWorld.loadedEntityList
-            (entityList as MutableList<Entity>?)?.forEach {
-                if(it is EntityZombie) {
-                    if(mc.thePlayer.getDistanceToEntity(it) > 38) {
-                        mc.theWorld.removeEntity(it)
-                    }
-                }
-            }
-        }
         if (cancelRun || (noInventoryAttackValue.equals("CancelRun") && (mc.currentScreen is GuiContainer ||
                         System.currentTimeMillis() - containerOpen < noInventoryDelayValue.get()))
         ) {

@@ -68,6 +68,7 @@ class Scaffold : Module() {
 
     // AutoBlock
     private val autoBlockValue = ListValue("AutoBlock", arrayOf("Spoof", "LiteSpoof", "Switch", "OFF"), "LiteSpoof")
+    private val switchOnEnableValue = BoolValue("SwitchOnEnable", false).displayable { autoBlockValue.equals("Switch") }
 
     // Basic stuff
     private val sprintValue = ListValue("Sprint", arrayOf("Always", "Dynamic", "OnGround", "OffGround", "Hypixel", "OFF"), "Always")
@@ -264,6 +265,16 @@ class Scaffold : Module() {
         if(motionResetValue.equals("OnEnable")) {
             mc.thePlayer.motionX = 0.0
             mc.thePlayer.motionZ = 0.0
+        }
+        if(switchOnEnableValue.get()) {
+            if (autoBlockValue.equals("Switch")) {
+                var blockSlot = -1
+                if (mc.thePlayer.heldItem == null || !(mc.thePlayer.heldItem.item is ItemBlock && !InventoryUtils.isBlockListBlock(mc.thePlayer.heldItem.item as ItemBlock))) {
+                    blockSlot = InventoryUtils.findAutoBlockBlock()
+                    if (blockSlot == -1) return
+                    mc.thePlayer.inventory.currentItem = blockSlot - 36
+                }
+            }
         }
     }
 
@@ -839,7 +850,7 @@ class Scaffold : Module() {
             if (autoBlockValue.equals("off")) return
             blockSlot = InventoryUtils.findAutoBlockBlock()
             if (blockSlot == -1) return
-            if (autoBlockValue.equals("LiteSpoof") || autoBlockValue.equals("Spoof")) {
+            if ((autoBlockValue.equals("LiteSpoof") || autoBlockValue.equals("Spoof"))) {
                 mc.netHandler.addToSendQueue(C09PacketHeldItemChange(blockSlot - 36))
             } else {
                 mc.thePlayer.inventory.currentItem = blockSlot - 36

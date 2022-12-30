@@ -17,8 +17,10 @@ import net.ccbluex.liquidbounce.features.value.BoolValue
 import net.ccbluex.liquidbounce.features.value.FloatValue
 import net.ccbluex.liquidbounce.features.value.IntegerValue
 import net.ccbluex.liquidbounce.features.value.ListValue
+import net.ccbluex.liquidbounce.script.api.global.Chat
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
+import net.minecraft.entity.monster.EntityZombie
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.network.play.server.*
 import net.minecraft.world.WorldSettings
@@ -27,28 +29,29 @@ import java.util.*
 @ModuleInfo(name = "AntiBot", category = ModuleCategory.MISC)
 object AntiBot : Module() {
 
-    private val tabValue = BoolValue("Tab", true)
+    private val buzzValue = BoolValue("BuzzZombies", true)
+    private val tabValue = BoolValue("Tab", false)
     private val tabModeValue = ListValue("TabMode", arrayOf("Equals", "Contains"), "Contains").displayable { tabValue.get() }
-    private val entityIDValue = BoolValue("EntityID", true)
+    private val entityIDValue = BoolValue("EntityID", false)
     private val colorValue = BoolValue("Color", false)
     private val livingTimeValue = BoolValue("LivingTime", false)
     private val livingTimeTicksValue = IntegerValue("LivingTimeTicks", 40, 1, 200).displayable { livingTimeValue.get() }
-    private val groundValue = BoolValue("Ground", true)
+    private val groundValue = BoolValue("Ground", false)
     private val airValue = BoolValue("Air", false)
-    private val invalidGroundValue = BoolValue("InvalidGround", true)
+    private val invalidGroundValue = BoolValue("InvalidGround", false)
     private val swingValue = BoolValue("Swing", false)
     private val healthValue = BoolValue("Health", false)
-    private val derpValue = BoolValue("Derp", true)
+    private val derpValue = BoolValue("Derp", false)
     private val wasInvisibleValue = BoolValue("WasInvisible", false)
-    private val validNameValue = BoolValue("ValidName", true)
+    private val validNameValue = BoolValue("ValidName", false)
     private val hiddenNameValue = BoolValue("HiddenName", false)
     private val armorValue = BoolValue("Armor", false)
     private val pingValue = BoolValue("Ping", false)
     private val needHitValue = BoolValue("NeedHit", false)
     private val noClipValue = BoolValue("NoClip", false)
     private val czechHekValue = BoolValue("CzechMatrix", false)
-    private val czechHekPingCheckValue = BoolValue("PingCheck", true).displayable { czechHekValue.get() }
-    private val czechHekGMCheckValue = BoolValue("GamemodeCheck", true).displayable { czechHekValue.get() }
+    private val czechHekPingCheckValue = BoolValue("PingCheck", false).displayable { czechHekValue.get() }
+    private val czechHekGMCheckValue = BoolValue("GamemodeCheck", false).displayable { czechHekValue.get() }
     private val reusedEntityIdValue = BoolValue("ReusedEntityId", false)
     private val spawnInCombatValue = BoolValue("SpawnInCombat", false)
     private val duplicateInWorldValue = BoolValue("DuplicateInWorld", false)
@@ -79,10 +82,17 @@ object AntiBot : Module() {
     private val hasRemovedEntities = mutableListOf<Int>()
     private val regex = Regex("\\w{3,16}")
     private var wasAdded = mc.thePlayer != null
+    private var entityList = mutableListOf<Entity>()
 
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
         if (mc.thePlayer == null || mc.theWorld == null) return
+        entityList = mc.theWorld.getLoadedEntityList()
+        entityList.forEach {
+            if(it is EntityZombie && mc.thePlayer.getDistanceToEntity(it) > 60) {
+                mc.theWorld.removeEntity(it)
+            }
+        }
         if (removeFromWorld.get() && mc.thePlayer.ticksExisted > 0 && mc.thePlayer.ticksExisted % removeIntervalValue.get() == 0) {
             val ent: MutableList<EntityPlayer> = ArrayList()
             for (entity in mc.theWorld.playerEntities) {

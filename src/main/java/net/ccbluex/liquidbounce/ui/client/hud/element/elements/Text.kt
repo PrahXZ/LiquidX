@@ -49,7 +49,7 @@ class Text(
         val NO_DECIMAL_FORMAT = DecimalFormat("#")
     }
 
-    val displayString = TextValue("DisplayText", "")
+    val displayString = TextValue("DisplayText", "Text")
     private val redValue = IntegerValue("Red", 255, 0, 255)
     private val greenValue = IntegerValue("Green", 255, 0, 255)
     private val blueValue = IntegerValue("Blue", 255, 0, 255)
