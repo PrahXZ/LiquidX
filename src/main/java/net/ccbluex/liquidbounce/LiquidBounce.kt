@@ -64,7 +64,7 @@ object LiquidBounce {
 
     @JvmField
     val CLIENT_BRANCH = (gitInfo["git.branch"] ?: "unknown").let {
-        if (it == "main") "Sofia's Version" else it
+        if (it == "main") "Genesis" else it
     }
 
     var isStarting = true

@@ -89,7 +89,7 @@ object AntiBot : Module() {
         if (mc.thePlayer == null || mc.theWorld == null) return
         entityList = mc.theWorld.getLoadedEntityList()
         entityList.forEach {
-            if(it is EntityZombie && mc.thePlayer.getDistanceToEntity(it) > 60) {
+            if(it is EntityZombie && mc.thePlayer.getDistanceToEntity(it) > 38) {
                 mc.theWorld.removeEntity(it)
             }
         }
