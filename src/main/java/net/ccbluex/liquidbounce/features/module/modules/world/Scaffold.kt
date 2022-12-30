@@ -87,6 +87,7 @@ class Scaffold : Module() {
 
     // Rotations
     private val rotationsValue = ListValue("Rotations", arrayOf("None", "Better", "Vanilla", "AAC", "Test1", "Test2", "Custom", "Advanced"), "AAC")
+    private val bypassmodeValue = ListValue("BypassMode", arrayOf("None", "Universocraft"), "None")
     private val alwaysRotateValue = BoolValue("AlwaysRotate", true).displayable { !rotationsValue.equals("None") }
     private val towerrotationsValue = ListValue("TowerRotations", arrayOf("None", "Better", "Vanilla", "AAC", "Test1", "Test2", "Custom"), "AAC")
     private val advancedYawModeValue = ListValue("AdvancedYawRotations", arrayOf("Offset", "Static", "RoundStatic", "Vanilla", "Round", "MoveDirection", "OffsetMove"), "MoveDirection").displayable { rotationsValue.equals("Advanced") }
@@ -160,7 +161,7 @@ class Scaffold : Module() {
     // Safety
     private val sameYValue = ListValue("SameY", arrayOf("Simple", "AutoJump", "WhenSpeed", "JumpUpY", "Universocraft",  "OFF"), "WhenSpeed")
     private val safeWalkValue = ListValue("SafeWalk", arrayOf("Ground", "Air", "OFF"), "OFF")
-    private val hitableCheckValue = ListValue("HitableCheck", arrayOf("Simple", "Strict", "OFF"), "Simple")
+    private val hitableCheckValue = ListValue("HitableCheck", arrayOf("Simple", "Random", "Strict", "OFF"), "Simple")
 
     // Extra click
     private val extraClickValue = ListValue("ExtraClick", arrayOf("EmptyC08", "AfterPlace", "RayTrace", "OFF"), "OFF")
@@ -243,6 +244,8 @@ class Scaffold : Module() {
     private var doSpoof = false
 
     //Universo
+    private val speed1 = 0.9f
+    private val speed2 = 1.1f
     private var wasTimer = false
 
     /**
@@ -353,6 +356,21 @@ class Scaffold : Module() {
                     mc.netHandler.addToSendQueue(c08)
                 }
                 mc.netHandler.addToSendQueue(c08)
+            }
+            when (bypassmodeValue.get().lowercase()) {
+                "none" -> {
+                    speedModifierValue.value = speedModifierValue.get()
+            }
+                "universocraft" -> {
+                    if(mc.thePlayer.ticksExisted % 15 < 10) {
+                        speedModifierValue.set(speed1)
+                        mc.timer.timerSpeed = 1f
+                    } else {
+                        speedModifierValue.set(speed2)
+                        mc.timer.timerSpeed = 0.9f
+                    }
+                }
+
             }
             when (extraClickValue.get().lowercase()) {
                 "emptyc08" -> sendPacket(C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getStackInSlot(slot)))
@@ -794,9 +812,15 @@ class Scaffold : Module() {
 
         if (!rotationsValue.equals("None")) {
             val rayTraceInfo = mc.thePlayer.rayTraceWithServerSideRotation(5.0)
+            val rayTraceInfo2 = mc.thePlayer.rayTraceWithServerSideRotation(20.0)
             when (hitableCheckValue.get().lowercase()) {
                 "simple" -> {
                     if (!rayTraceInfo.blockPos.equals(targetPlace!!.blockPos)) {
+                        return
+                    }
+                }
+                "random" -> {
+                    if (!rayTraceInfo2.blockPos.equals(targetPlace!!.blockPos)) {
                         return
                     }
                 }
@@ -872,9 +896,20 @@ class Scaffold : Module() {
             mc.gameSettings.keyBindSneak.pressed = false
             if (eagleSneaking) mc.netHandler.addToSendQueue(C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SNEAKING))
         }
+        when (bypassmodeValue.get().lowercase()) {
+            "none" -> {
+                speedModifierValue.value = speedModifierValue.get()
+            }
+
+            "universocraft" -> {
+                speedModifierValue.set(0.90f)
+
+            }
+        }
         if (!GameSettings.isKeyDown(mc.gameSettings.keyBindRight)) mc.gameSettings.keyBindRight.pressed = false
         if (!GameSettings.isKeyDown(mc.gameSettings.keyBindLeft)) mc.gameSettings.keyBindLeft.pressed = false
         lockRotation = null
+
         mc.timer.timerSpeed = 1f
         shouldGoDown = false
         RotationUtils.reset()

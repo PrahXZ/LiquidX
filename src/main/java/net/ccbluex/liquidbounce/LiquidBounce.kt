@@ -44,7 +44,7 @@ object LiquidBounce {
     const val COLORED_NAME = "§3§lLiquidX §8» "
     const val NORMAL_NAME = "§3§lLiquidX §f§lClient"
     const val CLIENT_CREATOR = "Prah and Halflin"
-    const val CLIENT_WEBSITE = "PRE release b0.2"
+    const val CLIENT_WEBSITE = "PRE Release b0.3"
     const val CLIENT_IP = "www.liquidx.net"
     
     @JvmField
