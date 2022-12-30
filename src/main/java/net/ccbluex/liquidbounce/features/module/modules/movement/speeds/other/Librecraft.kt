@@ -5,6 +5,7 @@ import net.ccbluex.liquidbounce.event.PacketEvent
 import net.ccbluex.liquidbounce.event.UpdateEvent
 import net.ccbluex.liquidbounce.features.module.modules.movement.speeds.SpeedMode
 import net.ccbluex.liquidbounce.features.value.BoolValue
+import net.ccbluex.liquidbounce.features.value.FloatValue
 import net.ccbluex.liquidbounce.utils.MinecraftInstance
 import net.ccbluex.liquidbounce.utils.MovementUtils
 import net.ccbluex.liquidbounce.utils.MovementUtils.isMoving
@@ -18,6 +19,8 @@ import net.minecraft.network.play.server.S08PacketPlayerPosLook
 class Librecraft : SpeedMode("Librecraft") {
 
     private val timerBoostValue = BoolValue("TimerBoost", false)
+    private val timer1 = FloatValue("Timer-1", 2.2f,1f, 4f)
+    private val timer2 = FloatValue("Timer-1", 1.5f,1f, 2f)
     fun onMotion() {}
     override fun onUpdate() {
         if (!mc.thePlayer.isInWeb && !mc.thePlayer.isInLava && !mc.thePlayer.isInWater && !mc.thePlayer.isOnLadder && mc.thePlayer.ridingEntity == null) {
@@ -28,9 +31,9 @@ class Librecraft : SpeedMode("Librecraft") {
                     strafe(0.48f)
                     if (timerBoostValue.get()) {
                         if(mc.thePlayer.ticksExisted % 25 < 10) {
-                            mc.timer.timerSpeed = 2.25f
+                            mc.timer.timerSpeed = timer1.get()
                         } else {
-                            mc.timer.timerSpeed = 1.5f
+                            mc.timer.timerSpeed = timer2.get()
                         }
                 }
                 }
