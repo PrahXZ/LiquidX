@@ -10,6 +10,7 @@ import net.ccbluex.liquidbounce.event.UpdateEvent
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
+import net.ccbluex.liquidbounce.features.value.BoolValue
 import net.ccbluex.liquidbounce.utils.RotationUtils
 import net.ccbluex.liquidbounce.utils.timer.MSTimer
 import net.ccbluex.liquidbounce.features.value.IntegerValue
@@ -25,13 +26,16 @@ class FastBow : Module() {
 
     private val packetsValue = IntegerValue("Packets", 20, 3, 20)
     private val delay = IntegerValue("Delay", 0, 0, 500)
-
+    private val noGroundValue = BoolValue("NoGround", false)
 
     val timer = MSTimer()
 
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
         if (!mc.thePlayer.isUsingItem)
+            return
+
+        if(noGroundValue.get() && !mc.thePlayer.onGround)
             return
 
         if (mc.thePlayer.inventory.getCurrentItem() != null && mc.thePlayer.inventory.getCurrentItem().item is ItemBow) {
@@ -47,7 +51,7 @@ class FastBow : Module() {
             else
                 mc.thePlayer.rotationPitch
             for (i in 0 until packetsValue.get())
-                mc.netHandler.addToSendQueue(C05PacketPlayerLook(yaw, pitch, true))
+                mc.netHandler.addToSendQueue(C05PacketPlayerLook(yaw, pitch, mc.thePlayer.onGround))
             if(timer.hasTimePassed(delay.get().toLong())) {
                 mc.netHandler.addToSendQueue(C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN))
                 timer.reset()
