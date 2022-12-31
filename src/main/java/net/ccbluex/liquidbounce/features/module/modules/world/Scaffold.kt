@@ -388,7 +388,7 @@ class Scaffold : Module() {
                         mc.timer.timerSpeed = 0.9f
                     }
                     if(mc.thePlayer.ticksExisted % 15 < 10) {
-                        mc.timer.timerSpeed = 0.9f
+                        mc.timer.timerSpeed = 0.95f
                         LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
                         speedModifierValue.set(speed3)
                     }
