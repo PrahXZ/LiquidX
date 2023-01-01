@@ -40,14 +40,14 @@ class Criticals : Module() {
             if (state) onEnable()
         }
     }
-    private val delayValue = IntegerValue("Delay", 0, 0, 500)
+    val delayValue = IntegerValue("Delay", 0, 0, 500)
     val s08FlagValue = BoolValue("FlagPause", true)
     private val s08DelayValue = IntegerValue("FlagPause-Time", 100, 100, 5000).displayable { s08FlagValue.get() }
     private val hurtTimeValue = IntegerValue("HurtTime", 10, 0, 10)
     private val CritTiming = ListValue("CritTiming", arrayOf("Always", "OnGround", "OffGround"), "Always")
     private val lookValue = BoolValue("UseC06Packet", false)
     private val debugValue = BoolValue("DebugMessage", false)
-    private val msTimer = MSTimer()
+    val msTimer = MSTimer()
     private val flagTimer = MSTimer()
     private val syncTimer = MSTimer()
 
