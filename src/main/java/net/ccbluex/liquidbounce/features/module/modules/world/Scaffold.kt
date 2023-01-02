@@ -85,6 +85,9 @@ class Scaffold : Module() {
     // New feature
     private val edgeDistanceValue = FloatValue("EagleEdgeDistance", 0f, 0f, 0.5f).displayable { !eagleValue.equals("Off") }
 
+    // DiagonalFix
+    private  val diagonalfixValue = ListValue("DiagonalFix", arrayOf("None", "Verus","Zitter"), "None")
+
     // Expand
     private val expandLengthValue = IntegerValue("ExpandLength", 1, 1, 6)
 
@@ -400,6 +403,40 @@ class Scaffold : Module() {
                         mc.timer.timerSpeed = 0.8f
                         speedModifierValue.set (speed5)
                     }
+                }
+            }
+            when (diagonalfixValue.get().lowercase()) {
+                "none" -> {
+
+                }
+                "verus" -> {
+                    if(mc.thePlayer.ticksExisted % 10 < 10) {
+                        mc.timer.timerSpeed = 1f
+                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
+                    } else {
+                        mc.timer.timerSpeed = 0.9f
+                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = true
+                        LiquidBounce.moduleManager[ABlink::class.java]!!.pulseListValue.set("custom")
+                        LiquidBounce.moduleManager[ABlink::class.java]!!.pulseCustomDelayValue.set(90)
+                    }
+                    if(mc.thePlayer.ticksExisted % 20 < 10) {
+                        mc.timer.timerSpeed = 0.9f
+                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = true
+                        LiquidBounce.moduleManager[ABlink::class.java]!!.pulseListValue.set("custom")
+                        LiquidBounce.moduleManager[ABlink::class.java]!!.pulseCustomDelayValue.set(120)
+
+                    }
+
+                }
+                "zitter" -> {
+                    if(mc.thePlayer.ticksExisted % 40 < 10) {
+                        mc.timer.timerSpeed = 1f
+                        zitterModeValue.set("OFF")
+                    } else {
+                        mc.timer.timerSpeed = 0.9f
+                        zitterModeValue.set("Smooth")
+                    }
+
                 }
             }
             when (extraClickValue.get().lowercase()) {
@@ -934,6 +971,21 @@ class Scaffold : Module() {
 
             "universocraft" -> {
                 speedModifierValue.set(0.85f)
+
+            }
+        }
+        when (diagonalfixValue.get().lowercase()) {
+            "none" -> {
+
+            }
+
+            "verus" -> {
+                LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
+                LiquidBounce.moduleManager[ABlink::class.java]!!.pulseCustomDelayValue.set(0)
+
+            }
+            "zitter" -> {
+                zitterModeValue.set("OFF")
 
             }
         }
