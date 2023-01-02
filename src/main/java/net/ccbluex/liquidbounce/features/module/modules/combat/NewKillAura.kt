@@ -168,7 +168,10 @@ class NewKillAura : Module() {
     private val green = IntegerValue("Green", 255, 0, 255).displayable { circleValue.get() }
     private val blue = IntegerValue("Blue", 255, 0, 255).displayable { circleValue.get() }
     private val alpha = IntegerValue("Alpha", 255, 0, 255).displayable { circleValue.get() }
-
+    private val inRangeDiscoveredTargets = mutableListOf<EntityLivingBase>()
+    private val discoveredTargets = mutableListOf<EntityLivingBase>()
+    val canFakeBlock: Boolean
+        get() = inRangeDiscoveredTargets.isNotEmpty()
 
     /**
      * MODULE
@@ -197,7 +200,7 @@ class NewKillAura : Module() {
     var blockingStatus = false
 
     val displayBlocking: Boolean
-        get() = blockingStatus || (autoBlockModeValue.equals("Fake"))
+        get() = blockingStatus || (autoBlockModeValue.equals("Fake") && canFakeBlock)
 
     var spinYaw = 0F
 
@@ -222,6 +225,8 @@ class NewKillAura : Module() {
         currentTarget = null
         hitable = false
         prevTargetEntities.clear()
+        inRangeDiscoveredTargets.clear()
+        discoveredTargets.clear()
         attackTimer.reset()
         clicks = 0
 
@@ -339,6 +344,10 @@ class NewKillAura : Module() {
             stopBlocking()
             return
         }
+        if (discoveredTargets.isEmpty()) {
+            stopBlocking()
+            return
+        }
 
         // Target
         currentTarget = target
@@ -360,6 +369,8 @@ class NewKillAura : Module() {
             target = null
             currentTarget = null
             hitable = false
+            discoveredTargets.clear()
+            inRangeDiscoveredTargets.clear()
             stopBlocking()
             return
         }
@@ -422,6 +433,8 @@ class NewKillAura : Module() {
             target = null
             currentTarget = null
             hitable = false
+            discoveredTargets.clear()
+            inRangeDiscoveredTargets.clear()
             stopBlocking()
             return
         }
@@ -532,6 +545,7 @@ class NewKillAura : Module() {
         val switchMode = targetModeValue.get().equals("Switch", ignoreCase = true)
 
         // Find possible targets
+        discoveredTargets.clear()
         val targets = mutableListOf<EntityLivingBase>()
         val lookingTargets = mutableListOf<EntityLivingBase>()
 
@@ -544,18 +558,28 @@ class NewKillAura : Module() {
 
             if (distance <= maxRange && (fov == 180F || entityFov <= fov) && entity.hurtTime <= hurtTime)
                 targets.add(entity)
+            discoveredTargets.add(entity)
         }
 
-        // Sort targets by priority
+        // Sort targets by priority // targets.sortBy
         when (priorityValue.get().lowercase()) {
-            "distance" -> targets.sortBy { mc.thePlayer.getDistanceToEntityBox(it) } // Sort by distance
-            "health" -> targets.sortBy { it.health } // Sort by health
-            "direction" -> targets.sortBy { RotationUtils.getRotationDifference(it) } // Sort by FOV
-            "livingtime" -> targets.sortBy { -it.ticksExisted } // Sort by existence
-            "hurtresistance" -> targets.sortBy { it.hurtResistantTime } // Sort by armor hurt time
-            "hurttime" -> targets.sortBy { it.hurtTime } // Sort by hurt time
-            "healthabsorption" -> targets.sortBy { it.health + it.absorptionAmount } // Sort by full health with absorption effect
-            "regenamplifier" -> targets.sortBy { if (it.isPotionActive(Potion.regeneration)) it.getActivePotionEffect(Potion.regeneration).amplifier else -1 }
+            "distance" -> discoveredTargets.sortBy { mc.thePlayer.getDistanceToEntityBox(it) } // Sort by distance
+            "health" -> discoveredTargets.sortBy { it.health } // Sort by health
+            "direction" -> discoveredTargets.sortBy { RotationUtils.getRotationDifference(it) } // Sort by FOV
+            "livingtime" -> discoveredTargets.sortBy { -it.ticksExisted } // Sort by existence
+            "hurtresistance" -> discoveredTargets.sortBy { it.hurtResistantTime } // Sort by armor hurt time
+            "hurttime" -> discoveredTargets.sortBy { it.hurtTime } // Sort by hurt time
+            "healthabsorption" -> discoveredTargets.sortBy { it.health + it.absorptionAmount } // Sort by full health with absorption effect
+            "regenamplifier" -> discoveredTargets.sortBy { if (it.isPotionActive(Potion.regeneration)) it.getActivePotionEffect(Potion.regeneration).amplifier else -1 }
+        }
+        inRangeDiscoveredTargets.clear()
+        inRangeDiscoveredTargets.addAll(discoveredTargets.filter { mc.thePlayer.getDistanceToEntityBox(it) < getRange(it) })
+
+        // Cleanup last targets when no targets found and try again
+        if (inRangeDiscoveredTargets.isEmpty() && prevTargetEntities.isNotEmpty()) {
+            prevTargetEntities.clear()
+            updateTarget()
+            return
         }
 
         var found = false
