@@ -11,6 +11,7 @@ import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.features.module.modules.client.Target
+import net.ccbluex.liquidbounce.features.module.modules.exploit.ABlink
 import net.ccbluex.liquidbounce.features.module.modules.exploit.Disabler
 import net.ccbluex.liquidbounce.features.module.modules.misc.AntiBot
 import net.ccbluex.liquidbounce.features.module.modules.misc.Teams
@@ -18,6 +19,8 @@ import net.ccbluex.liquidbounce.features.module.modules.player.Blink
 import net.ccbluex.liquidbounce.features.module.modules.render.FreeCam
 import net.ccbluex.liquidbounce.features.module.modules.world.Scaffold
 import net.ccbluex.liquidbounce.features.value.*
+import net.ccbluex.liquidbounce.ui.client.hud.element.elements.Notification
+import net.ccbluex.liquidbounce.ui.client.hud.element.elements.NotifyType
 import net.ccbluex.liquidbounce.utils.*
 import net.ccbluex.liquidbounce.utils.extensions.getDistanceToEntityBox
 import net.ccbluex.liquidbounce.utils.misc.RandomUtils
@@ -102,6 +105,7 @@ class NewKillAura : Module() {
     private val rotTest = BoolValue("rotTest", false).displayable { rotations.get().equals("down", true) }
 
     private val priorityValue = ListValue("Priority", arrayOf("Health", "Distance", "Direction", "LivingTime", "Armor", "HurtResistance", "HurtTime", "HealthAbsorption", "RegenAmplifier"), "Distance")
+    private val rangeModeValue = ListValue("RangeMode", arrayOf("None", "Universocraft", "Verus"), "None")
     val targetModeValue = ListValue("TargetMode", arrayOf("Single", "Switch", "Multi"), "Switch")
 
     //reverted in old LB. idk why they removed it.
@@ -362,6 +366,8 @@ class NewKillAura : Module() {
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
         updateKA()
+
+
     }
 
     private fun updateKA() {
@@ -488,6 +494,40 @@ class NewKillAura : Module() {
         // Close inventory when open
         if (openInventory)
             mc.netHandler.addToSendQueue(C0DPacketCloseWindow())
+
+        // Verus and Universocraft Bypass
+        when (rangeModeValue.get().lowercase()) {
+            "none" -> {
+
+            }
+
+            "universocraft" -> {
+                if (mc.thePlayer.ticksExisted % 13 < 10) {
+                    rangeValue.set(2.9)
+                }
+                if (mc.thePlayer.ticksExisted % 55 < 10) {
+                    rangeValue.set(3.05)
+                    LiquidBounce.hud.addNotification(Notification("HitboxCheck", "Failed the hitbox of player", NotifyType.WARNING, 1000, 500))
+                }
+                if (mc.thePlayer.ticksExisted % 70 < 10) {
+                    rangeValue.set(3.05)
+                    LiquidBounce.hud.addNotification(Notification("HitboxCheck", "Failed the hitbox of player", NotifyType.WARNING, 1000, 500))
+                }
+
+            }
+            "verus" -> {
+                if (mc.thePlayer.ticksExisted % 13 < 10) {
+                    rangeValue.set(3.2)
+                }
+                if (mc.thePlayer.ticksExisted % 40 < 10) {
+                    rangeValue.set(3.35)
+                }
+                if (mc.thePlayer.ticksExisted % 60 < 10) {
+                    rangeValue.set(3.6)
+                }
+
+            }
+        }
 
         // Check is not hitable or check failrate
         if (!hitable || failHit) {
