@@ -506,11 +506,11 @@ class NewKillAura : Module() {
                     rangeValue.set(2.9)
                 }
                 if (mc.thePlayer.ticksExisted % 55 < 10) {
-                    rangeValue.set(3.05)
+                    rangeValue.set(2.95)
                     LiquidBounce.hud.addNotification(Notification("HitboxCheck", "Failed the hitbox of player", NotifyType.WARNING, 1000, 500))
                 }
                 if (mc.thePlayer.ticksExisted % 70 < 10) {
-                    rangeValue.set(3.05)
+                    rangeValue.set(3.0)
                     LiquidBounce.hud.addNotification(Notification("HitboxCheck", "Failed the hitbox of player", NotifyType.WARNING, 1000, 500))
                 }
 
