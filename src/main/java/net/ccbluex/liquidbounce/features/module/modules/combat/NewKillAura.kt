@@ -19,6 +19,7 @@ import net.ccbluex.liquidbounce.features.module.modules.player.Blink
 import net.ccbluex.liquidbounce.features.module.modules.render.FreeCam
 import net.ccbluex.liquidbounce.features.module.modules.world.Scaffold
 import net.ccbluex.liquidbounce.features.value.*
+import net.ccbluex.liquidbounce.script.api.global.Chat
 import net.ccbluex.liquidbounce.ui.client.hud.element.elements.Notification
 import net.ccbluex.liquidbounce.ui.client.hud.element.elements.NotifyType
 import net.ccbluex.liquidbounce.utils.*
@@ -116,12 +117,7 @@ class NewKillAura : Module() {
     private val keepSprintValue = BoolValue("KeepSprint", true)
 
     // AutoBlock
-    private val autoBlockModeValue = ListValue("AutoBlock", arrayOf("Range", "Verus", "Fake", "Off"), "Off")
-
-    private val blockTimingValue = ListValue("BlockTiming", arrayOf("Pre", "Post", "Both"), "Both").displayable { autoBlockModeValue.equals("Range") }
-    private val autoBlockRangeValue = FloatValue("AutoBlockRange", 2.5f, 0f, 8f).displayable { autoBlockModeValue.equals("Range") }
-    private val autoBlockPacketValue = ListValue("AutoBlockPacket", arrayOf("AfterTick", "AfterAttack", "Vanilla", "Hypixel"), "AfterTick").displayable { autoBlockModeValue.equals("Range") }
-    private val interactAutoBlockValue = BoolValue("InteractAutoBlock", true).displayable { autoBlockModeValue.equals("Range") }
+    private val autoBlockModeValue = ListValue("AutoBlock", arrayOf("Verus", "Fake", "Off"), "Off")
     private val blockRateValue = IntegerValue("BlockRate", 100, 1, 100).displayable { autoBlockModeValue.equals("Range") }
 
     // Raycast
@@ -251,28 +247,12 @@ class NewKillAura : Module() {
 
         }
 
-        if (blockTimingValue.equals("Both") && !autoBlockModeValue.equals("Verus") ||
-                (autoBlockModeValue.equals("Verus") && event.eventState == EventState.PRE) ||
-                (blockTimingValue.equals("Pre") && event.eventState == EventState.PRE && !autoBlockModeValue.equals("Verus")) ||
-                (blockTimingValue.equals("Post") && event.eventState == EventState.POST && !autoBlockModeValue.equals("Verus"))
-        ) {
+        if (autoBlockModeValue.equals("Verus") && event.eventState == EventState.PRE) {
             // AutoBlock
-            if (autoBlockModeValue.equals("Range") && target != null && (!autoBlockPacketValue.equals("AfterAttack")
-                            || mc.thePlayer.getDistanceToEntityBox(target!!) > maxRange ) && canBlock) {
-                if (mc.thePlayer.getDistanceToEntityBox(target!!) <= autoBlockRangeValue.get()) {
+            if (prevTargetEntities.isNotEmpty() && canBlock) {
+                if (mc.thePlayer.getDistanceToEntityBox(currentTarget!!) <= maxRange) {
                     startBlocking(
-                            target!!,
-                            interactAutoBlockValue.get() && (mc.thePlayer.getDistanceToEntityBox(target!!) < maxRange)
-                    )
-                } else {
-                    if (!mc.thePlayer.isBlocking) {
-                        stopBlocking()
-                    }
-                }
-            } else if (autoBlockModeValue.equals("Verus") && prevTargetEntities.isNotEmpty() && canBlock && !autoBlockPacketValue.equals("AfterAttack")) {
-                if (mc.thePlayer.getDistanceToEntityBox(target!!) <= maxRange) {
-                    startBlocking(
-                            target!!,
+                            currentTarget!!,
                             false)
                 } else {
                     if (!mc.thePlayer.isBlocking) {
@@ -692,10 +672,6 @@ class NewKillAura : Module() {
      * Attack [entity]
      */
     private fun attackEntity(entity: EntityLivingBase) {
-        // Stop blocking
-        if (mc.thePlayer.isBlocking || blockingStatus)
-            stopBlocking()
-
         // Call attack event
         LiquidBounce.eventManager.callEvent(AttackEvent(entity))
 
@@ -710,16 +686,13 @@ class NewKillAura : Module() {
                 ClientUtils.displayChatMessage("[KillAura] Silent rotation change.")
         }
 
-        // Stop blocking
-        if (!autoBlockPacketValue.equals("Vanilla") && (mc.thePlayer.isBlocking || blockingStatus)) {
-            mc.netHandler.addToSendQueue(
-                    C07PacketPlayerDigging(
-                            C07PacketPlayerDigging.Action.RELEASE_USE_ITEM,
-                            BlockPos.ORIGIN,
-                            EnumFacing.DOWN
-                    )
-            )
-            blockingStatus = false
+        if (mc.thePlayer.isBlocking || (autoBlockModeValue.equals("Verus") && canBlock)) {
+
+            if (!(blockRateValue.get() > 0 && Random().nextInt(100) <= blockRateValue.get())) {
+                return
+            }
+
+            startBlocking(entity, false)
         }
 
         mc.thePlayer.swingItem()
@@ -751,19 +724,6 @@ class NewKillAura : Module() {
             // Enchant Effect
             if (EnchantmentHelper.getModifierForCreature(mc.thePlayer.heldItem, target!!.creatureAttribute) > 0.0f || (fakeSharpValue.get() && (!fakeSharpSword.get() || canBlock)))
                 mc.thePlayer.onEnchantmentCritical(target)
-        }
-
-        // Start blocking after attack
-        if (mc.thePlayer.isBlocking || (autoBlockModeValue.equals("Range") && canBlock)) {
-            if (autoBlockPacketValue.equals("AfterTick") && !autoBlockModeValue.equals("Verus")) {
-                return
-            }
-
-            if (!(blockRateValue.get() > 0 && Random().nextInt(100) <= blockRateValue.get())) {
-                return
-            }
-
-            startBlocking(entity, interactAutoBlockValue.get())
         }
     }
 
@@ -932,17 +892,12 @@ class NewKillAura : Module() {
      * Start blocking
      */
     private fun startBlocking(interactEntity: Entity, interact: Boolean) {
-        if (autoBlockModeValue.equals("Range") && mc.thePlayer.getDistanceToEntityBox(interactEntity) > autoBlockRangeValue.get()) {
+        if (autoBlockModeValue.equals("Verus") && mc.thePlayer.getDistanceToEntityBox(interactEntity) > maxRange) {
             return
         }
 
         if (blockingStatus) {
             return
-        }
-
-        if (interact && !autoBlockModeValue.equals("Verus")) {
-            mc.netHandler.addToSendQueue(C02PacketUseEntity(interactEntity, interactEntity.positionVector))
-            mc.netHandler.addToSendQueue(C02PacketUseEntity(interactEntity, C02PacketUseEntity.Action.INTERACT))
         }
 
         mc.netHandler.addToSendQueue(C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem()))
