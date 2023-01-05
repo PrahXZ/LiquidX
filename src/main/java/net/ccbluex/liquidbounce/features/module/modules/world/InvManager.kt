@@ -30,8 +30,10 @@ import net.minecraft.init.Blocks
 import net.minecraft.item.*
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement
 import net.minecraft.network.play.client.C09PacketHeldItemChange
+import java.util.Timer
 import java.util.stream.Collectors
 import java.util.stream.IntStream
+import kotlin.concurrent.schedule
 
 @ModuleInfo(name = "InvManager", category = ModuleCategory.WORLD)
 class InvManager : Module() {
@@ -55,6 +57,7 @@ class InvManager : Module() {
     }
 
     private val invOpenValue = BoolValue("InvOpen", false)
+    private val delayOnOpenValue = IntegerValue("DelayOnOpen", 0, 0, 1000).displayable { invOpenValue.get() }
     private val simulateInventory = BoolValue("SimulateInventory", true)
     private val simulateDelayValue = IntegerValue("SimulateInventoryDelay", 0, 0, 1000).displayable { simulateInventory.get() }
     private val noMoveValue = BoolValue("NoMove", false)
@@ -109,6 +112,8 @@ class InvManager : Module() {
 
     private var delay = 0L
     private val simDelayTimer = MSTimer()
+    private val delayOnOpenTimer = MSTimer()
+    private var delayedOnOpen = false
 
     override fun onDisable() {
         invOpened = false
@@ -125,91 +130,178 @@ class InvManager : Module() {
 
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
+        if(mc.currentScreen !is GuiInventory) {
+            delayedOnOpen = false
+        }
+
         if (noMoveValue.get() && MovementUtils.isMoving() ||
-            mc.thePlayer.openContainer != null && mc.thePlayer.openContainer.windowId != 0 ||
-            (LiquidBounce.combatManager.inCombat && noCombatValue.get())) {
-            if(InventoryUtils.CLICK_TIMER.hasTimePassed(simulateDelayValue.get().toLong())) {
+                mc.thePlayer.openContainer != null && mc.thePlayer.openContainer.windowId != 0 ||
+                (LiquidBounce.combatManager.inCombat && noCombatValue.get())) {
+            if (InventoryUtils.CLICK_TIMER.hasTimePassed(simulateDelayValue.get().toLong())) {
                 invOpened = false
             }
             return
         }
 
-        if (!InventoryUtils.CLICK_TIMER.hasTimePassed(delay) || (mc.currentScreen !is GuiInventory && invOpenValue.get())) {
-            return
-        }
+        if(!delayedOnOpen) {
+            Timer().schedule(delayOnOpenValue.get().toLong()) {
+                delayedOnOpen = true
 
-        if (armorValue.get()) {
-            // Find best armor
-            val bestArmor = findBestArmor()
+                if (!InventoryUtils.CLICK_TIMER.hasTimePassed(delay) || (mc.currentScreen !is GuiInventory && invOpenValue.get())) {
+                    return@schedule
+                }
 
-            // Swap armor
-            for (i in 0..3) {
-                val armorPiece = bestArmor[i] ?: continue
-                val armorSlot = 3 - i
-                val oldArmor: ItemStack? = mc.thePlayer.inventory.armorItemInSlot(armorSlot)
-                if (oldArmor == null || oldArmor.item !is ItemArmor || ItemUtils.compareArmor(ArmorPiece(oldArmor, -1), armorPiece, nbtArmorPriority.get(), goal) < 0) {
-                    if (oldArmor != null && move(8 - armorSlot, true)) {
-                        return
+                if (armorValue.get()) {
+                    // Find best armor
+                    val bestArmor = findBestArmor()
+                    // Swap armor
+                    for (i in 0..3) {
+                        val armorPiece = bestArmor[i] ?: continue
+                        val armorSlot = 3 - i
+                        val oldArmor: ItemStack? = mc.thePlayer.inventory.armorItemInSlot(armorSlot)
+                        if (oldArmor == null || oldArmor.item !is ItemArmor || ItemUtils.compareArmor(ArmorPiece(oldArmor, -1), armorPiece, nbtArmorPriority.get(), goal) < 0) {
+                            if (oldArmor != null && move(8 - armorSlot, true)) {
+                                return@schedule
+                            }
+                            if (mc.thePlayer.inventory.armorItemInSlot(armorSlot) == null && move(armorPiece.slot, false)) {
+                                return@schedule
+                            }
+                        }
                     }
-                    if (mc.thePlayer.inventory.armorItemInSlot(armorSlot) == null && move(armorPiece.slot, false)) {
-                        return
+                }
+
+                if (sortValue.get()) {
+                    for (index in 0..8) {
+                        val bestItem = findBetterItem(index, mc.thePlayer.inventory.getStackInSlot(index)) ?: continue
+
+                        if (bestItem != index) {
+                            if (checkOpen()) {
+                                return@schedule
+                            }
+
+                            mc.playerController.windowClick(0, if (bestItem < 9) bestItem + 36 else bestItem, index, 2, mc.thePlayer)
+
+                            delay = TimeUtils.randomDelay(minDelayValue.get(), maxDelayValue.get())
+                            return@schedule
+                        }
                     }
+                }
+
+                if (throwValue.get()) {
+                    val garbageItems = items(5, if (hotbarValue.get()) 45 else 36)
+                            .filter { !isUseful(it.value, it.key) }
+                            .keys
+
+                    val garbageItem = if(garbageItems.isNotEmpty()) {
+                        if(randomSlotValue.get()) {
+                            // pick random one
+                            garbageItems.toList()[RandomUtils.nextInt(0, garbageItems.size)]
+                        } else {
+                            garbageItems.first()
+                        }
+                    } else {
+                        null
+                    }
+                    if (garbageItem != null) {
+                        // Drop all useless items
+                        if (checkOpen()) {
+                            return@schedule
+                        }
+
+                        if(swingValue.get()) mc.thePlayer.swingItem()
+
+                        mc.playerController.windowClick(mc.thePlayer.openContainer.windowId, garbageItem, 0, 0, mc.thePlayer)
+                        mc.playerController.windowClick(mc.thePlayer.openContainer.windowId, -999, 0, 0, mc.thePlayer)
+
+                        delay = TimeUtils.randomDelay(minDelayValue.get(), maxDelayValue.get())
+
+                        return@schedule
+                    }
+                }
+
+                if(InventoryUtils.CLICK_TIMER.hasTimePassed(simulateDelayValue.get().toLong())) {
+                    invOpened = false
                 }
             }
-        }
+        } else {
 
-        if (sortValue.get()) {
-            for (index in 0..8) {
-                val bestItem = findBetterItem(index, mc.thePlayer.inventory.getStackInSlot(index)) ?: continue
-
-                if (bestItem != index) {
-                    if (checkOpen()) {
-                        return
-                    }
-
-                    mc.playerController.windowClick(0, if (bestItem < 9) bestItem + 36 else bestItem, index, 2, mc.thePlayer)
-
-                    delay = TimeUtils.randomDelay(minDelayValue.get(), maxDelayValue.get())
-                    return
-                }
-            }
-        }
-
-        if (throwValue.get()) {
-            val garbageItems = items(5, if (hotbarValue.get()) 45 else 36)
-                .filter { !isUseful(it.value, it.key) }
-                .keys
-
-            val garbageItem = if(garbageItems.isNotEmpty()) {
-                if(randomSlotValue.get()) {
-                    // pick random one
-                    garbageItems.toList()[RandomUtils.nextInt(0, garbageItems.size)]
-                } else {
-                    garbageItems.first()
-                }
-            } else {
-                null
-            }
-            if (garbageItem != null) {
-                // Drop all useless items
-                if (checkOpen()) {
-                    return
-                }
-		
-		if(swingValue.get()) mc.thePlayer.swingItem()
-
-                mc.playerController.windowClick(mc.thePlayer.openContainer.windowId, garbageItem, 0, 0, mc.thePlayer)
-                mc.playerController.windowClick(mc.thePlayer.openContainer.windowId, -999, 0, 0, mc.thePlayer)
-
-                delay = TimeUtils.randomDelay(minDelayValue.get(), maxDelayValue.get())
-
+            if (!InventoryUtils.CLICK_TIMER.hasTimePassed(delay) || (mc.currentScreen !is GuiInventory && invOpenValue.get())) {
                 return
             }
+
+                if (armorValue.get()) {
+                    // Find best armor
+                    val bestArmor = findBestArmor()
+                    // Swap armor
+                    for (i in 0..3) {
+                        val armorPiece = bestArmor[i] ?: continue
+                        val armorSlot = 3 - i
+                        val oldArmor: ItemStack? = mc.thePlayer.inventory.armorItemInSlot(armorSlot)
+                        if (oldArmor == null || oldArmor.item !is ItemArmor || ItemUtils.compareArmor(ArmorPiece(oldArmor, -1), armorPiece, nbtArmorPriority.get(), goal) < 0) {
+                            if (oldArmor != null && move(8 - armorSlot, true)) {
+                                return
+                            }
+                            if (mc.thePlayer.inventory.armorItemInSlot(armorSlot) == null && move(armorPiece.slot, false)) {
+                                return
+                            }
+                        }
+                    }
+                }
+
+                if (sortValue.get()) {
+                    for (index in 0..8) {
+                        val bestItem = findBetterItem(index, mc.thePlayer.inventory.getStackInSlot(index)) ?: continue
+
+                        if (bestItem != index) {
+                            if (checkOpen()) {
+                                return
+                            }
+
+                            mc.playerController.windowClick(0, if (bestItem < 9) bestItem + 36 else bestItem, index, 2, mc.thePlayer)
+
+                            delay = TimeUtils.randomDelay(minDelayValue.get(), maxDelayValue.get())
+                            return
+                        }
+                    }
+                }
+
+                if (throwValue.get()) {
+                    val garbageItems = items(5, if (hotbarValue.get()) 45 else 36)
+                            .filter { !isUseful(it.value, it.key) }
+                            .keys
+
+                    val garbageItem = if(garbageItems.isNotEmpty()) {
+                        if(randomSlotValue.get()) {
+                            // pick random one
+                            garbageItems.toList()[RandomUtils.nextInt(0, garbageItems.size)]
+                        } else {
+                            garbageItems.first()
+                        }
+                    } else {
+                        null
+                    }
+                    if (garbageItem != null) {
+                        // Drop all useless items
+                        if (checkOpen()) {
+                            return
+                        }
+
+                        if(swingValue.get()) mc.thePlayer.swingItem()
+
+                        mc.playerController.windowClick(mc.thePlayer.openContainer.windowId, garbageItem, 0, 0, mc.thePlayer)
+                        mc.playerController.windowClick(mc.thePlayer.openContainer.windowId, -999, 0, 0, mc.thePlayer)
+
+                        delay = TimeUtils.randomDelay(minDelayValue.get(), maxDelayValue.get())
+
+                        return
+                    }
+                }
+
+                if(InventoryUtils.CLICK_TIMER.hasTimePassed(simulateDelayValue.get().toLong())) {
+                    invOpened = false
+                }
         }
 
-        if(InventoryUtils.CLICK_TIMER.hasTimePassed(simulateDelayValue.get().toLong())) {
-            invOpened = false
-        }
     }
 
     /**

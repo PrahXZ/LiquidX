@@ -696,10 +696,9 @@ class NewKillAura : Module() {
         }
 
         mc.thePlayer.swingItem()
-        mc.netHandler.addToSendQueue(C02PacketUseEntity(entity, C02PacketUseEntity.Action.ATTACK))
 
         if (keepSprintValue.get()) {
-            // mc.netHandler.addToSendQueue(C02PacketUseEntity(entity, C02PacketUseEntity.Action.ATTACK))
+            mc.netHandler.addToSendQueue(C02PacketUseEntity(entity, C02PacketUseEntity.Action.ATTACK))
             // Critical Effect
             if (mc.thePlayer.fallDistance > 0F && !mc.thePlayer.onGround && !mc.thePlayer.isOnLadder &&
                     !mc.thePlayer.isInWater && !mc.thePlayer.isPotionActive(Potion.blindness) && !mc.thePlayer.isRiding)
@@ -711,6 +710,7 @@ class NewKillAura : Module() {
         } else {
             if (mc.playerController.currentGameType != WorldSettings.GameType.SPECTATOR)
                 mc.thePlayer.attackTargetEntityWithCurrentItem(entity)
+                mc.netHandler.addToSendQueue(C02PacketUseEntity(entity, C02PacketUseEntity.Action.ATTACK))
         }
 
         // Extra critical effects
