@@ -16,6 +16,7 @@ import net.ccbluex.liquidbounce.utils.timer.MSTimer
 import net.ccbluex.liquidbounce.utils.timer.TimeUtils
 import net.ccbluex.liquidbounce.features.value.BoolValue
 import net.ccbluex.liquidbounce.features.value.IntegerValue
+import net.ccbluex.liquidbounce.utils.math.MathUtils
 import net.minecraft.client.gui.inventory.GuiChest
 import net.minecraft.inventory.Slot
 import net.minecraft.item.Item
@@ -54,7 +55,8 @@ class Stealer : Module() {
         }
     }
 
-    private val chestValue = IntegerValue("ChestOpenDelay", 300, 0, 1000)
+    private val openDelayRandomValue = BoolValue("OpenDelayRandom", false)
+    private val chestValue = IntegerValue("ChestOpenDelay", 300, 0, 1000).displayable {!openDelayRandomValue.get()}
     private val takeRandomizedValue = BoolValue("TakeRandomized", false)
     private val onlyItemsValue = BoolValue("OnlyItems", false)
     private val noCompassValue = BoolValue("NoCompass", false)
@@ -99,8 +101,14 @@ class Stealer : Module() {
 
     @EventTarget
     fun onRender3D(event: Render3DEvent) {
-        if (!chestTimer.hasTimePassed(chestValue.get().toLong())) {
-            return
+        if(openDelayRandomValue.get()) {
+            if (!chestTimer.hasTimePassed(MathUtils.randomNumber(200, 125).toLong())) {
+                return
+            }
+        } else {
+            if (!chestTimer.hasTimePassed(chestValue.get().toLong())) {
+                return
+            }
         }
 
         val screen = mc.currentScreen

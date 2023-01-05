@@ -73,4 +73,9 @@ public final class MathUtils {
     public static double randomNumber(double max, double min) {
         return Math.random() * (max - min) + min;
     }
+
+    public static int randomNumber(int max, int min) {
+        if (max < min) return min;
+        return new Random().nextInt(max)+min;
+    }
 }
