@@ -44,8 +44,9 @@ object LiquidBounce {
     const val COLORED_NAME = "§3§lLiquidX §8» "
     const val NORMAL_NAME = "§3§lLiquidX §f§lClient"
     const val CLIENT_CREATOR = "Prah and Halflin"
-    const val CLIENT_WEBSITE = "PRE Release b0.4"
+    const val CLIENT_WEBSITE = "PRE Release final"
     const val CLIENT_IP = "www.liquidx.net"
+    const val UID = "23"
     
     @JvmField
     val gitInfo = Properties().also {
@@ -89,7 +90,7 @@ object LiquidBounce {
     lateinit var mainMenu: GuiScreen
 
     // Menu Background
-    var background: ResourceLocation? = ResourceLocation("fdpclient/background.jpg")
+    var background: ResourceLocation? = ResourceLocation("fdpclient/background.png")
 
     val launchFilters = mutableListOf<EnumLaunchFilter>()
     private val dynamicLaunchOptions: Array<LaunchOption>

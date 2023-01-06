@@ -26,7 +26,7 @@ class rebornGuiMainMenu : GuiScreen(), GuiYesNoCallback {
         this.buttonList.add(
                 TestBtn(
                         1,
-                        (this.width / 2) - (640 / 2),
+                        (this.width / 2) - (120 / 2),
                         this.height / 2 - 70,
                         130,
                         23,
@@ -39,7 +39,7 @@ class rebornGuiMainMenu : GuiScreen(), GuiYesNoCallback {
         this.buttonList.add(
                 TestBtn(
                         2,
-                        (this.width / 2) - (640 / 2),
+                        (this.width / 2) - (120 / 2),
                         this.height / 2 - 40,
                         130,
                         23,
@@ -53,7 +53,7 @@ class rebornGuiMainMenu : GuiScreen(), GuiYesNoCallback {
         this.buttonList.add(
                 TestBtn(
                         100,
-                        (this.width / 2) - (640 / 2),
+                        (this.width / 2) - (120 / 2),
                         this.height / 2 - 10,
                         130,
                         23,
@@ -67,7 +67,7 @@ class rebornGuiMainMenu : GuiScreen(), GuiYesNoCallback {
         this.buttonList.add(
                 TestBtn(
                         103,
-                        (this.width / 2) - (640 / 2),
+                        (this.width / 2) - (120 / 2),
                         this.height / 2 + 20,
                         130,
                         23,
@@ -80,7 +80,7 @@ class rebornGuiMainMenu : GuiScreen(), GuiYesNoCallback {
         this.buttonList.add(
             TestBtn(
                 0,
-                (this.width / 2) - (640 / 2),
+                (this.width / 2) - (120 / 2),
                 this.height / 2 + 50,
                 130,
                 23,
@@ -95,7 +95,7 @@ class rebornGuiMainMenu : GuiScreen(), GuiYesNoCallback {
         this.buttonList.add(
                 TestBtn(
                         4,
-                        (this.width / 2) - (640 / 2),
+                        (this.width / 2) - (120 / 2),
                         this.height / 2 + 80,
                         130,
                         23,
@@ -158,85 +158,25 @@ class rebornGuiMainMenu : GuiScreen(), GuiYesNoCallback {
         val defaultWidth1 = (this.width).toDouble()
         FontLoaders.F40.drawCenteredString(
                 LiquidBounce.CLIENT_NAME,
-                this.width.toDouble() / 2 - 255,
-                this.height.toDouble() / 2 - 130,
+                this.width.toDouble() / 2 + 5,
+                this.height.toDouble() / 2 - 140,
                 if (LiquidBounce.Darkmode) {
                     Color(255, 255, 255, 200).rgb
                 } else {
                     Color(25, 25, 25, 170).rgb
                 }
         )
-        FontLoaders.SF45.drawCenteredString(
-                "Contributors",
-                this.width.toDouble() / 2 + 40,
-                this.height.toDouble() / 2 - 110,
-                if (LiquidBounce.Darkmode) {
-                    Color(255, 255, 255, 200).rgb
-                } else {
-                    Color(25, 25, 25, 170).rgb
-                }
-        )
-        FontLoaders.F20.drawCenteredString(
-                "vPrah",
-                this.width.toDouble() / 2 - 50,
-                this.height.toDouble() / 2 - 75,
-                Color(6, 159, 237, 200).rgb
-        )
-        FontLoaders.F16.drawCenteredString(
-                "Founder and Developer",
-                this.width.toDouble() / 2 - 50,
-                this.height.toDouble() / 2 - 63,
-                Color(1, 1, 1, 170).rgb
-        )
-        FontLoaders.F20.drawCenteredString(
-                        "Halflin",
-                this.width.toDouble() / 2 + 70,
-                this.height.toDouble() / 2 - 23,
-                Color(253, 0, 11, 200).rgb
-        )
-        FontLoaders.F16.drawCenteredString(
-                "Admin and Developer",
-                this.width.toDouble() / 2 + 70,
-                this.height.toDouble() / 2 - 10,
-                Color(1, 1, 1, 170).rgb
-
-        )
-        FontLoaders.F20.drawCenteredString(
-                "Mochi",
-                this.width.toDouble() / 2 + 40,
-                this.height.toDouble() / 2 - 75,
-                Color(6, 159, 237, 200).rgb
-        )
-        FontLoaders.F16.drawCenteredString(
-                "Developer",
-                this.width.toDouble() / 2 + 40,
-                this.height.toDouble() / 2 - 63,
-                Color(1, 1, 1, 170).rgb
-        )
-        FontLoaders.F20.drawCenteredString(
-                "Dany (nullptr#4080)",
-                this.width.toDouble() / 2 + 130,
-                this.height.toDouble() / 2 - 75,
-                Color(6, 159, 237, 200).rgb
-        )
-        FontLoaders.F16.drawCenteredString(
-                "Ideas & Tester",
-                this.width.toDouble() / 2 + 130,
-                this.height.toDouble() / 2 - 63,
-                Color(1, 1, 1, 170).rgb
-        )
-
-        FontLoaders.F16.drawCenteredString(
+        FontLoaders.JELLO20.drawCenteredString(
                 "Made by vPrah and Halflin",
-                this.width.toDouble() / 2 - 255,
-                this.height.toDouble() / 2 - 97,
-                Color(1, 1, 1, 170).rgb
+                this.width.toDouble() / 2 + 5,
+                this.height.toDouble() / 2 - 107,
+                Color(1, 1, 1, 200).rgb
         )
-        FontLoaders.F16.drawCenteredString(
+        FontLoaders.JELLO20.drawCenteredString(
                 "To the Bypassers Gang Community",
-                this.width.toDouble() / 2 - 255,
-                this.height.toDouble() / 2 - 88,
-                Color(1, 1, 1, 170).rgb
+                this.width.toDouble() / 2 + 5,
+                this.height.toDouble() / 2 - 98,
+                Color(1, 1, 1, 200).rgb
         )
        // FontLoaders.F16.drawString(
        //         LiquidBounce.CLIENT_NAME,
