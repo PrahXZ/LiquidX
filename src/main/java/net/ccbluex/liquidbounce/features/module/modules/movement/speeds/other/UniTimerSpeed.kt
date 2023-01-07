@@ -3,13 +3,28 @@
  * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge.
  * https://github.com/SkidderMC/FDPClient/
  */
-package net.ccbluex.liquidbounce.features.module.modules.movement.speeds.aac
+package net.ccbluex.liquidbounce.features.module.modules.movement.speeds.other
 
+import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.event.MoveEvent
+import net.ccbluex.liquidbounce.features.module.modules.exploit.ABlink
 import net.ccbluex.liquidbounce.features.module.modules.movement.speeds.SpeedMode
 import net.ccbluex.liquidbounce.utils.MovementUtils
 
-class AACHop438Speed : SpeedMode("AACHop4.3.8") {
+class UniTimerSpeed : SpeedMode("UniversoTimer") {
+    private var lastABlinkPulse = "";
+
+    override fun onEnable() {
+        lastABlinkPulse = LiquidBounce.moduleManager[ABlink::class.java]!!.pulseListValue.get()
+        LiquidBounce.moduleManager[ABlink::class.java]!!.pulseListValue.set("Universo")
+        LiquidBounce.moduleManager[ABlink::class.java]!!.state = true
+    }
+
+    override fun onDisable() {
+        LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
+        LiquidBounce.moduleManager[ABlink::class.java]!!.pulseListValue.set(lastABlinkPulse)
+    }
+
     override fun onUpdate() {
         val thePlayer = mc.thePlayer ?: return
 
