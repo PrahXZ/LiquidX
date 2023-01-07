@@ -22,9 +22,9 @@ class AACHop438Speed : SpeedMode("AACHop4.3.8") {
             thePlayer.jump()
         else {
             if (thePlayer.fallDistance <= 0.1)
-                mc.timer.timerSpeed = 1.5f
+                mc.timer.timerSpeed = 1.2f
             else if (thePlayer.fallDistance < 1.3)
-                mc.timer.timerSpeed = 0.6f
+                mc.timer.timerSpeed = 0.85f
             else
                 mc.timer.timerSpeed = 1f
         }
