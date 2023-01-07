@@ -350,4 +350,13 @@ object MovementUtils : MinecraftInstance() {
         }
         return false
     }
+
+    fun getScaffoldRotation(yaw: Float, strafe: Float): Float {
+        var rotationYaw = yaw
+        rotationYaw += 180f
+        val forward = -0.5f
+        if (strafe < 0f) rotationYaw -= 90f * forward
+        if (strafe > 0f) rotationYaw += 90f * forward
+        return rotationYaw
+    }
 }
