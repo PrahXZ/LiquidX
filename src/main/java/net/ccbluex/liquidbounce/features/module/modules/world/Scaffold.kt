@@ -138,6 +138,7 @@ class Scaffold : Module() {
     private val towerModeValue = ListValue(
         "TowerMode", arrayOf(
             "Jump",
+            "Universocraft",
             "Motion",
 	    "Motion2",
             "ConstantMotion",
@@ -651,6 +652,16 @@ class Scaffold : Module() {
             "none" -> {
                  if (mc.thePlayer.onGround) {
                     fakeJump()
+                    mc.thePlayer.motionY = 0.42
+                }
+            }
+            "universocraft" -> {
+                if (mc.thePlayer.onGround) {
+                    fakeJump()
+                    mc.thePlayer.motionY = 0.42
+                } else if (mc.thePlayer.motionY < 0.19) {
+                    mc.thePlayer.setPosition(mc.thePlayer.posX, truncate(mc.thePlayer.posY), mc.thePlayer.posZ)
+                    mc.thePlayer.onGround = true
                     mc.thePlayer.motionY = 0.42
                 }
             }
