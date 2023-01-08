@@ -24,4 +24,4 @@ pluginManagement {
 	}
 }
 
-rootProject.name = 'FDPClient'
+rootProject.name = 'LiquidX'
