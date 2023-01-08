@@ -126,7 +126,7 @@ jar {
             "ModSide": "CLIENT",
             "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
             "TweakOrder": "0",
-            "FMLAT": "liquidx_config.cfg",
+            "FMLAT": "fdpclient_at.cfg",
     )
 
     enabled = false
