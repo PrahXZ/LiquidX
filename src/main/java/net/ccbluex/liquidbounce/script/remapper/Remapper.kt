@@ -24,7 +24,7 @@ object Remapper {
             return
         // Load srg
         ClientUtils.logInfo("[Remapper] Loading srg...")
-        parseSrg(IOUtils.readLines(Remapper::class.java.classLoader.getResourceAsStream("assets/minecraft/fdpclient/scriptapi/mcp-stable_22.srg")))
+        parseSrg(IOUtils.readLines(Remapper::class.java.classLoader.getResourceAsStream("assets/minecraft/liquidx/scriptapi/mcp-stable_22.srg")))
         srgLoaded = true
         ClientUtils.logInfo("[Remapper] Loaded srg.")
     }

@@ -40,7 +40,7 @@ object LiquidBounce {
     const val COLORED_NAME = "§3§lLiquidX §8» "
     const val NORMAL_NAME = "§3§lLiquidX §f§lClient"
     const val CLIENT_CREATOR = "Prah and Halflin"
-    const val CLIENT_WEBSITE = "Release Final"
+    const val CLIENT_RELEASE = "Development Build"
     const val CLIENT_IP = "www.liquidx.net"
     const val UID = "23"
     
@@ -56,12 +56,12 @@ object LiquidBounce {
 
     @JvmField
 
-    val CLIENT_VERSION = "v2.0"
+    val CLIENT_VERSION = "v2.1 Beta"
 
 
     @JvmField
     val CLIENT_BRANCH = (gitInfo["git.branch"] ?: "unknown").let {
-        if (it == "main") "Lucia's version" else it
+        if (it == "main") "Gamma version" else it
     }
 
     var isStarting = true
@@ -86,7 +86,7 @@ object LiquidBounce {
     lateinit var mainMenu: GuiScreen
 
     // Menu Background
-    var background: ResourceLocation? = ResourceLocation("fdpclient/background.png")
+    var background: ResourceLocation? = ResourceLocation("liquidx/background.png")
 
     val launchFilters = mutableListOf<EnumLaunchFilter>()
     private val dynamicLaunchOptions: Array<LaunchOption>
@@ -183,10 +183,7 @@ object LiquidBounce {
 
         fileManager.loadConfigs(fileManager.hudConfig, fileManager.xrayConfig)
 
-        // run update checker
-        if (CLIENT_VERSION != "unknown") {
-            thread(block = this::checkUpdate)
-        }
+        // Load Scripts
         ClientUtils.logInfo("Loading Script Subscripts...")
         for (subscript in fileManager.subscriptsConfig.subscripts) {
             Subscriptions.addSubscribes(ScriptSubscribe(subscript.url, subscript.name))
@@ -202,24 +199,6 @@ object LiquidBounce {
         ClientUtils.logInfo("$CLIENT_NAME $CLIENT_VERSION loaded in ${(System.currentTimeMillis() - startTime)}ms!")
     }
 
-    private fun checkUpdate() {
-        try {
-            val get = HttpUtils.get("https://api.github.com/repos/SkidderMC/FDPClient/commits/${gitInfo["git.branch"]}")
-
-            val jsonObj = JsonParser()
-                .parse(get).asJsonObject
-
-            latest = jsonObj.get("sha").asString.substring(0, 7)
-
-            if (latest != gitInfo["git.commit.id.abbrev"]) {
-                ClientUtils.logInfo("New version available: $latest")
-            } else {
-                ClientUtils.logInfo("No new version available")
-            }
-        } catch (t: Throwable) {
-            ClientUtils.logError("Failed to check for updates.", t)
-        }
-    }
 
     /**
      * Execute if client ui type is selected

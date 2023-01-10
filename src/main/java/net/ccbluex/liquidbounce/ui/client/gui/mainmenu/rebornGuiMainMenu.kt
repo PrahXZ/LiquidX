@@ -3,15 +3,11 @@ package net.ccbluex.liquidbounce.launch.data.modernui.mainmenu
 import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.font.FontLoaders
 import net.ccbluex.liquidbounce.ui.client.gui.modernui.TestBtn
-import net.ccbluex.liquidbounce.ui.client.GuiBackground
 import net.ccbluex.liquidbounce.ui.client.altmanager.GuiAltManager
 import net.ccbluex.liquidbounce.ui.i18n.LanguageManager
-import net.ccbluex.liquidbounce.utils.render.RenderUtils
-import net.ccbluex.liquidbounce.utils.misc.HttpUtils
 import net.ccbluex.liquidbounce.utils.misc.MiscUtils
 import net.minecraft.client.gui.*
 import net.minecraft.client.resources.I18n
-import net.minecraft.util.ResourceLocation
 import net.minecraftforge.fml.client.GuiModList
 import java.awt.Color
 
@@ -210,9 +206,9 @@ class rebornGuiMainMenu : GuiScreen(), GuiYesNoCallback {
             100 -> mc.displayGuiScreen(GuiAltManager(this))
             102 -> displayed = false
             103 -> mc.displayGuiScreen(GuiModList(this))
-            104 -> MiscUtils.showURL("https://${LiquidBounce.CLIENT_WEBSITE}/discord.html")
-            514 -> MiscUtils.showURL("https://${LiquidBounce.CLIENT_WEBSITE}/discord.html")
-            114 -> MiscUtils.showURL("https://${LiquidBounce.CLIENT_WEBSITE}")
+            104 -> MiscUtils.showURL("https://${LiquidBounce.CLIENT_RELEASE}/discord.html")
+            514 -> MiscUtils.showURL("https://${LiquidBounce.CLIENT_RELEASE}/discord.html")
+            114 -> MiscUtils.showURL("https://${LiquidBounce.CLIENT_RELEASE}")
             191 -> LiquidBounce.Darkmode = !LiquidBounce.Darkmode
         }
     }

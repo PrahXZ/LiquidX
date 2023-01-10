@@ -211,14 +211,14 @@ public class Fonts {
 
     private static void initFonts() {
         try {
-            initSingleFont("regular.ttf", "assets/minecraft/fdpclient/font/regular.ttf");
-            initSingleFont("regular.ttf", "assets/minecraft/fdpclient/font/Bangers.ttf");
-            initSingleFont("regular.ttf", "assets/minecraft/fdpclient/font/Roboto-Regular.ttf");
-            initSingleFont("regular.ttf", "assets/minecraft/fdpclient/font/Comfortaa.ttf");
-            initSingleFont("regular.ttf", "assets/minecraft/fdpclient/font/SF.ttf");
-            initSingleFont("regular.ttf", "assets/minecraft/fdpclient/font/stylesicons.ttf");
-            initSingleFont("regular.ttf", "assets/minecraft/fdpclient/font/Tahoma.ttf");
-            initSingleFont("regular.ttf", "assets/minecraft/fdpclient/font/Verdana.ttf");
+            initSingleFont("regular.ttf", "assets/minecraft/liquidx/font/regular.ttf");
+            initSingleFont("regular.ttf", "assets/minecraft/liquidx/font/Bangers.ttf");
+            initSingleFont("regular.ttf", "assets/minecraft/liquidx/font/Roboto-Regular.ttf");
+            initSingleFont("regular.ttf", "assets/minecraft/liquidx/font/Comfortaa.ttf");
+            initSingleFont("regular.ttf", "assets/minecraft/liquidx/font/SF.ttf");
+            initSingleFont("regular.ttf", "assets/minecraft/liquidx/font/stylesicons.ttf");
+            initSingleFont("regular.ttf", "assets/minecraft/liquidx/font/Tahoma.ttf");
+            initSingleFont("regular.ttf", "assets/minecraft/liquidx/font/Verdana.ttf");
         }catch(IOException e) {
             e.printStackTrace();
         }
