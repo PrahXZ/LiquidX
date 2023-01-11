@@ -488,6 +488,7 @@ class NewKillAura : Module() {
             "universocraft" -> {
                 if (mc.thePlayer.ticksExisted % 13 < 10) {
                     rangeValue.set(2.9)
+                    failRateValue.set(9)
                 }
                 if (mc.thePlayer.ticksExisted % 55 < 10) {
                     rangeValue.set(2.95)
