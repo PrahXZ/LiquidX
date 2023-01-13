@@ -24,7 +24,7 @@ import net.minecraft.util.ResourceLocation
 import kotlin.random.Random
 
 @ModuleInfo(name = "ChestStealer", category = ModuleCategory.WORLD)
-class Stealer : Module() {
+class ChestStealer : Module() {
     /**
      * OPTIONS
      */

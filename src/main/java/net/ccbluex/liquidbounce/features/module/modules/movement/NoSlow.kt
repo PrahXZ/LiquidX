@@ -28,7 +28,7 @@ import kotlin.math.sqrt
 
 @ModuleInfo(name = "NoSlow", category = ModuleCategory.MOVEMENT)
 class NoSlow : Module() {
-    private val modeValue = ListValue("PacketMode", arrayOf("Vanilla", "LiquidBounce", "Custom", "WatchDog", "Watchdog2", "NCP", "AAC", "AAC4", "AAC5", "Matrix", "Vulcan","Medusa"), "Vanilla")
+    private val modeValue = ListValue("PacketMode", arrayOf("Vanilla", "Universocraft", "LiquidBounce", "Custom", "WatchDog", "Watchdog2", "NCP", "AAC", "AAC4", "AAC5", "Matrix", "Vulcan","Medusa"), "Vanilla")
     private val blockForwardMultiplier = FloatValue("BlockForwardMultiplier", 1.0F, 0.2F, 1.0F)
     private val blockStrafeMultiplier = FloatValue("BlockStrafeMultiplier", 1.0F, 0.2F, 1.0F)
     private val consumeForwardMultiplier = FloatValue("ConsumeForwardMultiplier", 1.0F, 0.2F, 1.0F)
@@ -52,6 +52,9 @@ class NoSlow : Module() {
     private val teleportDecreasePercentValue = FloatValue("Teleport-DecreasePercent", 0.13f, 0f, 1f).displayable { teleportValue.get() && teleportModeValue.equals("Decrease") }
     private val alert1Value = BoolValue("updateAlert1", true).displayable { false }
 
+    private var fasterDelay = false
+    private var placeDelay = 0L
+    private val timer = MSTimer()
     private var pendingFlagApplyPacket = false
     private var lastMotionX = 0.0
     private var lastMotionY = 0.0
@@ -65,6 +68,10 @@ class NoSlow : Module() {
     private var sendPacket = false
     private var lastBlockingStat = false
 
+
+    override fun onEnable() {
+        msTimer.reset()
+    }
     override fun onDisable() {
         msTimer.reset()
         pendingFlagApplyPacket = false
@@ -110,7 +117,7 @@ class NoSlow : Module() {
 
     @EventTarget
     fun onMotion(event: MotionEvent) {
-        if(mc.thePlayer == null || mc.theWorld == null || (onlyGround.get() && !mc.thePlayer.onGround))
+        if (mc.thePlayer == null || mc.theWorld == null || (onlyGround.get() && !mc.thePlayer.onGround))
             return
         if (alertTimer.hasTimePassed(10000) && alert1Value.get() && (modeValue.equals("Matrix") || modeValue.equals("Vulcan"))) {
             alertTimer.reset()
@@ -140,66 +147,87 @@ class NoSlow : Module() {
                 "aac" -> {
                     if (mc.thePlayer.ticksExisted % 3 == 0) {
                         sendPacket(event,
-                            sendC07 = true,
-                            sendC08 = false,
-                            delay = false,
-                            delayValue = 0,
-                            onGround = false
+                                sendC07 = true,
+                                sendC08 = false,
+                                delay = false,
+                                delayValue = 0,
+                                onGround = false
                         )
                     } else if (mc.thePlayer.ticksExisted % 3 == 1) {
                         sendPacket(event,
-                            sendC07 = false,
-                            sendC08 = true,
-                            delay = false,
-                            delayValue = 0,
-                            onGround = false
+                                sendC07 = false,
+                                sendC08 = true,
+                                delay = false,
+                                delayValue = 0,
+                                onGround = false
                         )
                     }
                 }
-                
-                "aac4" -> {
-                    sendPacket(event, c07Value.get(), c08Value.get(), true, 80, groundValue.get())
-                }
 
-                "custom" -> {
-                    sendPacket(event,
-                        sendC07 = true,
-                        sendC08 = true,
-                        delay = true,
-                        delayValue = customDelayValue.get().toLong(),
-                        onGround = customOnGround.get()
-                    )
-                }
-
-                "ncp" -> {
-                    sendPacket(event, sendC07 = true, sendC08 = true, delay = false, delayValue = 0, onGround = false)
-                }
-
-                "watchdog2" -> {
-                    if (event.eventState == EventState.PRE) {
+                "universocraft" -> {
+                    if ((mc.thePlayer.isUsingItem || mc.thePlayer.isBlocking) && timer.hasTimePassed(placeDelay)) {
+                        mc.playerController.syncCurrentPlayItem()
                         mc.netHandler.addToSendQueue(C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN))
-                    } else {
-                        mc.netHandler.addToSendQueue(C08PacketPlayerBlockPlacement(BlockPos(-1, -1, -1), 255, null, 0.0f, 0.0f, 0.0f))
+                        if (event.eventState == EventState.POST) {
+                            placeDelay = 200L
+                            if (fasterDelay) {
+                                placeDelay = 100L
+                                fasterDelay = false
+                            } else
+                                fasterDelay = true
+                            timer.reset()
+                        }
+                    }
+                    else {
+                        if (!mc.thePlayer.isBlocking && !killAura.blockingStatus)
+                            return
                     }
                 }
 
-                "watchdog" -> {
-                    if (mc.thePlayer.ticksExisted % 2 == 0) {
-                        sendPacket(event, true, sendC08 = false, delay = true, delayValue = 50, onGround = true)
-                    } else {
+                    "aac4" -> {
+                        sendPacket(event, c07Value.get(), c08Value.get(), true, 80, groundValue.get())
+                    }
+
+                    "custom" -> {
                         sendPacket(event,
-                            sendC07 = false,
-                            sendC08 = true,
-                            delay = false,
-                            delayValue = 0,
-                            onGround = true,
-                            watchDog = true
+                                sendC07 = true,
+                                sendC08 = true,
+                                delay = true,
+                                delayValue = customDelayValue.get().toLong(),
+                                onGround = customOnGround.get()
                         )
+                    }
+
+                    "ncp" -> {
+                        sendPacket(event, sendC07 = true, sendC08 = true, delay = false, delayValue = 0, onGround = false)
+                    }
+
+                    "watchdog2" -> {
+                        if (event.eventState == EventState.PRE) {
+                            mc.netHandler.addToSendQueue(C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN))
+                        } else {
+                            mc.netHandler.addToSendQueue(C08PacketPlayerBlockPlacement(BlockPos(-1, -1, -1), 255, null, 0.0f, 0.0f, 0.0f))
+                        }
+                    }
+
+                    "watchdog" -> {
+                        if (mc.thePlayer.ticksExisted % 2 == 0) {
+                            sendPacket(event, true, sendC08 = false, delay = true, delayValue = 50, onGround = true)
+                        } else {
+                            sendPacket(event,
+                                    sendC07 = false,
+                                    sendC08 = true,
+                                    delay = false,
+                                    delayValue = 0,
+                                    onGround = true,
+                                    watchDog = true
+                            )
+                        }
                     }
                 }
             }
         }
-    }
+
 
     @EventTarget
     fun onSlowDown(event: SlowDownEvent) {

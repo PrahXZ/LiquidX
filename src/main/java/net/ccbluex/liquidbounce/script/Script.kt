@@ -129,7 +129,7 @@ class Script(private val scriptFile: File) : MinecraftInstance() {
         if (!scriptText.lines().first().contains("api_version=2")) {
             ClientUtils.logWarn("[ScriptAPI] Running script '${scriptFile.name}' with legacy support.")
             val legacyScript =
-                LiquidBounce::class.java.getResource("/assets/minecraft/fdpclient/scriptapi/legacy.js").readText()
+                LiquidBounce::class.java.getResource("/assets/minecraft/liquidx/scriptapi/legacy.js").readText()
             scriptEngine.eval(legacyScript)
         }
     }

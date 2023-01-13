@@ -13,10 +13,10 @@ class TipSoundManager {
         val disableSoundFile = File(LiquidBounce.fileManager.soundsDir, "disable.wav")
 
         if (!enableSoundFile.exists()) {
-            FileUtils.unpackFile(enableSoundFile, "assets/minecraft/fdpclient/sound/enable.wav")
+            FileUtils.unpackFile(enableSoundFile, "assets/minecraft/liquidx/sound/enable.wav")
         }
         if (!disableSoundFile.exists()) {
-            FileUtils.unpackFile(disableSoundFile, "assets/minecraft/fdpclient/sound/disable.wav")
+            FileUtils.unpackFile(disableSoundFile, "assets/minecraft/liquidx/sound/disable.wav")
         }
 
         enableSound = TipSoundPlayer(enableSoundFile)

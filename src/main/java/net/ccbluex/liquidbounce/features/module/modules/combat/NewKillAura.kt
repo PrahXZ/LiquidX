@@ -12,7 +12,6 @@ import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.features.module.modules.client.Target
 import net.ccbluex.liquidbounce.features.module.modules.movement.Fly
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ABlink
 import net.ccbluex.liquidbounce.features.module.modules.exploit.Disabler
 import net.ccbluex.liquidbounce.features.module.modules.misc.AntiBot
 import net.ccbluex.liquidbounce.features.module.modules.misc.Teams
@@ -20,7 +19,6 @@ import net.ccbluex.liquidbounce.features.module.modules.player.Blink
 import net.ccbluex.liquidbounce.features.module.modules.render.FreeCam
 import net.ccbluex.liquidbounce.features.module.modules.world.Scaffold
 import net.ccbluex.liquidbounce.features.value.*
-import net.ccbluex.liquidbounce.script.api.global.Chat
 import net.ccbluex.liquidbounce.ui.client.hud.element.elements.Notification
 import net.ccbluex.liquidbounce.ui.client.hud.element.elements.NotifyType
 import net.ccbluex.liquidbounce.utils.*
@@ -35,19 +33,15 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.item.EntityArmorStand
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemAxe
 import net.minecraft.item.ItemSword
 import net.minecraft.network.play.client.*
 import net.minecraft.potion.Potion
 import net.minecraft.util.*
 import net.minecraft.world.WorldSettings
-import org.lwjgl.input.Keyboard
 import org.lwjgl.opengl.GL11
 import java.util.*
-import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.sin
 
 @ModuleInfo(name = "NewKillAura", category = ModuleCategory.COMBAT)
 class NewKillAura : Module() {
@@ -79,7 +73,12 @@ class NewKillAura : Module() {
 
     // Range
     val rangeValue = FloatValue("Range", 3.7f, 1f, 8f)
-    private val throughWallsRangeValue = FloatValue("ThroughWallsRange", 3f, 0f, 8f)
+    private val throughWallsRangeValue = object : FloatValue("ThroughWallsRange", 1.5f, 0f, 8f) {
+        override fun onChanged(oldValue: Float, newValue: Float) {
+            val i = rangeValue.get()
+            if (i < newValue) set(i)
+        }
+    }
     private val rangeSprintReducementValue = FloatValue("RangeSprintReducement", 0f, 0f, 0.4f)
 
     // Modes
@@ -187,6 +186,9 @@ class NewKillAura : Module() {
 
     private var markEntity: EntityLivingBase? = null
     private val markTimer = MSTimer()
+
+    var strictStrafe = false
+
 
     // Attack delay
     private val attackTimer = MSTimer()
@@ -486,14 +488,13 @@ class NewKillAura : Module() {
             "universocraft" -> {
                 if (mc.thePlayer.ticksExisted % 13 < 10) {
                     rangeValue.set(2.9)
+                    failRateValue.set(9)
                 }
                 if (mc.thePlayer.ticksExisted % 55 < 10) {
                     rangeValue.set(2.95)
-                    LiquidBounce.hud.addNotification(Notification("HitboxCheck", "Failed the hitbox of player", NotifyType.WARNING, 1000, 500))
                 }
                 if (mc.thePlayer.ticksExisted % 70 < 10) {
                     rangeValue.set(3.0)
-                    LiquidBounce.hud.addNotification(Notification("HitboxCheck", "Failed the hitbox of player", NotifyType.WARNING, 1000, 500))
                     mc.thePlayer.ticksExisted = 0
                 }
 
@@ -767,7 +768,7 @@ class NewKillAura : Module() {
                     outborderValue.get() && !attackTimer.hasTimePassed(attackDelay / 2),
                     randomCenterValue.get(),
                     predictValue.get(),
-                    mc.thePlayer!!.getDistanceToEntityBox(entity) < throughWallsRangeValue.get(),
+                    mc.thePlayer.getDistanceToEntityBox(entity) <= throughWallsRangeValue.get(),
                     maxRange,
                     RandomUtils.nextFloat(minRand.get(), maxRand.get()),
                     randomCenterNewValue.get()
@@ -801,7 +802,7 @@ class NewKillAura : Module() {
                     outborderValue.get() && !attackTimer.hasTimePassed(attackDelay / 2),
                     randomCenterValue.get(),
                     predictValue.get(),
-                    mc.thePlayer!!.getDistanceToEntityBox(entity) < throughWallsRangeValue.get(),
+                    mc.thePlayer.getDistanceToEntityBox(entity) <= throughWallsRangeValue.get(),
                     maxRange,
                     RandomUtils.nextFloat(minRand.get(), maxRand.get()),
                     randomCenterNewValue.get()
@@ -828,7 +829,7 @@ class NewKillAura : Module() {
                     false,
                     false,
                     false,
-                    mc.thePlayer!!.getDistanceToEntityBox(entity) < throughWallsRangeValue.get()
+                    mc.thePlayer.getDistanceToEntityBox(entity) <= throughWallsRangeValue.get()
             ) ?: return null
 
             return rotation
@@ -843,7 +844,7 @@ class NewKillAura : Module() {
 
             val limitedRotation = RotationUtils.limitAngleChange(RotationUtils.serverRotation,
                     RotationUtils.OtherRotation(boundingBox, RotationUtils.getCenter(entity.entityBoundingBox), predictValue.get(),
-                            mc.thePlayer!!.getDistanceToEntityBox(entity) < throughWallsRangeValue.get(), maxRange), (Math.random() * (maxTurnSpeed.get() - minTurnSpeed.get()) + minTurnSpeed.get()).toFloat())
+                            mc.thePlayer.getDistanceToEntityBox(entity) <= throughWallsRangeValue.get(), maxRange), (Math.random() * (maxTurnSpeed.get() - minTurnSpeed.get()) + minTurnSpeed.get()).toFloat())
 
             return limitedRotation
         }

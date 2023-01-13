@@ -38,7 +38,7 @@ class ClassicGuiMainMenu : GuiScreen(), GuiYesNoCallback {
 
         mc.fontRendererObj.drawCenteredString(LiquidBounce.CLIENT_NAME, (width / 2).toFloat(), (bHeight - 20).toFloat(), Color.WHITE.rgb, false)
         mc.fontRendererObj.drawString(LiquidBounce.CLIENT_VERSION, 3F, (height - mc.fontRendererObj.FONT_HEIGHT - 2).toFloat(), 0xffffff, false)
-        "§cWebsite: §fhttps://${LiquidBounce.CLIENT_WEBSITE}/".also { str ->
+        "§cWebsite: §fhttps://${LiquidBounce.CLIENT_RELEASE}/".also { str ->
             mc.fontRendererObj.drawString(str, (this.width - mc.fontRendererObj.getStringWidth(str) - 3).toFloat(), (height - mc.fontRendererObj.FONT_HEIGHT - 2).toFloat(), 0xffffff, false)
         }
         super.drawScreen(mouseX, mouseY, partialTicks)

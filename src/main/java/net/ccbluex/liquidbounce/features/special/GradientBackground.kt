@@ -16,7 +16,7 @@ object GradientBackground {
     init {
         // color data from https://uigradients.com/
         val json = JsonParser().parse(
-            GradientBackground::class.java.classLoader.getResourceAsStream("assets/minecraft/fdpclient/ui/misc/gradient.json")!!
+            GradientBackground::class.java.classLoader.getResourceAsStream("assets/minecraft/liquidx/ui/misc/gradient.json")!!
                 .reader(Charsets.UTF_8)).asJsonArray
         json.forEach {
             val obj = it.asJsonObject

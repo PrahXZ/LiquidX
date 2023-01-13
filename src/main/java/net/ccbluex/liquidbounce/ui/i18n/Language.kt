@@ -27,7 +27,7 @@ class Language(val locale: String) {
             return it
         }
 
-        LanguageManager::class.java.classLoader.getResourceAsStream("assets/minecraft/fdpclient/translations/source.properties")?.let {
+        LanguageManager::class.java.classLoader.getResourceAsStream("assets/minecraft/liquidx/translations/source.properties")?.let {
             return it
         }
 

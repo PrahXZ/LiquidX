@@ -161,6 +161,9 @@ class AutoPlay : Module() {
                     if (text.contains("Jugar de nuevo", true)) {
                         queueAutoPlay {
                             mc.thePlayer.sendChatMessage("/skywars random")
+                            mc.thePlayer.sendChatMessage("/bedwars random")
+                            mc.thePlayer.sendChatMessage("/eggwars random")
+                            mc.thePlayer.sendChatMessage("/playagain")
                             LiquidBounce.hud.addNotification(Notification("AutoPlay", "You joined in the new game", NotifyType.SUCCESS, 1000, 500))
                         }
                     }
