@@ -1,10 +1,12 @@
 // LiquidX Development by PrahXZ and Haflin with FDP Base modified. v2.0 R1
 package net.ccbluex.liquidbounce.features.module.modules.movement
 
+import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.event.*
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
+import net.ccbluex.liquidbounce.features.module.modules.exploit.ABlink
 import net.ccbluex.liquidbounce.features.value.BoolValue
 import net.ccbluex.liquidbounce.features.value.FloatValue
 import net.ccbluex.liquidbounce.features.value.IntegerValue
@@ -105,8 +107,11 @@ class BowJump : Module() {
                         return
                     }
                     "UniversoSpeed" -> {
-                        strafe(0.815F)
-                        mc.thePlayer.motionY = 0.42
+                        LiquidBounce.moduleManager[ABlink::class.java]!!.pulseListValue.set("Custom")
+                        LiquidBounce.moduleManager[ABlink::class.java]!!.pulseCustomDelayValue.set(150)
+                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = true
+                        strafe(0.864f)
+                        mc.thePlayer.motionY = 0.42f.toDouble()
                         lastPlayerTick = mc.thePlayer.ticksExisted.toLong()
                         mc.timer.timerSpeed = 0.88F
                         bowState = 4
@@ -132,6 +137,7 @@ class BowJump : Module() {
     }
 
     override fun onDisable() {
+        LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
         mc.timer.timerSpeed = 1.0f
         mc.thePlayer.speedInAir = 0.02f
     }
