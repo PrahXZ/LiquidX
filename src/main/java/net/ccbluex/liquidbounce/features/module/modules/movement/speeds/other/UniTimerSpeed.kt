@@ -37,9 +37,9 @@ class UniTimerSpeed : SpeedMode("UniversoTimer") {
             thePlayer.jump()
         else {
             if (thePlayer.fallDistance <= 0.1)
-                mc.timer.timerSpeed = 1.2f
-            else if (thePlayer.fallDistance < 1.3)
-                mc.timer.timerSpeed = 0.85f
+                mc.timer.timerSpeed = 0.7f
+            else if (thePlayer.fallDistance < 1)
+                mc.timer.timerSpeed = 6f
             else
                 mc.timer.timerSpeed = 1f
         }
