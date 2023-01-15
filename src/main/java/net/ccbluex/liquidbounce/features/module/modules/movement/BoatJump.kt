@@ -28,6 +28,7 @@ class BoatJump : Module() {
     private val launchRadiusValue = FloatValue("LaunchRadius", 4F, 3F, 10F).displayable { modeValue.equals("Launch") }
     private val delayValue = IntegerValue("Delay", 200, 100, 500)
     private val autoHitValue = BoolValue("AutoHit", true)
+    private val resetMotionValue = BoolValue("ResetMotionOnDisable", true)
 
     private var jumpState = 1
     private val timer = MSTimer()
@@ -44,6 +45,10 @@ class BoatJump : Module() {
         hasStopped = false
         mc.timer.timerSpeed = 1f
         mc.thePlayer.speedInAir = 0.02f
+        if(resetMotionValue.get()) {
+            mc.thePlayer.motionX = 0.0
+            mc.thePlayer.motionZ = 0.0
+        }
     }
 
     @EventTarget
