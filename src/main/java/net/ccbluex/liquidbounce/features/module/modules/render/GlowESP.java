@@ -46,6 +46,11 @@ public class GlowESP extends Module {
     public final BoolValue Animals = new BoolValue("Animals", false);
     public final BoolValue Mobs = new BoolValue("Mobs", false);
 
+    public final FloatValue Redcolor = new FloatValue("R", 255, 0, 255);
+    private final FloatValue Greencolor = new FloatValue("G", 255, 0, 255);
+    private final FloatValue Bluecolor = new FloatValue("B", 255, 0, 255);
+    private final BoolValue Rainbowcolor = new BoolValue("Rainbow", false);
+
     public static boolean renderNameTags = true;
     private final ShaderUtil outlineShader = new ShaderUtil("shaders/outline.frag");
     private final ShaderUtil glowShader = new ShaderUtil("shaders/glow.frag");
