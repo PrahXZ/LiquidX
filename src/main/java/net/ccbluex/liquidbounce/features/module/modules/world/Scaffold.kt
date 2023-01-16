@@ -1,6 +1,7 @@
 // LiquidX Development by PrahXZ and Haflin with FDP Base modified. v2.0 R1
 package net.ccbluex.liquidbounce.features.module.modules.world
 
+import com.sun.org.apache.xpath.internal.operations.Bool
 import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.event.*
 import net.ccbluex.liquidbounce.features.module.modules.exploit.ABlink
@@ -39,6 +40,9 @@ import net.minecraft.item.ItemStack
 import net.minecraft.network.play.client.*
 import net.minecraft.network.play.client.C03PacketPlayer
 import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition
+import net.minecraft.network.play.client.C03PacketPlayer.C05PacketPlayerLook
+import net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook
+import net.minecraft.network.play.server.S04PacketEntityEquipment
 import net.minecraft.stats.StatList
 import net.minecraft.util.*
 import org.lwjgl.input.Keyboard
@@ -254,10 +258,23 @@ class Scaffold : Module() {
     private val speed5 = 1.3f
     private var wasTimer = false
 
+    //test
+    private val putoliquid = BoolValue("TimerBoost", false)
+    private val timerlol2 = FloatValue("TimerBoostValue", 1f, 0f, 10f)
+    private var disableticks = 0
+    private var timerboosttimer = MSTimer()
+    private val timerboosttime = IntegerValue("BoostTime", 1500, 0, 10000)
+    private var disabling = false
+    private val disableticksputo = IntegerValue("ScaffoldC03", 30, 20, 100)
+
     /**
      * Enable module
      */
     override fun onEnable() {
+        timerboosttimer.reset()
+        disableticks = 0
+        disabling = false
+
         slot = mc.thePlayer.inventory.currentItem
         doSpoof = false
         if (mc.thePlayer == null) return
@@ -290,9 +307,7 @@ class Scaffold : Module() {
      */
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
-        // if(!mc.thePlayer.onGround) tolleyStayTick=0
-        //    else tolleyStayTick++
-        // if(tolleyStayTick>100) tolleyStayTick=100
+
         if (towerStatus && towerModeValue.get().lowercase() != "aac3.3.9" && towerModeValue.get().lowercase() != "aac4.4constant" && towerModeValue.get().lowercase() != "aac4jump") mc.timer.timerSpeed = towerTimerValue.get()
         if (!towerStatus) mc.timer.timerSpeed = timerValue.get()
         if (towerStatus || mc.thePlayer.isCollidedHorizontally) {
@@ -550,15 +565,31 @@ class Scaffold : Module() {
                 zitterDirection = !zitterDirection
             }
         }
+        if (disabling)
+            mc.timer.timerSpeed = if (!timerboosttimer.hasTimePassed(timerboosttime.get().toLong())) timerlol2.get() else 1f
+
     }
 
     @EventTarget
     fun onPacket(event: PacketEvent) {
+
         if (mc.thePlayer == null) return
         val packet = event.packet
 
-        //Verus
+        //C03 Halflin packet position
         if (packet is C03PacketPlayer) {
+            if (disableticks < disableticksputo.get()) {
+                event.cancelEvent()
+                if (disableticks == 5)
+                    PacketUtils.sendPacketNoEvent(C05PacketPlayerLook(mc.thePlayer.rotationYaw-180, 83f,true ))
+                disableticks++
+            } else if (disableticks == disableticksputo.get()) {
+                disabling = true
+                disableticks++
+                timerboosttimer.reset()
+            }
+
+
             if (doSpoof) {
                 packet.onGround = true
             }
@@ -965,6 +996,8 @@ class Scaffold : Module() {
      */
     override fun onDisable() {
         // tolleyStayTick=999
+        if (putoliquid.get())
+            PacketUtils.sendPacketNoEvent(C06PacketPlayerPosLook(mc.thePlayer.posX, mc.thePlayer.posY - 0.075, mc.thePlayer.posZ, mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch, false))
         LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
         if (mc.thePlayer == null) return
         if (!GameSettings.isKeyDown(mc.gameSettings.keyBindSneak)) {
@@ -1017,6 +1050,8 @@ class Scaffold : Module() {
      */
     @EventTarget
     fun onMove(event: MoveEvent) {
+        if (disableticks < disableticksputo.get())
+            event.zero()
         if (safeWalkValue.equals("off") || shouldGoDown) return
         if (safeWalkValue.equals("air") || mc.thePlayer.onGround) event.isSafeWalk = true
     }

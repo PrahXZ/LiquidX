@@ -1,4 +1,4 @@
-package net.ccbluex.liquidbounce.features.module.modules.movement.speeds.other
+package net.ccbluex.liquidbounce.features.module.modules.movement.speeds.universo
 
 import net.ccbluex.liquidbounce.event.MoveEvent
 import net.ccbluex.liquidbounce.features.module.modules.movement.speeds.SpeedMode

@@ -114,7 +114,7 @@ class NewKillAura : Module() {
 
     // Bypass
     private val swingValue = BoolValue("Swing", true)
-    private val keepSprintValue = BoolValue("KeepSprint", true)
+    public val keepSprintValue = BoolValue("KeepSprint", true)
 
     // AutoBlock
     private val autoBlockModeValue = ListValue("AutoBlock", arrayOf("Verus", "Fake", "Off"), "Off")
