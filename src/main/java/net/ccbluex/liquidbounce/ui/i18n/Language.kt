@@ -17,13 +17,13 @@ class Language(val locale: String) {
 
         if(split.size > 1) {
             val str = split[0].lowercase() + "-" + split[1].uppercase()
-            LanguageManager::class.java.classLoader.getResourceAsStream("assets/minecraft/fdpclient/translations/${str}/source.properties")?.let {
+            LanguageManager::class.java.classLoader.getResourceAsStream("assets/minecraft/liquidx/translations/${str}/source.properties")?.let {
                 return it
             }
         }
 
         val str = split[0].lowercase()
-        LanguageManager::class.java.classLoader.getResourceAsStream("assets/minecraft/fdpclient/translations/${str}/source.properties")?.let {
+        LanguageManager::class.java.classLoader.getResourceAsStream("assets/minecraft/liquidx/translations/${str}/source.properties")?.let {
             return it
         }
 

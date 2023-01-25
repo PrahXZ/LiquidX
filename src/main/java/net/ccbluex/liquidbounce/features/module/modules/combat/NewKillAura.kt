@@ -106,7 +106,7 @@ class NewKillAura : Module() {
     private val rotTest = BoolValue("rotTest", false).displayable { rotations.get().equals("down", true) }
 
     private val priorityValue = ListValue("Priority", arrayOf("Health", "Distance", "Direction", "LivingTime", "Armor", "HurtResistance", "HurtTime", "HealthAbsorption", "RegenAmplifier"), "Distance")
-    private val rangeModeValue = ListValue("RangeMode", arrayOf("None", "Universocraft", "Verus"), "None")
+    public val rangeModeValue = ListValue("RangeMode", arrayOf("None", "Universocraft", "Verus"), "None")
     val targetModeValue = ListValue("TargetMode", arrayOf("Single", "Switch", "Multi"), "Switch")
 
     //reverted in old LB. idk why they removed it.
@@ -488,14 +488,16 @@ class NewKillAura : Module() {
             "universocraft" -> {
                 if (mc.thePlayer.ticksExisted % 13 < 10) {
                     rangeValue.set(2.9)
-                    failRateValue.set(9)
+                    failRateValue.set(5)
                 }
                 if (mc.thePlayer.ticksExisted % 55 < 10) {
                     rangeValue.set(2.95)
+                    failRateValue.set(7)
                 }
                 if (mc.thePlayer.ticksExisted % 70 < 10) {
                     rangeValue.set(3.0)
                     mc.thePlayer.ticksExisted = 0
+                    failRateValue.set(9)
                 }
 
             }

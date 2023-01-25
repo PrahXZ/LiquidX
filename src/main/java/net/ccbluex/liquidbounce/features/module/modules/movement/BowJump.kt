@@ -18,11 +18,15 @@ import net.ccbluex.liquidbounce.utils.render.RenderUtils
 import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.init.Items
 import net.minecraft.item.ItemBow
+import net.minecraft.network.play.client.C00PacketKeepAlive
 import net.minecraft.network.play.client.C03PacketPlayer
 import net.minecraft.network.play.client.C03PacketPlayer.C05PacketPlayerLook
 import net.minecraft.network.play.client.C07PacketPlayerDigging
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement
 import net.minecraft.network.play.client.C09PacketHeldItemChange
+import net.minecraft.network.play.client.C0BPacketEntityAction
+import net.minecraft.network.play.client.C0FPacketConfirmTransaction
+import net.minecraft.network.play.server.S00PacketKeepAlive
 import net.minecraft.util.BlockPos
 import net.minecraft.util.EnumFacing
 import java.awt.Color
@@ -39,6 +43,7 @@ class BowJump : Module() {
     private var bowState = 0
     private var lastPlayerTick: Long = 0
     private var lastSlot = -1
+    private  var trans = false
     override fun onEnable() {
         if (mc.thePlayer == null) return
         bowState = 0
@@ -56,12 +61,20 @@ class BowJump : Module() {
 
     @EventTarget
     fun onPacket(event: PacketEvent) {
+
+        val packet = event.packet
+
         if (event.packet is C09PacketHeldItemChange) {
             lastSlot = event.packet.slotId
             event.cancelEvent()
         }
         if (event.packet is C03PacketPlayer) {
             if (bowState < 3) event.packet.isMoving = false
+        }
+        if (packet is C0BPacketEntityAction || packet is C0FPacketConfirmTransaction || packet is C03PacketPlayer || packet is S00PacketKeepAlive) {
+            if (trans) {
+                event.cancelEvent()
+            }
         }
     }
 
@@ -108,20 +121,23 @@ class BowJump : Module() {
                     }
                     "UniversoSpeed" -> {
                         LiquidBounce.moduleManager[ABlink::class.java]!!.pulseListValue.set("Custom")
-                        LiquidBounce.moduleManager[ABlink::class.java]!!.pulseCustomDelayValue.set(150)
+                        LiquidBounce.moduleManager[ABlink::class.java]!!.pulseCustomDelayValue.set(200)
                         LiquidBounce.moduleManager[ABlink::class.java]!!.state = true
-                        strafe(0.864f)
+                        strafe(0.871f)
                         mc.thePlayer.motionY = 0.42f.toDouble()
                         lastPlayerTick = mc.thePlayer.ticksExisted.toLong()
-                        mc.timer.timerSpeed = 0.88F
+                        mc.timer.timerSpeed = 0.66F
                         bowState = 4
+                        trans = true
                         return
                     }
                 }
 
             }
             4 -> {
-                if (mc.thePlayer.onGround && mc.thePlayer.ticksExisted - lastPlayerTick >= 1) bowState = 5
+                if (mc.thePlayer.onGround && mc.thePlayer.ticksExisted - lastPlayerTick >= 1)
+                    trans = false
+                    bowState = 5
             }
         }
         if (bowState < 3) {
@@ -140,6 +156,7 @@ class BowJump : Module() {
         LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
         mc.timer.timerSpeed = 1.0f
         mc.thePlayer.speedInAir = 0.02f
+        trans = false
     }
 
     private val bowSlot: Int
@@ -165,10 +182,10 @@ class BowJump : Module() {
 
     val bowStatus: String
         get() = when (bowState) {
-            0 -> "Idle..."
+            0 -> "Waiting..."
             1 -> "Preparing..."
             2 -> "Waiting for damage..."
-            3, 4 -> "Boost!"
+            3, 4 -> "ZOOOM!"
             else -> "Task completed."
         }
     val statusColor: Color

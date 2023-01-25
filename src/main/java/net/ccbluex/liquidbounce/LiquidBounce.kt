@@ -1,7 +1,6 @@
 // LiquidX Development by PrahXZ and Haflin with FDP Base modified. v2.0 R1
 package net.ccbluex.liquidbounce
 
-import com.google.gson.JsonParser
 import net.ccbluex.liquidbounce.event.ClientShutdownEvent
 import net.ccbluex.liquidbounce.event.EventManager
 import net.ccbluex.liquidbounce.features.command.CommandManager
@@ -23,12 +22,11 @@ import net.ccbluex.liquidbounce.ui.font.Fonts
 import net.ccbluex.liquidbounce.ui.i18n.LanguageManager
 import net.ccbluex.liquidbounce.ui.sound.TipSoundManager
 import net.ccbluex.liquidbounce.utils.*
-import net.ccbluex.liquidbounce.utils.misc.HttpUtils
+import net.ccbluex.liquidbounce.utils.math.MathUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.util.ResourceLocation
 import java.util.*
-import kotlin.concurrent.thread
 
 object LiquidBounce {
 
@@ -37,12 +35,12 @@ object LiquidBounce {
     const val CLIENT_NAME = "LiquidX"
 
     var Darkmode = true
-    const val COLORED_NAME = "§3§lLiquidX §8» "
-    const val NORMAL_NAME = "§3§lLiquidX §f§lClient"
+    const val CLIENT_PREFIX = "§3§lLiquidX §8» "
+    const val BIG_NAME = "§3§lLiquidX §f§lClient"
     const val CLIENT_CREATOR = "Prah and Halflin"
-    const val CLIENT_RELEASE = "Development Build"
+    const val CLIENT_RELEASE = "Ultimate Release"
     const val CLIENT_IP = "www.liquidx.net"
-    const val UID = "23"
+    val UID = MathUtils.randomNumber(600, 1)
     
     @JvmField
     val gitInfo = Properties().also {
@@ -56,7 +54,7 @@ object LiquidBounce {
 
     @JvmField
 
-    val CLIENT_VERSION = "v2.1 Beta"
+    val CLIENT_VERSION = "v2.1"
 
 
     @JvmField
@@ -66,7 +64,7 @@ object LiquidBounce {
 
     var isStarting = true
     var isLoadingConfig = true
-    private var latest = ""
+    private var uidrandom = 0
 
     // Managers
     lateinit var moduleManager: ModuleManager
@@ -203,6 +201,7 @@ object LiquidBounce {
     /**
      * Execute if client ui type is selected
      */
+
     fun startClient() {
         dynamicLaunchOptions.forEach {
             it.start()

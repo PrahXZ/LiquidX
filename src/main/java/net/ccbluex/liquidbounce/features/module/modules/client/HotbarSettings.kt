@@ -63,7 +63,7 @@ object HotbarSettings : Module() {
                 RenderHelper.disableStandardItemLighting()
                 // render windows logo and item pos indicator
                 RenderUtils.originalRoundedRect(itemX + 19F, sr.scaledHeight - 3F, itemX + 25F,sr.scaledHeight - 1F, 1F,  Color(68, 129, 230).rgb)
-                RenderUtils.drawImage( ResourceLocation("fdpclient/ui/hotbar/win11.png"), sr.scaledWidth / 2 - 95, sr.scaledHeight - 19, 14, 14)
+                RenderUtils.drawImage( ResourceLocation("liquidx/ui/hotbar/win11.png"), sr.scaledWidth / 2 - 95, sr.scaledHeight - 19, 14, 14)
                 // date and time
                 val dateFormat = SimpleDateFormat("dd/MM/yy")
                 val date = dateFormat.format(System.currentTimeMillis())
@@ -74,9 +74,9 @@ object HotbarSettings : Module() {
                 // get distance date takes up
                 val padding = max(FontLoaders.F14.getStringWidth(time), FontLoaders.F14.getStringWidth(date)) + 10
                 // fake icons
-                RenderUtils.drawImage(ResourceLocation("fdpclient/ui/hotbar/1.png"), (sr.scaledWidth - padding) - 10, sr.scaledHeight - 17, 10, 10)
-                RenderUtils.drawImage(ResourceLocation("fdpclient/ui/hotbar/2.png"), (sr.scaledWidth - padding) - 28, sr.scaledHeight - 17, 10, 10)
-                RenderUtils.drawImage(ResourceLocation("fdpclient/ui/hotbar/3.png"), (sr.scaledWidth - padding) - 46, sr.scaledHeight - 17, 10, 10)
+                RenderUtils.drawImage(ResourceLocation("liquidx/ui/hotbar/1.png"), (sr.scaledWidth - padding) - 10, sr.scaledHeight - 17, 10, 10)
+                RenderUtils.drawImage(ResourceLocation("liquidx/ui/hotbar/2.png"), (sr.scaledWidth - padding) - 28, sr.scaledHeight - 17, 10, 10)
+                RenderUtils.drawImage(ResourceLocation("liquidx/ui/hotbar/3.png"), (sr.scaledWidth - padding) - 46, sr.scaledHeight - 17, 10, 10)
                 // lang idicator
                 val loccode = mc.gameSettings.language.uppercase()
                 val lang = loccode.substringBefore("_", "null")
@@ -88,7 +88,7 @@ object HotbarSettings : Module() {
                     FontLoaders.F14.getStringWidth(time),
                     FontLoaders.F14.getStringWidth(date)
                 ) + 10) + (max(FontLoaders.F14.getStringWidth(lang), FontLoaders.F14.getStringWidth(region)) + 2)
-                RenderUtils.drawImage(ResourceLocation("fdpclient/ui/hotbar/up.png"), (sr.scaledWidth - paddingAfter) - 68, sr.scaledHeight - 17, 10, 10)
+                RenderUtils.drawImage(ResourceLocation("liquidx/ui/hotbar/up.png"), (sr.scaledWidth - paddingAfter) - 68, sr.scaledHeight - 17, 10, 10)
             }
             hotbarValue.get() ==  "Rise" -> {
                 if(BlurValue.get() && BlurAmount.get() > 1F ) {

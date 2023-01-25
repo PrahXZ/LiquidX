@@ -73,7 +73,7 @@ class Scaffold : Module() {
     private val switchOnEnableValue = BoolValue("SwitchOnEnable", false).displayable { autoBlockValue.equals("Switch") }
 
     // Basic stuff
-    private val sprintValue = ListValue("Sprint", arrayOf("Always", "Dynamic", "OnGround", "OffGround", "Hypixel", "OFF"), "Always")
+    public val sprintValue = ListValue("Sprint", arrayOf("Always", "Dynamic", "OnGround", "OffGround", "Verus", "OFF"), "Always")
     private val swingValue = ListValue("Swing", arrayOf("Normal", "Packet", "None"), "Normal")
     private val searchValue = BoolValue("Search", true)
     private val downValue = BoolValue("Down", true)
@@ -82,24 +82,25 @@ class Scaffold : Module() {
     // Eagle
     private val eagleValue = ListValue("Eagle", arrayOf("Silent", "Normal", "Off"), "Off")
     private val blocksToEagleValue = IntegerValue("BlocksToEagle", 0, 0, 10).displayable { !eagleValue.equals("Off") }
+
     // New feature
     private val edgeDistanceValue = FloatValue("EagleEdgeDistance", 0f, 0f, 0.5f).displayable { !eagleValue.equals("Off") }
 
     // DiagonalFix
-    private  val diagonalfixValue = ListValue("DiagonalFix", arrayOf("None", "Verus","Zitter"), "None")
+//    private val diagonalfixValue = ListValue("DiagonalFix", arrayOf("None", "Verus", "Zitter"), "None")
 
     // Expand
     private val expandLengthValue = IntegerValue("ExpandLength", 1, 1, 6)
 
     // Rotations
     private val rotationsValue = ListValue("Rotations", arrayOf("None", "Better", "Vanilla", "AAC", "Test1", "Test2", "Custom", "Advanced"), "AAC")
-    private val bypassmodeValue = ListValue("BypassMode", arrayOf("None", "Universocraft"), "None")
+//    private val bypassmodeValue = ListValue("BypassMode", arrayOf("None", "Universocraft"), "None")
     private val alwaysRotateValue = BoolValue("AlwaysRotate", true).displayable { !rotationsValue.equals("None") }
     private val towerrotationsValue = ListValue("TowerRotations", arrayOf("None", "Better", "Vanilla", "AAC", "Test1", "Test2", "Custom"), "AAC")
     private val advancedYawModeValue = ListValue("AdvancedYawRotations", arrayOf("Offset", "Static", "RoundStatic", "Vanilla", "Round", "MoveDirection", "OffsetMove"), "MoveDirection").displayable { rotationsValue.equals("Advanced") }
     private val advancedPitchModeValue = ListValue("AdvancedPitchRotations", arrayOf("Offset", "Static", "Vanilla"), "Static").displayable { rotationsValue.equals("Advanced") }
     private val advancedYawOffsetValue = IntegerValue("AdvancedOffsetYaw", -15, -180, 180).displayable { rotationsValue.equals("Advanced") && advancedYawModeValue.equals("Offset") }
-	private val advancedYawMoveOffsetValue = IntegerValue("AdvancedMoveOffsetYaw", -15, -180, 180).displayable { rotationsValue.equals("Advanced") && advancedYawModeValue.equals("Offset") }
+    private val advancedYawMoveOffsetValue = IntegerValue("AdvancedMoveOffsetYaw", -15, -180, 180).displayable { rotationsValue.equals("Advanced") && advancedYawModeValue.equals("Offset") }
     private val advancedYawStaticValue = IntegerValue("AdvancedStaticYaw", 145, -180, 180).displayable { rotationsValue.equals("Advanced") && (advancedYawModeValue.equals("Static") || advancedYawModeValue.equals("RoundStatic")) }
     private val advancedYawRoundValue = IntegerValue("AdvancedYawRoundValue", 45, 0, 180).displayable { rotationsValue.equals("Advanced") && (advancedYawModeValue.equals("Round") || advancedYawModeValue.equals("RoundStatic")) }
     private val advancedPitchOffsetValue = FloatValue("AdvancedOffsetPitch", -0.4f, -90f, 90f).displayable { rotationsValue.equals("Advanced") && advancedPitchModeValue.equals("Offset") }
@@ -109,6 +110,7 @@ class Scaffold : Module() {
     private val customPitchValue = FloatValue("CustomPitch", 82.4f, -90f, 90f).displayable { rotationsValue.equals("Custom") }
     private val customtowerYawValue = IntegerValue("CustomTowerYaw", -145, -180, 180).displayable { towerrotationsValue.equals("Custom") }
     private val customtowerPitchValue = FloatValue("CustomTowerPitch", 79f, -90f, 90f).displayable { towerrotationsValue.equals("Custom") }
+
     // private val tolleyBridgeValue = IntegerValue("TolleyBridgeTick", 0, 0, 10)
     // private val tolleyYawValue = IntegerValue("TolleyYaw", 0, 0, 90)
     private val silentRotationValue = BoolValue("SilentRotation", true).displayable { !rotationsValue.equals("None") }
@@ -136,20 +138,20 @@ class Scaffold : Module() {
     private val motionResetValue = ListValue("MotionReset", arrayOf("OFF", "OnEnable", "OnDisable"), "OFF")
     private val motionSpeedEnabledValue = BoolValue("MotionSpeedSet", false)
     private val motionSpeedValue = FloatValue("MotionSpeed", 0.1f, 0.05f, 1f).displayable { motionSpeedEnabledValue.get() }
-    private val speedModifierValue = FloatValue("SpeedModifier", 1f, 0f, 2f)
+    public val speedModifierValue = FloatValue("SpeedModifier", 1f, 0f, 2f)
 
     // Tower
     private val towerModeValue = ListValue(
-        "TowerMode", arrayOf(
+            "TowerMode", arrayOf(
             "Jump",
             "Universocraft",
             "Motion",
-	    "Motion2",
+            "Motion2",
             "ConstantMotion",
             "PlusMotion",
             "StableMotion",
             "MotionTP",
-	    "MotionTP2",
+            "MotionTP2",
             "Packet",
             "Teleport",
             "AAC3.3.9",
@@ -158,7 +160,7 @@ class Scaffold : Module() {
             "AAC4Jump",
             "Matrix6.9.2",
             "Verus"
-        ), "Jump"
+    ), "Jump"
     )
     private val stopWhenBlockAboveValue = BoolValue("StopTowerWhenBlockAbove", true)
     private val towerFakeJumpValue = BoolValue("TowerFakeJump", true)
@@ -166,7 +168,7 @@ class Scaffold : Module() {
     private val towerTimerValue = FloatValue("TowerTimer", 1f, 0.1f, 5f)
 
     // Safety
-    private val sameYValue = ListValue("SameY", arrayOf("Simple", "AutoJump", "WhenSpeed", "JumpUpY", "Universocraft",  "OFF"), "WhenSpeed")
+    private val sameYValue = ListValue("SameY", arrayOf("Simple", "AutoJump", "WhenSpeed", "JumpUpY", "Universocraft", "OFF"), "WhenSpeed")
     private val safeWalkValue = ListValue("SafeWalk", arrayOf("Ground", "Air", "OFF"), "OFF")
     private val hitableCheckValue = ListValue("HitableCheck", arrayOf("Simple", "Random", "Strict", "OFF"), "Simple")
 
@@ -260,22 +262,24 @@ class Scaffold : Module() {
 
     //test scaffold boost timer
     private val timerboost = ListValue("TimerBoost-Mode", arrayOf("None", "Universocraft", "Verus"), "None")
-    private val timerlol2 = FloatValue("ScaffoldTimer", 1f, 0f, 10f).displayable { !timerboost.equals("None") }
+    private val timerlol2 = FloatValue("ScaffoldTimer", 1f, 0f, 10f).displayable { timerboost.equals("Verus") }
     private var disableticks = 0
     private var timerboosttimer = MSTimer()
-    private val timerboosttime = IntegerValue("BoostTime", 1500, 0, 10000).displayable { !timerboost.equals("None") }
+    private var timerms = MSTimer()
+    private val timerboosttime = IntegerValue("BoostTime", 1500, 0, 10000).displayable { timerboost.equals("Verus") }
     private var disabling = false
-    private val disableticksputo = IntegerValue("C03Ticks", 30, 20, 100).displayable { !timerboost.equals("None") }
+    private var transactionxd = false
+    private var speedboost = 1.05
+    private val disableticksputo = IntegerValue("C03Ticks", 30, 20, 100).displayable { timerboost.equals("Verus") }
     /**
      * Enable module
      */
     override fun onEnable() {
-        if (mc.thePlayer.ticksExisted % 30 < 10) {
-            disableticks = 0
-        }
         timerboosttimer.reset()
-        disableticks = 0
+        disableticks = 40
         disabling = false
+        transactionxd = false
+        mc.thePlayer.ticksExisted = 15
 
         slot = mc.thePlayer.inventory.currentItem
         doSpoof = false
@@ -394,72 +398,72 @@ class Scaffold : Module() {
                 }
                 mc.netHandler.addToSendQueue(c08)
             }
-            when (bypassmodeValue.get().lowercase()) {
-                "none" -> {
-                    speedModifierValue.value = speedModifierValue.get()
-                }
-
-                "universocraft" -> {
-                    if (mc.thePlayer.ticksExisted % 20 < 10) {
-                        speedModifierValue.set(speed1)
-                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
-                        mc.timer.timerSpeed = 1f
-                    } else {
-                        speedModifierValue.set(speed2)
-                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
-                        mc.timer.timerSpeed = 0.9f
-                    }
-                    if (mc.thePlayer.ticksExisted % 15 < 10) {
-                        mc.timer.timerSpeed = 0.95f
-                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
-                        speedModifierValue.set(speed3)
-                    }
-                    if (mc.thePlayer.ticksExisted % 30 < 10) {
-                        mc.timer.timerSpeed = 0.8f
-                        speedModifierValue.set(speed4)
-                    }
-                    if (mc.thePlayer.ticksExisted % 25 < 10) {
-                        mc.timer.timerSpeed = 0.8f
-                        speedModifierValue.set(speed5)
-                    }
-                }
-            }
-            when (diagonalfixValue.get().lowercase()) {
-                "none" -> {
-
-                }
-
-                "verus" -> {
-                    if (mc.thePlayer.ticksExisted % 10 < 10) {
-                        mc.timer.timerSpeed = 1f
-                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
-                    } else {
-                        mc.timer.timerSpeed = 0.9f
-                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = true
-                        LiquidBounce.moduleManager[ABlink::class.java]!!.pulseListValue.set("custom")
-                        LiquidBounce.moduleManager[ABlink::class.java]!!.pulseCustomDelayValue.set(90)
-                    }
-                    if (mc.thePlayer.ticksExisted % 20 < 10) {
-                        mc.timer.timerSpeed = 0.9f
-                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = true
-                        LiquidBounce.moduleManager[ABlink::class.java]!!.pulseListValue.set("custom")
-                        LiquidBounce.moduleManager[ABlink::class.java]!!.pulseCustomDelayValue.set(120)
-
-                    }
-
-                }
-
-                "zitter" -> {
-                    if (mc.thePlayer.ticksExisted % 40 < 10) {
-                        mc.timer.timerSpeed = 1f
-                        zitterModeValue.set("OFF")
-                    } else {
-                        mc.timer.timerSpeed = 0.9f
-                        zitterModeValue.set("Smooth")
-                    }
-
-                }
-            }
+//            when (bypassmodeValue.get().lowercase()) {
+//                "none" -> {
+//                    speedModifierValue.value = speedModifierValue.get()
+//                }
+//
+//                "universocraft" -> {
+//                    if (mc.thePlayer.ticksExisted % 20 < 10) {
+//                        speedModifierValue.set(speed1)
+//                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
+//                        mc.timer.timerSpeed = 1f
+//                    } else {
+//                        speedModifierValue.set(speed2)
+//                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
+//                        mc.timer.timerSpeed = 0.9f
+//                    }
+//                    if (mc.thePlayer.ticksExisted % 15 < 10) {
+//                        mc.timer.timerSpeed = 0.95f
+//                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
+//                        speedModifierValue.set(speed3)
+//                    }
+//                    if (mc.thePlayer.ticksExisted % 30 < 10) {
+//                        mc.timer.timerSpeed = 0.8f
+//                        speedModifierValue.set(speed4)
+//                    }
+//                    if (mc.thePlayer.ticksExisted % 25 < 10) {
+//                        mc.timer.timerSpeed = 0.8f
+//                        speedModifierValue.set(speed5)
+//                    }
+//                }
+//            }
+//            when (diagonalfixValue.get().lowercase()) {
+//                "none" -> {
+//
+//                }
+//
+//                "verus" -> {
+//                    if (mc.thePlayer.ticksExisted % 10 < 10) {
+//                        mc.timer.timerSpeed = 1f
+//                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
+//                    } else {
+//                        mc.timer.timerSpeed = 0.9f
+//                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = true
+//                        LiquidBounce.moduleManager[ABlink::class.java]!!.pulseListValue.set("custom")
+//                        LiquidBounce.moduleManager[ABlink::class.java]!!.pulseCustomDelayValue.set(90)
+//                    }
+//                    if (mc.thePlayer.ticksExisted % 20 < 10) {
+//                        mc.timer.timerSpeed = 0.9f
+//                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = true
+//                        LiquidBounce.moduleManager[ABlink::class.java]!!.pulseListValue.set("custom")
+//                        LiquidBounce.moduleManager[ABlink::class.java]!!.pulseCustomDelayValue.set(120)
+//
+//                    }
+//
+//                }
+//
+//                "zitter" -> {
+//                    if (mc.thePlayer.ticksExisted % 40 < 10) {
+//                        mc.timer.timerSpeed = 1f
+//                        zitterModeValue.set("OFF")
+//                    } else {
+//                        mc.timer.timerSpeed = 0.9f
+//                        zitterModeValue.set("Smooth")
+//                    }
+//
+//                }
+//            }
             when (extraClickValue.get().lowercase()) {
                 "emptyc08" -> sendPacket(C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getStackInSlot(slot)))
                 "afterplace" -> {
@@ -492,7 +496,7 @@ class Scaffold : Module() {
         }
 
         mc.thePlayer.isSprinting = canSprint
-        if (sprintValue.equals("Hypixel")) {
+        if (sprintValue.equals("Verus")) {
             if (mc.thePlayer.onGround) {
                 mc.thePlayer.motionX *= 1.19
                 mc.thePlayer.motionZ *= 1.19
@@ -580,15 +584,17 @@ class Scaffold : Module() {
 
             }
             "universocraft" -> {
-                if (disabling)
-                    mc.timer.timerSpeed = if (!timerboosttimer.hasTimePassed(timerboosttime.get().toLong())) timerlol2.get() else 1f
-            }
-            "verus" -> {
-                if (disabling)
-                    mc.timer.timerSpeed = if (!timerboosttimer.hasTimePassed(timerboosttime.get().toLong())) timerlol2.get() else 1f
+                if (mc.thePlayer.ticksExisted % 45 < 10) {
+                    transactionxd = true
+                }
+                if (mc.thePlayer.ticksExisted % 65 < 10) {
+                    transactionxd = false
+                    mc.timer.timerSpeed = 1.0f
+                    mc.thePlayer.ticksExisted = 15
+                }
+                }
             }
         }
-    }
 
     @EventTarget
     fun onPacket(event: PacketEvent) {
@@ -600,6 +606,13 @@ class Scaffold : Module() {
                 packet.onGround = true
             }
         }
+        if (packet is C0FPacketConfirmTransaction || packet is C0BPacketEntityAction) {
+            if (transactionxd) {
+                event.cancelEvent()
+                mc.timer.timerSpeed = 2.3f
+            }
+
+        }
 
         //C03 Halflin packet position
         when (timerboost.get().lowercase()) {
@@ -609,9 +622,6 @@ class Scaffold : Module() {
              "universocraft" ->
                  if (packet is C03PacketPlayer) {
                 if (disableticks < disableticksputo.get()) {
-                    event.cancelEvent()
-                    if (disableticks == 5)
-                        PacketUtils.sendPacketNoEvent(C05PacketPlayerLook(mc.thePlayer.rotationYaw - 180, 83f, true))
                     disableticks++
                 } else if (disableticks == disableticksputo.get()) {
                     disabling = true
@@ -1046,10 +1056,7 @@ class Scaffold : Module() {
                 disabling = false
             }
             "universocraft" -> {
-                PacketUtils.sendPacketNoEvent(C06PacketPlayerPosLook(mc.thePlayer.posX, mc.thePlayer.posY - 0.075, mc.thePlayer.posZ, mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch, false))
-            }
-            "verus" -> {
-                PacketUtils.sendPacketNoEvent(C06PacketPlayerPosLook(mc.thePlayer.posX, mc.thePlayer.posY - 0.075, mc.thePlayer.posZ, mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch, false))
+                mc.timer.timerSpeed = 1f
             }
         }
         LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
@@ -1058,31 +1065,31 @@ class Scaffold : Module() {
             mc.gameSettings.keyBindSneak.pressed = false
             if (eagleSneaking) mc.netHandler.addToSendQueue(C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SNEAKING))
         }
-        when (bypassmodeValue.get().lowercase()) {
-            "none" -> {
-                speedModifierValue.value = speedModifierValue.get()
-            }
-
-            "universocraft" -> {
-                speedModifierValue.set(0.85f)
-
-            }
-        }
-        when (diagonalfixValue.get().lowercase()) {
-            "none" -> {
-
-            }
-
-            "verus" -> {
-                LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
-                LiquidBounce.moduleManager[ABlink::class.java]!!.pulseCustomDelayValue.set(0)
-
-            }
-            "zitter" -> {
-                zitterModeValue.set("OFF")
-
-            }
-        }
+//        when (bypassmodeValue.get().lowercase()) {
+//            "none" -> {
+//                speedModifierValue.value = speedModifierValue.get()
+//            }
+//
+//            "universocraft" -> {
+//                speedModifierValue.set(0.85f)
+//
+//            }
+//        }
+//        when (diagonalfixValue.get().lowercase()) {
+//            "none" -> {
+//
+//            }
+//
+//            "verus" -> {
+//                LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
+//                LiquidBounce.moduleManager[ABlink::class.java]!!.pulseCustomDelayValue.set(0)
+//
+//            }
+//            "zitter" -> {
+//                zitterModeValue.set("OFF")
+//
+//            }
+//        }
         if (!GameSettings.isKeyDown(mc.gameSettings.keyBindRight)) mc.gameSettings.keyBindRight.pressed = false
         if (!GameSettings.isKeyDown(mc.gameSettings.keyBindLeft)) mc.gameSettings.keyBindLeft.pressed = false
         lockRotation = null
@@ -1104,20 +1111,12 @@ class Scaffold : Module() {
      */
     @EventTarget
     fun onMove(event: MoveEvent) {
-        when (timerboost.get().lowercase()) {
-            "None" -> {
-            }
+        //if (towerStatus)
+          //  else if (timerboost.equals("Universocraft"))
+            //    (disableticks < wputo.get())
+              //  event.zero()
 
-            "Universocraft" ->{
-                if (disableticks < disableticksputo.get())
-                    event.zeroXZ()
-                event.zero()
-        }
-        "Verus" -> {
-            if (disableticks < disableticksputo.get())
-                event.zero()
-        }
-    }
+
         if (safeWalkValue.equals("off") || shouldGoDown) return
         if (safeWalkValue.equals("air") || mc.thePlayer.onGround) event.isSafeWalk = true
     }

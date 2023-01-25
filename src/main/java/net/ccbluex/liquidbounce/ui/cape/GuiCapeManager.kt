@@ -26,9 +26,9 @@ object GuiCapeManager : GuiScreen() {
     val capeList = mutableListOf<ICape>()
 
     init {
-        arrayOf("iota", "JupoHappy", "Daydream").forEach {
+        arrayOf("iota", "JupoHappy", "Daydream", "jupo2").forEach {
             try {
-                embeddedCapes.add(loadCapeFromResource(it, "assets/minecraft/fdpclient/cape/$it.png"))
+                embeddedCapes.add(loadCapeFromResource(it, "assets/minecraft/liquidx/cape/$it.png"))
             } catch (e: Throwable){
                 System.out.println("Failed to load Capes")
             }

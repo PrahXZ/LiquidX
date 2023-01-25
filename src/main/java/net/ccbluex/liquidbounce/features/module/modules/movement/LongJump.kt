@@ -10,12 +10,13 @@ import net.ccbluex.liquidbounce.utils.ClassUtils
 import net.ccbluex.liquidbounce.utils.MovementUtils
 import net.ccbluex.liquidbounce.features.value.BoolValue
 import net.ccbluex.liquidbounce.features.value.ListValue
+import net.ccbluex.liquidbounce.features.value.FloatValue
 
 @ModuleInfo(name = "LongJump", category = ModuleCategory.MOVEMENT, autoDisable = EnumAutoDisableType.FLAG)
 class LongJump : Module() {
     private val modes = ClassUtils.resolvePackage("${this.javaClass.`package`.name}.longjumps", LongJumpMode::class.java)
-        .map { it.newInstance() as LongJumpMode }
-        .sortedBy { it.modeName }
+            .map { it.newInstance() as LongJumpMode }
+            .sortedBy { it.modeName }
 
     private val mode: LongJumpMode
         get() = modes.find { modeValue.equals(it.modeName) } ?: throw NullPointerException() // this should not happen
@@ -32,14 +33,17 @@ class LongJump : Module() {
 
     val autoJumpValue = BoolValue("AutoJump", true)
     val autoDisableValue = BoolValue("AutoDisable", true)
-    var jumped = false
-    var hasJumped = false
-    var no = false
+    val timerValue = FloatValue("GlobalTimer", 1.0f, 0.1f, 2.0f)
+    val onlyAirValue = BoolValue("TimerOnlyAir", true)
+    val legacyWarningValue = BoolValue("LegacyWarn", true)
+    var airTick = 0
+    var isJumped = false
+    var noTimerModify = false
 
     override fun onEnable() {
-        jumped = false
-        hasJumped = false
-        no = false
+        airTick = 0
+        isJumped = false
+        noTimerModify = false
         mode.onEnable()
     }
 
@@ -55,15 +59,21 @@ class LongJump : Module() {
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
         if(!state) return
-        mode.onUpdate(event)
-        if (!no && autoJumpValue.get() && mc.thePlayer.onGround && MovementUtils.isMoving()) {
-            jumped = true
-            if (hasJumped && autoDisableValue.get()) {
-                state = false
-                return
+        if ((!onlyAirValue.get() || !mc.thePlayer.onGround) && !noTimerModify) {
+            mc.timer.timerSpeed = timerValue.get()
+        }
+        if (!mc.thePlayer.onGround) {
+            airTick++
+        }else {
+            if (airTick > 1 && autoDisableValue.get()) {
+                mode.onAttemptDisable()
+            } else if (!autoDisableValue.get()) {
+                airTick = 0
             }
-            mc.thePlayer.jump()
-            hasJumped = true
+        }
+        mode.onUpdate(event)
+        if (autoJumpValue.get() && mc.thePlayer.onGround && MovementUtils.isMoving() && airTick < 2) {
+            mode.onAttemptJump()
         }
     }
 
@@ -97,7 +107,6 @@ class LongJump : Module() {
     fun onJump(event: JumpEvent) {
         if(!state) return
         mode.onJump(event)
-        jumped = true
     }
 
     @EventTarget
@@ -109,9 +118,5 @@ class LongJump : Module() {
     override val tag: String
         get() = modeValue.get()
 
-    /**
-     * 读取mode中的value并和本体中的value合并
-     * 所有的value必须在这个之前初始化
-     */
     override val values = super.values.toMutableList().also { modes.map { mode -> mode.values.forEach { value -> it.add(value.displayable { modeValue.equals(mode.modeName) }) } } }
 }

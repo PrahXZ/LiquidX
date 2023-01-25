@@ -21,7 +21,7 @@ import net.minecraft.network.play.server.S08PacketPlayerPosLook
 class Librecraft : SpeedMode("Librecraft") {
 
     private val timerBoostValue = BoolValue("TimerBoost", false)
-    private val timer1 = FloatValue("Timer-1", 2.2f,1f, 4f)
+    private val timer1 = FloatValue("Timer-1", 2.2f,1f, 4f,)
     private val timer2 = FloatValue("Timer-2", 1.5f,1f, 2f)
     fun onMotion() {}
     override fun onUpdate() {
@@ -47,5 +47,10 @@ class Librecraft : SpeedMode("Librecraft") {
         }
     }
 
+    override fun onDisable() {
+        LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
+    }
+
     override fun onMove(event: MoveEvent) {}
 }
+

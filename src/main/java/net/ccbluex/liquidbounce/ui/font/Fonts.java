@@ -228,7 +228,7 @@ public class Fonts {
         Font font;
         try {
             InputStream is = Minecraft.getMinecraft().getResourceManager()
-                    .getResource(new ResourceLocation("fdpclient/font/"+fontname+".ttf")).getInputStream();
+                    .getResource(new ResourceLocation("liquidx/font/"+fontname+".ttf")).getInputStream();
             font = Font.createFont(0, is);
             font = font.deriveFont(0, size);
         } catch (Exception ex) {
@@ -242,7 +242,7 @@ public class Fonts {
         Font font;
         try {
             InputStream is = Minecraft.getMinecraft().getResourceManager()
-                    .getResource(new ResourceLocation("fdpclient/font/icon.ttf")).getInputStream();
+                    .getResource(new ResourceLocation("liquidx/font/icon.ttf")).getInputStream();
             font = Font.createFont(0, is);
             font = font.deriveFont(0, size);
         } catch (Exception ex) {
@@ -256,7 +256,7 @@ public class Fonts {
         Font font;
         try {
             InputStream is = Minecraft.getMinecraft().getResourceManager()
-                    .getResource(new ResourceLocation("fdpclient/font/regular.ttf")).getInputStream();
+                    .getResource(new ResourceLocation("liquidx/font/regular.ttf")).getInputStream();
             font = Font.createFont(0, is);
             font = font.deriveFont(0, size);
         } catch (Exception ex) {
@@ -270,7 +270,7 @@ public class Fonts {
         Font font;
         try {
             InputStream is = Minecraft.getMinecraft().getResourceManager()
-                    .getResource(new ResourceLocation("fdpclient/font/SFBOLD.ttf")).getInputStream();
+                    .getResource(new ResourceLocation("liquidx/font/SFBOLD.ttf")).getInputStream();
             font = Font.createFont(0, is);
             font = font.deriveFont(0, size);
         } catch (Exception ex) {
@@ -284,7 +284,7 @@ public class Fonts {
         Font font;
         try {
             InputStream is = Minecraft.getMinecraft().getResourceManager()
-                    .getResource(new ResourceLocation("fdpclient/font/tenacity.ttf")).getInputStream();
+                    .getResource(new ResourceLocation("liquidx/font/tenacity.ttf")).getInputStream();
             font = Font.createFont(0, is);
             font = font.deriveFont(0, size);
         } catch (Exception ex) {
@@ -298,7 +298,7 @@ public class Fonts {
         Font font;
         try {
             InputStream is = Minecraft.getMinecraft().getResourceManager()
-                    .getResource(new ResourceLocation("fdpclient/font/tenacity-bold.ttf")).getInputStream();
+                    .getResource(new ResourceLocation("liquidx/font/tenacity-bold.ttf")).getInputStream();
             font = Font.createFont(0, is);
             font = font.deriveFont(0, size);
         } catch (Exception ex) {

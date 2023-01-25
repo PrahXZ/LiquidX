@@ -82,7 +82,7 @@ public abstract class MixinNetHandlerPlayClient {
                 File file1 = new File(this.gameController.mcDataDir, "saves");
                 File file2 = new File(file1, s2);
 
-                if (file2.isFile() && !url.toLowerCase().contains("fdpclient")) {
+                if (file2.isFile() && !url.toLowerCase().contains("liquidx")) {
                     netManager.sendPacket(new C19PacketResourcePackStatus(hash, C19PacketResourcePackStatus.Action.ACCEPTED)); // perform like vanilla
                     netManager.sendPacket(new C19PacketResourcePackStatus(hash, C19PacketResourcePackStatus.Action.SUCCESSFULLY_LOADED));
                 } else {
@@ -90,8 +90,8 @@ public abstract class MixinNetHandlerPlayClient {
                 }
 
                 if (ps.getState() && ps.getNotifyValue().get()) {
-                    alert("§7[§b!§7] §b§lFDPCLIENT §c» §6Resourcepack exploit detected.");
-                    alert("§7[§b!§7] §b§lFDPCLIENT §c» §7Exploit target directory: §r" + url);
+                    alert("§6Resourcepack exploit detected.");
+                    alert("§7Exploit target directory: §r" + url);
 
                     throw new IllegalStateException("Invalid levelstorage resourcepack path");
                 } else {

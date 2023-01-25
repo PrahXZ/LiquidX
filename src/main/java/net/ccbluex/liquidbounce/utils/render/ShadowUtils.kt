@@ -26,7 +26,7 @@ object ShadowUtils : MinecraftInstance() {
     private var lastHeight = 0
     private var lastStrength = 0F
 
-    private val blurDirectory = ResourceLocation("fdpclient/shadow.json")
+    private val blurDirectory = ResourceLocation("liquidx/shadow.json")
 
     @Throws(IOException::class)
     fun initShaderIfRequired(sc: ScaledResolution, strength: Float) {

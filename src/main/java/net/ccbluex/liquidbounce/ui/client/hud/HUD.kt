@@ -1,6 +1,8 @@
 // LiquidX Development by PrahXZ and Haflin with FDP Base modified. v2.0 R1
 package net.ccbluex.liquidbounce.ui.client.hud
 
+import net.ccbluex.liquidbounce.LiquidBounce.CLIENT_NAME
+import net.ccbluex.liquidbounce.LiquidBounce.CLIENT_VERSION
 import net.ccbluex.liquidbounce.injection.access.StaticStorage
 import net.ccbluex.liquidbounce.ui.client.hud.designer.GuiHudDesigner
 import net.ccbluex.liquidbounce.ui.client.hud.element.Element
@@ -30,7 +32,7 @@ open class HUD : MinecraftInstance() {
          */
         fun createDefault(): HUD {
             val text1 = Text(x = 4.0, y = 4.0)
-            text1.displayString.set("LiquidX v2.0")
+            text1.displayString.set("$CLIENT_NAME $CLIENT_VERSION")
             text1.setColor(Color(51, 149, 175, 1))
             text1.shadow.set(true)
             text1.colorModeValue.set("AnotherRainbow")

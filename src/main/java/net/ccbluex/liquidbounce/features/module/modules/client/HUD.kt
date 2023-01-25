@@ -103,8 +103,8 @@ object HUD : Module() {
         }
 
         if (state && blurValue.get() && !mc.entityRenderer.isShaderActive && event.guiScreen != null && !(event.guiScreen is GuiChat || event.guiScreen is GuiHudDesigner)) {
-            mc.entityRenderer.loadShader(ResourceLocation("fdpclient/blur.json"))
-        } else if (mc.entityRenderer.shaderGroup != null && mc.entityRenderer.shaderGroup!!.shaderGroupName.contains("fdpclient/blur.json")) {
+            mc.entityRenderer.loadShader(ResourceLocation("liquidx/blur.json"))
+        } else if (mc.entityRenderer.shaderGroup != null && mc.entityRenderer.shaderGroup!!.shaderGroupName.contains("liquidx/blur.json")) {
             mc.entityRenderer.stopUseShader()
         }
     }
