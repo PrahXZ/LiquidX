@@ -123,7 +123,7 @@ class BowJump : Module() {
                         LiquidBounce.moduleManager[ABlink::class.java]!!.pulseListValue.set("Custom")
                         LiquidBounce.moduleManager[ABlink::class.java]!!.pulseCustomDelayValue.set(200)
                         LiquidBounce.moduleManager[ABlink::class.java]!!.state = true
-                        strafe(0.871f)
+                        strafe(0.86f)
                         mc.thePlayer.motionY = 0.42f.toDouble()
                         lastPlayerTick = mc.thePlayer.ticksExisted.toLong()
                         mc.timer.timerSpeed = 0.66F

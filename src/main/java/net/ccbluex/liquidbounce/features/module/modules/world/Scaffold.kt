@@ -95,6 +95,10 @@ class Scaffold : Module() {
     // Rotations
     private val rotationsValue = ListValue("Rotations", arrayOf("None", "Better", "Vanilla", "AAC", "Test1", "Test2", "Custom", "Advanced"), "AAC")
 //    private val bypassmodeValue = ListValue("BypassMode", arrayOf("None", "Universocraft"), "None")
+    private val timerboost = ListValue("TimerBoost-Mode", arrayOf("None", "Universocraft", "Verus"), "None")
+    private val timerlol2 = FloatValue("ScaffoldTimer", 1f, 0f, 10f).displayable { timerboost.equals("Verus") }
+    private val timerboosttime = IntegerValue("BoostTime", 1500, 0, 10000).displayable { timerboost.equals("Verus") }
+    private val disableticksputo = IntegerValue("C03Ticks", 30, 20, 100).displayable { timerboost.equals("Verus") }
     private val alwaysRotateValue = BoolValue("AlwaysRotate", true).displayable { !rotationsValue.equals("None") }
     private val towerrotationsValue = ListValue("TowerRotations", arrayOf("None", "Better", "Vanilla", "AAC", "Test1", "Test2", "Custom"), "AAC")
     private val advancedYawModeValue = ListValue("AdvancedYawRotations", arrayOf("Offset", "Static", "RoundStatic", "Vanilla", "Round", "MoveDirection", "OffsetMove"), "MoveDirection").displayable { rotationsValue.equals("Advanced") }
@@ -261,16 +265,12 @@ class Scaffold : Module() {
     private var wasTimer = false
 
     //test scaffold boost timer
-    private val timerboost = ListValue("TimerBoost-Mode", arrayOf("None", "Universocraft", "Verus"), "None")
-    private val timerlol2 = FloatValue("ScaffoldTimer", 1f, 0f, 10f).displayable { timerboost.equals("Verus") }
     private var disableticks = 0
     private var timerboosttimer = MSTimer()
     private var timerms = MSTimer()
-    private val timerboosttime = IntegerValue("BoostTime", 1500, 0, 10000).displayable { timerboost.equals("Verus") }
     private var disabling = false
     private var transactionxd = false
     private var speedboost = 1.05
-    private val disableticksputo = IntegerValue("C03Ticks", 30, 20, 100).displayable { timerboost.equals("Verus") }
     /**
      * Enable module
      */

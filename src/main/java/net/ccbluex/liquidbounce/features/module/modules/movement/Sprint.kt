@@ -19,7 +19,7 @@ import net.minecraft.potion.Potion
 @ModuleInfo(name = "Sprint", category = ModuleCategory.MOVEMENT, defaultOn = true)
 class Sprint : Module() {
     val jumpDirectionsValue = BoolValue("JumpDirections", false)
-    val allDirectionsValue = BoolValue("AllDirections", true)
+    val allDirectionsValue = BoolValue("AllDirections", false)
     private val allDirectionsBypassValue = ListValue("AllDirectionsBypass", arrayOf("Rotate", "Rotate2", "Toggle", "Minemora", "Spoof", "LimitSpeed", "None"), "None").displayable { allDirectionsValue.get() }
     private val blindnessValue = BoolValue("Blindness", true)
     val useItemValue = BoolValue("UseItem", false)
@@ -27,8 +27,8 @@ class Sprint : Module() {
     private val noStopServerSide = BoolValue("ServerSideKeepSprint", false).displayable { !noPacket.get() }
     val checkServerSide = BoolValue("CheckServerSide", false)
     val checkServerSideGround = BoolValue("CheckServerSideOnlyGround", false).displayable { checkServerSide.get() }
-    private val noPacket = BoolValue("NoPacket", false)
-    private val allDirectionsLimitSpeedGround = BoolValue("AllDirectionsLimitSpeedOnlyGround", true)
+    private val noPacket = BoolValue("NoPacket", true)
+    private val allDirectionsLimitSpeedGround = BoolValue("AllDirectionsLimitSpeedOnlyGround", false)
     private val allDirectionsLimitSpeedValue = FloatValue("AllDirectionsLimitSpeed", 0.7f, 0.5f, 1f).displayable { allDirectionsBypassValue.displayable && allDirectionsBypassValue.equals("LimitSpeed") }
 
     private var spoofStat = false
