@@ -2,6 +2,7 @@
 package net.ccbluex.liquidbounce.ui.client.hud
 
 import net.ccbluex.liquidbounce.LiquidBounce.CLIENT_NAME
+import net.ccbluex.liquidbounce.LiquidBounce.CLIENT_RELEASE
 import net.ccbluex.liquidbounce.LiquidBounce.CLIENT_VERSION
 import net.ccbluex.liquidbounce.injection.access.StaticStorage
 import net.ccbluex.liquidbounce.ui.client.hud.designer.GuiHudDesigner
@@ -40,8 +41,18 @@ open class HUD : MinecraftInstance() {
             text1.fontValue.set(Fonts.fontTenacity35)
             text1.scale = 1.75F
 
+            val text2 = Text(x = 8.0, y = 25.0)
+            text2.displayString.set("$CLIENT_RELEASE")
+            text2.setColor(Color(51, 149, 175, 1))
+            text2.shadow.set(true)
+            text2.colorModeValue.set("AnotherRainbow")
+            text2.rectValue.set("None")
+            text2.fontValue.set(Fonts.fontTenacity35)
+            text2.scale = 1.0F
+
             return HUD()
                 .addElement(text1)
+                .addElement(text2)
                 .addElement(Arraylist())
                 .addElement(ScoreboardElement())
                 .addElement(Armor())
