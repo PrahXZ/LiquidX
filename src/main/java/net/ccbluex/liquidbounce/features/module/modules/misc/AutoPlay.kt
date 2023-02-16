@@ -31,6 +31,10 @@ class AutoPlay : Module() {
 
     private val modeValue = ListValue("Server", arrayOf("RedeSky", "BlocksMC", "Minemora", "Hypixel", "Jartex", "Pika", "Hydracraft", "HyCraft", "MineFC/HeroMC_Bedwars","Universocraft", "Librecraft", "Supercraft"), "RedeSky")
 
+    // Universocraft-Mode
+    private val unimode = ListValue("Universocraft-Mode", arrayOf("SW-TSW", "Bedwars", "Eggwars", "HungerGames"), "SW-TSW").displayable { modeValue.get().equals("Universocraft") }
+
+
     private val bwModeValue = ListValue("Mode", arrayOf("SOLO", "4v4v4v4"), "4v4v4v4").displayable { modeValue.equals("MineFC/HeroMC_Bedwars") }
     private val autoStartValue = BoolValue("AutoStartAtLobby", true).displayable { modeValue.equals("MineFC/HeroMC_Bedwars") }
     private val replayWhenKickedValue = BoolValue("ReplayWhenKicked", true).displayable { modeValue.equals("MineFC/HeroMC_Bedwars") }
@@ -42,11 +46,6 @@ class AutoPlay : Module() {
     private var clickState = 0
     private var waitForLobby = false
 
-    private val winCheckValue = "Jugar denuevo"
-    private val delaywValue = 0
-    private val ggMessageValue = "/skywars random"
-
-    private var winning = false
     private val timer = MSTimer()
 
     override fun onEnable() {
@@ -55,23 +54,11 @@ class AutoPlay : Module() {
         queued = false
         waitForLobby = false
         timer.reset()
-        winning = false
     }
 
     @EventTarget
     fun onPacket(event: PacketEvent) {
         val packet = event.packet
-        when (modeValue.get().lowercase()) {
-            "universocraft" -> {
-        if(packet is S02PacketChat) {
-            val message = packet.chatComponent.unformattedText
-
-            if(message.contains(winCheckValue) && !message.contains(":")) {
-                winning = true
-            }
-        }
-            }
-        }
         when (modeValue.get().lowercase()) {
             "redesky" -> {
                 if (clicking && (packet is C0EPacketClickWindow || packet is C07PacketPlayerDigging)) {
@@ -140,6 +127,7 @@ class AutoPlay : Module() {
                         queueAutoPlay {
                             mc.thePlayer.sendChatMessage("/sw leave")
                             mc.thePlayer.sendChatMessage("/sw randomjoin solo")
+                            correctjoin()
                         }
                     }
                     if (text.contains("El juego ya fue iniciado.", true)) {
@@ -147,6 +135,7 @@ class AutoPlay : Module() {
                         queueAutoPlay {
                             mc.thePlayer.sendChatMessage("/sw leave")
                             mc.thePlayer.sendChatMessage("/sw randomjoin solo")
+                            correctjoin()
                         }
                     }
                 }
@@ -154,17 +143,28 @@ class AutoPlay : Module() {
                     if (text.contains("Has click en alguna de las siguientes opciones", true)) {
                         queueAutoPlay {
                             mc.thePlayer.sendChatMessage("/join")
+                            correctjoin()
                         }
                     }
                 }
                 "universocraft" -> {
                     if (text.contains("Jugar de nuevo", true)) {
                         queueAutoPlay {
-                            mc.thePlayer.sendChatMessage("/skywars random")
-                            mc.thePlayer.sendChatMessage("/bedwars random")
-                            mc.thePlayer.sendChatMessage("/eggwars random")
-                            mc.thePlayer.sendChatMessage("/playagain")
-                            LiquidBounce.hud.addNotification(Notification("AutoPlay", "You joined in the new game", NotifyType.SUCCESS, 1000, 500))
+                            when (unimode.get()) {
+                                "SW-TSW" -> {
+                                    mc.thePlayer.sendChatMessage("/skywars random")
+                                }
+                                "Bedwars" -> {
+                                    mc.thePlayer.sendChatMessage("/bedwars random")
+                                }
+                                "Eggwars" -> {
+                                    mc.thePlayer.sendChatMessage("/eggwars random")
+                                }
+                                "Hungergames" -> {
+                                    mc.thePlayer.sendChatMessage("/playagain")
+                                }
+                            }
+                            correctjoin()
                         }
                     }
                 }
@@ -172,7 +172,7 @@ class AutoPlay : Module() {
                     if (text.contains("¡Partida finalizada!", true)) {
                         queueAutoPlay {
                             mc.thePlayer.sendChatMessage("/saliryentrar")
-                            LiquidBounce.hud.addNotification(Notification("AutoPlay", "You joined in the new game", NotifyType.SUCCESS, 1000, 500))
+                            correctjoin()
                         }
                     }
                 }
@@ -180,6 +180,7 @@ class AutoPlay : Module() {
                     if (text.contains("Has ganado ¿Qué quieres hacer?", true)) {
                         queueAutoPlay {
                             mc.thePlayer.sendChatMessage("/playagain")
+                            correctjoin()
                         }
                     }
                 }
@@ -189,6 +190,7 @@ class AutoPlay : Module() {
                         if(clickEvent != null && clickEvent.action == ClickEvent.Action.RUN_COMMAND && clickEvent.value.contains("playagain")) {
                             queueAutoPlay {
                                 mc.thePlayer.sendChatMessage(clickEvent.value)
+                                correctjoin()
                             }
                         }
                     }
@@ -201,6 +203,7 @@ class AutoPlay : Module() {
                             mc.netHandler.addToSendQueue(C09PacketHeldItemChange(7))
                             repeat(2) {
                                 mc.netHandler.addToSendQueue(C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem()))
+                                correctjoin()
                             }
                         }
                     }
@@ -224,6 +227,7 @@ class AutoPlay : Module() {
                             if(clickEvent != null && clickEvent.action == ClickEvent.Action.RUN_COMMAND && clickEvent.value.startsWith("/")) {
                                 queueAutoPlay {
                                     mc.thePlayer.sendChatMessage(clickEvent.value)
+                                    correctjoin()
                                 }
                             }
                         }
@@ -231,6 +235,7 @@ class AutoPlay : Module() {
                     if (text.contains(mc.getSession().username + " has been") || text.contains(mc.getSession().username + " died.")) {
                         queueAutoPlay {
                             mc.thePlayer.sendChatMessage("/skywars-normal-solo")
+                            correctjoin()
                         }
                     }
                 }
@@ -294,20 +299,6 @@ class AutoPlay : Module() {
     }
 
     fun onUpdate(event: UpdateEvent) {
-        when (modeValue.get().lowercase()) {
-            "Universocraft" -> {
-        if(winning) {
-            if(timer.hasTimePassed(delayValue.get().toLong())){
-                LiquidBounce.hud.addNotification(Notification("AutoPlay", "You joined in the new game", NotifyType.SUCCESS, 1000, 500))
-                mc.thePlayer.sendChatMessage(ggMessageValue)
-                 timer.reset()
-                 winning = false
-        }
-    } else {
-        timer.reset()
-    }
-    }
-        }
     }
 
     @EventTarget
@@ -316,7 +307,10 @@ class AutoPlay : Module() {
         clickState = 0
         queued = false
         timer.reset()
-        winning = false
+    }
+
+    fun correctjoin() {
+        LiquidBounce.hud.addNotification(Notification("AutoPlay", "You joined in the new game", NotifyType.SUCCESS, 1000, 500))
     }
 
     override val tag: String

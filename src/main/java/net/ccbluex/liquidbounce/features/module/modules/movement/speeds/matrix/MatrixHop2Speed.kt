@@ -13,6 +13,10 @@ import net.ccbluex.liquidbounce.features.value.BoolValue
 class MatrixHop2Speed : SpeedMode("MatrixHop2") {
     private val groundStrafe = BoolValue("${valuePrefix}GroundStrafe", false)
 
+    override fun onEnable() {
+        sendLegacy()
+    }
+
     override fun onUpdate() {
         mc.gameSettings.keyBindJump.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindJump)
         if (MovementUtils.isMoving()) {

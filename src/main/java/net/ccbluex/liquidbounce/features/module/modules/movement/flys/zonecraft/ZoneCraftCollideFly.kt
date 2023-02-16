@@ -3,7 +3,6 @@ package net.ccbluex.liquidbounce.features.module.modules.movement.flys.zonecraft
 import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.event.*
 import net.ccbluex.liquidbounce.features.module.modules.combat.KillAura
-import net.ccbluex.liquidbounce.features.module.modules.combat.NewKillAura
 import net.ccbluex.liquidbounce.features.module.modules.exploit.ABlink
 import net.ccbluex.liquidbounce.features.module.modules.movement.flys.FlyMode
 import net.ccbluex.liquidbounce.features.value.BoolValue
@@ -44,7 +43,7 @@ class ZoneCraftCollideFly: FlyMode("ZoneCraftCollide") {
 
     override fun onUpdate(event: UpdateEvent) {
         RotationUtils.setTargetRotation(Rotation(mc.thePlayer.rotationYaw, 90f))
-        if((LiquidBounce.moduleManager[KillAura::class.java]!!.target == null || LiquidBounce.moduleManager[NewKillAura::class.java]!!.target == null) && !mc.thePlayer.isBlocking) {
+        if((LiquidBounce.moduleManager[KillAura::class.java]!!.target == null || LiquidBounce.moduleManager[KillAura::class.java]!!.target == null) && !mc.thePlayer.isBlocking) {
             mc.netHandler.networkManager.sendPacket(C08PacketPlayerBlockPlacement(BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1, mc.thePlayer.posZ), 1, null, 0f, 1f, 0f))
         }
         if (TP.get()) {

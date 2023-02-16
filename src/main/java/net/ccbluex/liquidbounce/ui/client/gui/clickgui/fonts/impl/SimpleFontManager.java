@@ -23,7 +23,7 @@ public final class SimpleFontManager implements FontManager {
 		return new SimpleFontManager();
 	}
 
-	private static final String FONT_DIRECTORY = "fdpclient/font/";
+	private static final String FONT_DIRECTORY = "liquidx/font/";
 	private final FontRegistry fonts = new FontRegistry();
 
 	@Override

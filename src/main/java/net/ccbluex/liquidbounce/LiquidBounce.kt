@@ -13,8 +13,6 @@ import net.ccbluex.liquidbounce.ui.client.gui.EnumLaunchFilter
 import net.ccbluex.liquidbounce.ui.client.gui.LaunchFilterInfo
 import net.ccbluex.liquidbounce.ui.client.gui.LaunchOption
 import net.ccbluex.liquidbounce.ui.client.gui.GuiLaunchOptionSelectMenu
-import net.ccbluex.liquidbounce.ui.client.gui.scriptOnline.ScriptSubscribe
-import net.ccbluex.liquidbounce.ui.client.gui.scriptOnline.Subscriptions
 import net.ccbluex.liquidbounce.script.ScriptManager
 import net.ccbluex.liquidbounce.ui.cape.GuiCapeManager
 import net.ccbluex.liquidbounce.ui.client.hud.HUD
@@ -34,13 +32,16 @@ object LiquidBounce {
 
     const val CLIENT_NAME = "LiquidX"
 
-    var Darkmode = true
     const val CLIENT_PREFIX = "§3§lLiquidX §8» "
     const val BIG_NAME = "§3§lLiquidX §f§lClient"
-    const val CLIENT_CREATOR = "Prah and Halflin"
-    const val CLIENT_RELEASE = "Ultimate Release"
+    const val CLIENT_CREATOR = "Prah"
+    const val CLIENT_RELEASE = "Rev01 Ultimate Release"
     const val CLIENT_IP = "www.liquidx.net"
     val UID = MathUtils.randomNumber(600, 1)
+
+
+    // Dark mode :skull:
+    var Darkmode = true
     
     @JvmField
     val gitInfo = Properties().also {
@@ -54,12 +55,12 @@ object LiquidBounce {
 
     @JvmField
 
-    val CLIENT_VERSION = "v2.1"
+    val CLIENT_VERSION = "v3.0"
 
 
     @JvmField
     val CLIENT_BRANCH = (gitInfo["git.branch"] ?: "unknown").let {
-        if (it == "main") "Gamma version" else it
+        if (it == "main") "Yazmin Edition" else it
     }
 
     var isStarting = true
@@ -71,7 +72,6 @@ object LiquidBounce {
 
     lateinit var commandManager: CommandManager
     lateinit var eventManager: EventManager
-    private lateinit var subscriptions: Subscriptions
     lateinit var fileManager: FileManager
     lateinit var scriptManager: ScriptManager
     lateinit var tipSoundManager: TipSoundManager
@@ -117,8 +117,6 @@ object LiquidBounce {
         // Create file manager
         fileManager = FileManager()
         configManager = ConfigManager()
-        subscriptions = Subscriptions()
-
         // Create event manager
         eventManager = EventManager()
 
@@ -182,17 +180,6 @@ object LiquidBounce {
         fileManager.loadConfigs(fileManager.hudConfig, fileManager.xrayConfig)
 
         // Load Scripts
-        ClientUtils.logInfo("Loading Script Subscripts...")
-        for (subscript in fileManager.subscriptsConfig.subscripts) {
-            Subscriptions.addSubscribes(ScriptSubscribe(subscript.url, subscript.name))
-            scriptManager.disableScripts()
-            scriptManager.unloadScripts()
-            for (scriptSubscribe in Subscriptions.subscribes) {
-                scriptSubscribe.load()
-            }
-            scriptManager.loadScripts()
-            scriptManager.enableScripts()
-        }
         ClientUtils.setTitle()
         ClientUtils.logInfo("$CLIENT_NAME $CLIENT_VERSION loaded in ${(System.currentTimeMillis() - startTime)}ms!")
     }

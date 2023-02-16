@@ -1,4 +1,3 @@
-// LiquidX Development by PrahXZ and Haflin with FDP Base modified. v2.0 R1
 package net.ccbluex.liquidbounce.features.module.modules.combat
 
 import net.ccbluex.liquidbounce.event.AttackEvent
@@ -7,10 +6,10 @@ import net.ccbluex.liquidbounce.event.UpdateEvent
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
-import net.ccbluex.liquidbounce.features.value.IntegerValue
 import net.ccbluex.liquidbounce.utils.ClientUtils
-import net.ccbluex.liquidbounce.utils.EntityUtils
 import net.ccbluex.liquidbounce.utils.timer.MSTimer
+import net.ccbluex.liquidbounce.features.value.*
+import net.ccbluex.liquidbounce.utils.EntityUtils
 import net.minecraft.client.entity.EntityOtherPlayerMP
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.network.play.client.C02PacketUseEntity
@@ -20,8 +19,7 @@ import net.minecraft.world.WorldSettings
 class BackTrack : Module() {
 
     var fakePlayer: EntityOtherPlayerMP? = null
-    private val pulseDelayValue =
-        IntegerValue("PulseDelay", 1000, 5, 2000)
+    private val pulseDelayValue = IntegerValue("PulseDelay", 1000, 5, 5000, "ms")
     private val pulseTimer = MSTimer()
     var currentTarget: EntityLivingBase? = null
     private var shown = false
@@ -36,7 +34,7 @@ class BackTrack : Module() {
             (mc.theWorld ?: return).removeEntityFromWorld((fakePlayer ?: return).entityId) ?: return
             fakePlayer = null
         } catch (t: NullPointerException) {
-            ClientUtils.logger.error("Failed removing fakePlayer $t")
+            ClientUtils.displayChatMessage("Failed removing fakePlayer $t")
         }
     }
 
@@ -68,10 +66,7 @@ class BackTrack : Module() {
     fun onUpdate(@Suppress("UNUSED_PARAMETER") event: UpdateEvent?) {
         if (mc.thePlayer == null)
             return
-        if (fakePlayer != null && EntityUtils.isRendered(fakePlayer ?: return) && ((currentTarget ?: return).isDead || EntityUtils.isRendered(
-                currentTarget ?: return
-            ))
-        ) {
+        if (fakePlayer != null && EntityUtils.isRendered(fakePlayer ?: return) && ((currentTarget ?: return).isDead || EntityUtils.isRendered(currentTarget ?: return))) {
             removeFakePlayer()
         }
         if (currentTarget != null && fakePlayer != null) {
@@ -91,14 +86,9 @@ class BackTrack : Module() {
             }
             pulseTimer.reset()
         }
-        if (!shown && currentTarget != null && (currentTarget ?: return).uniqueID != null && mc.netHandler.getPlayerInfo(
-                (currentTarget ?: return).uniqueID ?: return
-            ) != null && mc.netHandler.getPlayerInfo((currentTarget ?: return).uniqueID ?: return).gameProfile != null
+        if (!shown && currentTarget != null && (currentTarget ?: return).uniqueID != null && mc.netHandler.getPlayerInfo((currentTarget ?: return).uniqueID ?: return) != null && mc.netHandler.getPlayerInfo((currentTarget ?: return).uniqueID ?: return).gameProfile != null
         ) {
-            val faker = EntityOtherPlayerMP(
-                mc.theWorld ?: return,
-                mc.netHandler.getPlayerInfo((currentTarget ?: return).uniqueID ?: return).gameProfile ?: return
-            )
+            val faker = EntityOtherPlayerMP(mc.theWorld ?: return, mc.netHandler.getPlayerInfo((currentTarget ?: return).uniqueID ?: return).gameProfile ?: return)
 
             faker.rotationYawHead = (currentTarget ?: return).rotationYawHead
             faker.renderYawOffset = (currentTarget ?: return).renderYawOffset

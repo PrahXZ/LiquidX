@@ -1,13 +1,9 @@
 package net.ccbluex.liquidbounce.features.module.modules.movement.flys.ncp
 
-import jdk.nashorn.internal.ir.Block
-import net.ccbluex.liquidbounce.event.BlockBBEvent
 import net.ccbluex.liquidbounce.event.UpdateEvent
 import net.ccbluex.liquidbounce.features.module.modules.movement.flys.FlyMode
 import net.ccbluex.liquidbounce.features.value.FloatValue
 import net.ccbluex.liquidbounce.utils.MovementUtils
-import net.minecraft.init.Blocks
-import net.minecraft.util.BlockPos
 
 class LatestNCP : FlyMode("LatestNCP") {
     private val speedValue = FloatValue("Speed", 15f, 10f, 20f)

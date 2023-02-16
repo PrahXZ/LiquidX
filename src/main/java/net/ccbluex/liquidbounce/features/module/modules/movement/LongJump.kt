@@ -40,6 +40,10 @@ class LongJump : Module() {
     var isJumped = false
     var noTimerModify = false
 
+    var launchX = 0.0
+    var launchY = 0.0
+    var launchZ = 0.0
+
     override fun onEnable() {
         airTick = 0
         isJumped = false

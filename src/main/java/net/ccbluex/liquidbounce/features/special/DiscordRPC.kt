@@ -5,6 +5,7 @@ import com.jagrosh.discordipc.IPCListener
 import com.jagrosh.discordipc.entities.RichPresence
 import com.jagrosh.discordipc.entities.pipe.PipeStatus
 import net.ccbluex.liquidbounce.LiquidBounce
+import net.ccbluex.liquidbounce.LiquidBounce.CLIENT_RELEASE
 import net.ccbluex.liquidbounce.LiquidBounce.CLIENT_VERSION
 import net.ccbluex.liquidbounce.LiquidBounce.UID
 import net.ccbluex.liquidbounce.features.module.modules.client.DiscordRPCModule
@@ -53,7 +54,7 @@ object DiscordRPC {
         val discordRPCModule = LiquidBounce.moduleManager[DiscordRPCModule::class.java]!!
         builder.setStartTimestamp(timestamp)
         builder.setLargeImage(if (discordRPCModule.animated.get()){"https://prahxz.github.io/Damar.gif"} else {"univelso2"})
-        builder.setDetails("Release: $CLIENT_VERSION")
+        builder.setDetails("Release: $CLIENT_VERSION $CLIENT_RELEASE")
         ServerUtils.getRemoteIp().also {
             val str = (if(discordRPCModule.showServerValue.get()) "Server: $it\n" else "\n") + (if(discordRPCModule.showNameValue.get()) "Username: ${if(mc.thePlayer != null) mc.thePlayer.name else mc.session.username}\n" else "\n") + (if(discordRPCModule.showHealthValue.get()) "HP: ${mc.thePlayer.health}\n" else "\n") + (if(discordRPCModule.showOtherValue.get()) "PlayTime: ${if(mc.isSingleplayer) "SinglePlayer\n" else SessionUtils.getFormatSessionTime()} Kills: ${StatisticsUtils.getKills()} Deaths: ${StatisticsUtils.getDeaths()}\n" else "\n")
             builder.setState(if(it.equals("idling", true)) "UID: $UID" else str)

@@ -1,6 +1,7 @@
 // LiquidX Development by PrahXZ and Haflin with FDP Base modified. v2.0 R1
 package net.ccbluex.liquidbounce.features.module.modules.movement
 
+import com.sun.org.apache.xpath.internal.operations.Bool
 import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.event.*
 import net.ccbluex.liquidbounce.features.module.EnumAutoDisableType
@@ -11,7 +12,9 @@ import net.ccbluex.liquidbounce.features.module.modules.movement.speeds.SpeedMod
 import net.ccbluex.liquidbounce.utils.ClassUtils
 import net.ccbluex.liquidbounce.utils.MovementUtils
 import net.ccbluex.liquidbounce.features.value.BoolValue
+import net.ccbluex.liquidbounce.features.value.FloatValue
 import net.ccbluex.liquidbounce.features.value.ListValue
+import net.minecraft.entity.player.EntityPlayer
 import org.lwjgl.input.Keyboard
 
 @ModuleInfo(name = "Speed", category = ModuleCategory.MOVEMENT, autoDisable = EnumAutoDisableType.FLAG, keyBind = Keyboard.KEY_V)
@@ -35,6 +38,8 @@ class Speed : Module() {
 
     private val noWater = BoolValue("NoWater", true)
     private val debug = BoolValue("Debug", false)
+    private val hidejumps = BoolValue("Hide Jumps", false)
+    val legacyWarningValue = BoolValue("LegacyWarn", true)
 
     @EventTarget
     fun onUpdate(event: UpdateEvent) {

@@ -5,8 +5,7 @@
  */
 package net.ccbluex.liquidbounce.ui.client.gui
 
-import net.ccbluex.liquidbounce.launch.data.modernui.mainmenu.rebornGuiMainMenu
-import net.ccbluex.liquidbounce.ui.client.gui.mainmenu.*
+import net.ccbluex.liquidbounce.launch.data.modernui.mainmenu.liquidxGuiMainMenu
 import net.minecraft.client.gui.*
 import net.minecraft.client.settings.GameSettings
 import net.minecraft.client.Minecraft;
@@ -23,9 +22,9 @@ class GuiMainMenu : GuiScreen(), GuiYesNoCallback {
             }
         }
         if (isFastRenderEnabled()){
-            mc.displayGuiScreen(ClassicGuiMainMenu())
+            mc.displayGuiScreen(liquidxGuiMainMenu())
         } else {
-            mc.displayGuiScreen(rebornGuiMainMenu())
+            mc.displayGuiScreen(liquidxGuiMainMenu())
         }
         drawBackground(1)
     }

@@ -19,6 +19,7 @@ abstract class FlyMode(val modeName: String) : MinecraftInstance() {
     open fun onEnable() {}
     open fun onDisable() {}
 
+
     open fun onUpdate(event: UpdateEvent) {}
     open fun onMotion(event: MotionEvent) {}
     open fun onPacket(event: PacketEvent) {}

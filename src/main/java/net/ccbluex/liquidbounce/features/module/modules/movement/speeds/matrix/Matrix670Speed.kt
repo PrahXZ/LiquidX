@@ -50,6 +50,11 @@ class Matrix670Speed : SpeedMode("Matrix6.7.0") {
         }
     }
 
+
+    override fun onEnable() {
+        sendLegacy()
+    }
+
     override fun onDisable() {
         mc.timer.timerSpeed = 1f
         noVelocityY = 0

@@ -82,6 +82,10 @@ class Matrix661Speed : SpeedMode("Matrix6.6.1") {
             MovementUtils.strafe()
     }
 
+    override fun onEnable() {
+        sendLegacy()
+    }
+
     override fun onDisable() {
         mc.timer.timerSpeed = 1f
     }

@@ -34,20 +34,20 @@ open class HUD : MinecraftInstance() {
         fun createDefault(): HUD {
             val text1 = Text(x = 4.0, y = 4.0)
             text1.displayString.set("$CLIENT_NAME $CLIENT_VERSION")
-            text1.setColor(Color(51, 149, 175, 1))
+            text1.setColor(Color(126, 77, 79, 255))
             text1.shadow.set(true)
             text1.colorModeValue.set("AnotherRainbow")
             text1.rectValue.set("None")
-            text1.fontValue.set(Fonts.fontTenacity35)
+            text1.fontValue.set(Fonts.fontTenacityBold35)
             text1.scale = 1.75F
 
             val text2 = Text(x = 8.0, y = 25.0)
             text2.displayString.set("$CLIENT_RELEASE")
-            text2.setColor(Color(51, 149, 175, 1))
+            text2.setColor(Color(126, 77, 79, 255))
             text2.shadow.set(true)
             text2.colorModeValue.set("AnotherRainbow")
             text2.rectValue.set("None")
-            text2.fontValue.set(Fonts.fontTenacity35)
+            text2.fontValue.set(Fonts.fontTenacityBold35)
             text2.scale = 1.0F
 
             return HUD()

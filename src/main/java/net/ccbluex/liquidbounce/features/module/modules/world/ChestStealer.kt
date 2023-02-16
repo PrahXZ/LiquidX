@@ -98,7 +98,7 @@ class ChestStealer : Module() {
     @EventTarget
     fun onRender3D(event: Render3DEvent) {
         if(openDelayRandomValue.get()) {
-            if (!chestTimer.hasTimePassed(MathUtils.randomNumber(600, 240).toLong())) {
+            if (!chestTimer.hasTimePassed(MathUtils.randomNumber(600, 400).toLong())) {
                 return
             }
         } else {

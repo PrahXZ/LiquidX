@@ -55,6 +55,10 @@ class MatrixBHopSpeed : SpeedMode("MatrixBHop") {
         }
     }
 
+    override fun onEnable() {
+        sendLegacy()
+    }
+
     override fun onDisable() {
         jumped = false
         mc.timer.timerSpeed = 1f

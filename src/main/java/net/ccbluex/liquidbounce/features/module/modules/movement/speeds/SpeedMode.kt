@@ -9,6 +9,9 @@ import net.ccbluex.liquidbounce.features.module.modules.movement.Speed
 import net.ccbluex.liquidbounce.utils.ClassUtils
 import net.ccbluex.liquidbounce.utils.MinecraftInstance
 import net.ccbluex.liquidbounce.features.value.Value
+import net.ccbluex.liquidbounce.ui.client.hud.element.elements.Notification
+import net.ccbluex.liquidbounce.ui.client.hud.element.elements.NotifyType
+import net.ccbluex.liquidbounce.utils.ClientUtils
 
 abstract class SpeedMode(val modeName: String) : MinecraftInstance() {
     protected val valuePrefix = "$modeName-"
@@ -18,6 +21,12 @@ abstract class SpeedMode(val modeName: String) : MinecraftInstance() {
 
     open val values: List<Value<*>>
         get() = ClassUtils.getValues(this.javaClass, this)
+
+    fun sendLegacy() {
+        if(!speed.legacyWarningValue.get()) return
+
+        ClientUtils.displayChatMessage("§6§lWARNING: §fThis bypass is patched or not stable for the latest anticheat!")
+    }
 
     open fun onEnable() {}
     open fun onDisable() {}

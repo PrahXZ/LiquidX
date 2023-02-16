@@ -33,7 +33,7 @@ class Vulcan3Fly : FlyMode("Vulcan3") {
         ClientUtils.displayChatMessage("§8[§c§lVulcan-Fly§8] §aPlease press Sneak before you land on ground!")
         ClientUtils.displayChatMessage("§8[§c§lVulcan-Fly§8] §aYou can go Up/Down by pressing Jump/Sneak")
     }
-    
+
     override fun onDisable() {
         mc.timer.timerSpeed = 1.0f
     }
@@ -57,8 +57,8 @@ class Vulcan3Fly : FlyMode("Vulcan3") {
                 if(!MovementUtils.isMoving() && ticks == 1 && (GameSettings.isKeyDown(mc.gameSettings.keyBindSneak) || GameSettings.isKeyDown(mc.gameSettings.keyBindJump)) && modifyTicks>=5) {
                     var playerYaw = mc.thePlayer.rotationYaw * Math.PI / 180
                     mc.thePlayer.setPosition(mc.thePlayer.posX + 0.05 * -Math.sin(playerYaw)
-                        , mc.thePlayer.posY
-                        , mc.thePlayer.posZ + 0.05 * Math.cos(playerYaw))
+                            , mc.thePlayer.posY
+                            , mc.thePlayer.posZ + 0.05 * Math.cos(playerYaw))
                 }
                 if(ticks == 2 && GameSettings.isKeyDown(mc.gameSettings.keyBindSneak) && modifyTicks>=6 && mc.theWorld.getCollisionBoxes(mc.thePlayer.entityBoundingBox.offset(0.0, -0.5, 0.0)).isEmpty()) {
                     mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY-0.5, mc.thePlayer.posZ)
@@ -88,17 +88,17 @@ class Vulcan3Fly : FlyMode("Vulcan3") {
                     var playerYaw = mc.thePlayer.rotationYaw * Math.PI / 180
                     if (!(modifyTicks % 2 == 0)) {
                         mc.thePlayer.setPosition(mc.thePlayer.posX + 0.1 * -Math.sin(playerYaw)
-                            , mc.thePlayer.posY
-                            , mc.thePlayer.posZ + 0.1 * Math.cos(playerYaw))
+                                , mc.thePlayer.posY
+                                , mc.thePlayer.posZ + 0.1 * Math.cos(playerYaw))
                     }else{
                         mc.thePlayer.setPosition(mc.thePlayer.posX - 0.1 * -Math.sin(playerYaw)
-                            , mc.thePlayer.posY
-                            , mc.thePlayer.posZ - 0.1 * Math.cos(playerYaw))
+                                , mc.thePlayer.posY
+                                , mc.thePlayer.posZ - 0.1 * Math.cos(playerYaw))
                         if (modifyTicks >= 16 && ticks == 2) {
                             modifyTicks = 16
                             mc.thePlayer.setPosition(mc.thePlayer.posX
-                                , mc.thePlayer.posY + 0.5
-                                , mc.thePlayer.posZ)
+                                    , mc.thePlayer.posY + 0.5
+                                    , mc.thePlayer.posZ)
                         }
                     }
                 }
@@ -125,7 +125,7 @@ class Vulcan3Fly : FlyMode("Vulcan3") {
             }
             if (stage == FlyStage.WAIT_APPLY) {
                 if(Math.sqrt((packet.x - groundX) * (packet.x - groundX)
-                    + (packet.z - groundZ) * (packet.z - groundZ)) < 1.4 && packet.y >= (groundY - 0.5)) {
+                                + (packet.z - groundZ) * (packet.z - groundZ)) < 1.4 && packet.y >= (groundY - 0.5)) {
                     fly.state = false
                     return
                 }

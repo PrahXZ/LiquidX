@@ -2,19 +2,26 @@
 package net.ccbluex.liquidbounce.features.module.modules.player
 
 import net.ccbluex.liquidbounce.event.EventTarget
+import net.ccbluex.liquidbounce.event.JumpEvent
 import net.ccbluex.liquidbounce.event.UpdateEvent
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
+import net.ccbluex.liquidbounce.features.module.modules.movement.Sneak
+import net.ccbluex.liquidbounce.features.value.BoolValue
 import net.minecraft.client.settings.GameSettings
 import net.minecraft.init.Blocks
 import net.minecraft.util.BlockPos
 
 @ModuleInfo(name = "Eagle", category = ModuleCategory.PLAYER)
 class Eagle : Module() {
-    
+
+
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
+
+
+
         mc.gameSettings.keyBindSneak.pressed =
                 mc.theWorld.getBlockState(BlockPos(mc.thePlayer.posX + mc.thePlayer.motionX.toDouble() * 0.2, mc.thePlayer.posY - 1.0, mc.thePlayer.posZ + mc.thePlayer.motionZ.toDouble() * 0.2)).block == Blocks.air
     }

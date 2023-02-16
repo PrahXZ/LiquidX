@@ -7,6 +7,10 @@ import net.ccbluex.liquidbounce.features.value.BoolValue
 
 class Matrix692Speed : SpeedMode("Matrix6.9.2") {
     private var wasTimer = false
+
+    override fun onEnable() {
+        sendLegacy()
+    }
     
     override fun onDisable() {
         wasTimer = false

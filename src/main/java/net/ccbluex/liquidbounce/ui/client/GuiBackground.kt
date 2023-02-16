@@ -20,7 +20,7 @@ class GuiBackground(val prevGui: GuiScreen) : GuiScreen() {
 
     companion object {
         var enabled = true
-        var particles = false
+        var particles = true
         var blur = false
     }
 
@@ -133,8 +133,8 @@ class GuiBackground(val prevGui: GuiScreen) : GuiScreen() {
 
     override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
         drawBackground(0)
-        mc.fontRendererObj.drawCenteredString("%ui.background%", this.width / 2F, height / 8F + 5F, 4673984, true)
-        mc.fontRendererObj.drawCenteredString("%ui.background.gcurrent%: " + if(LiquidBounce.background == null) { GradientBackground.nowGradient.name } else { "Customized" },
+        mc.fontRendererObj.drawCenteredString("Background", this.width / 2F, height / 8F + 5F, 4673984, true)
+        mc.fontRendererObj.drawCenteredString("Current: " + if(LiquidBounce.background == null) { GradientBackground.nowGradient.name } else { "Customized" },
             this.width / 2F, height / 4 + 40 + 25 * 2f + (20 - mc.fontRendererObj.FONT_HEIGHT) * 0.5f, Color.WHITE.rgb, true)
 
         super.drawScreen(mouseX, mouseY, partialTicks)

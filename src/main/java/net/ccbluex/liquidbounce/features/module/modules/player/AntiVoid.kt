@@ -22,7 +22,7 @@ import net.minecraft.util.BlockPos
 
 @ModuleInfo(name = "AntiVoid", category = ModuleCategory.PLAYER)
 class AntiVoid : Module() {
-    private val modeValue = ListValue("Mode", arrayOf("Blink", "TPBack", "MotionFlag", "PacketFlag", "GroundSpoof", "OldHypixel", "Jartex", "OldCubecraft", "Packet"), "Blink")
+    private val modeValue = ListValue("Mode", arrayOf("Universocraft", "Blink", "TPBack", "MotionFlag", "PacketFlag", "GroundSpoof", "OldHypixel", "Jartex", "OldCubecraft", "Packet"), "Blink")
     private val maxFallDistValue = FloatValue("MaxFallDistance", 10F, 5F, 20F)
     private val resetMotionValue = BoolValue("ResetMotion", false).displayable { modeValue.equals("Blink") }
     private val startFallDistValue = FloatValue("BlinkStartFallDistance", 2F, 0F, 5F).displayable { modeValue.equals("Blink") }
@@ -75,6 +75,18 @@ class AntiVoid : Module() {
         }
 
         when (modeValue.get().lowercase()) {
+
+            "universocraft" -> {
+                if (!voidOnlyValue.get() || checkVoid()) {
+                    if (mc.thePlayer.fallDistance > maxFallDistValue.get() && !tried) {
+                        mc.thePlayer.motionX = 0.0
+                        mc.thePlayer.motionY = 0.0
+                        mc.thePlayer.motionZ = 0.0
+                        tried = true
+                    }
+                }
+            }
+
             "groundspoof" -> {
                 if (!voidOnlyValue.get() || checkVoid()) {
                     canSpoof = mc.thePlayer.fallDistance > maxFallDistValue.get()

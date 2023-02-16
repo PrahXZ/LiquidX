@@ -1,15 +1,17 @@
 // LiquidX Development by PrahXZ and Haflin with FDP Base modified. v2.0 R1
 package net.ccbluex.liquidbounce.features.module.modules.world
 
-import com.sun.org.apache.xpath.internal.operations.Bool
 import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.event.*
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ABlink
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
+import net.ccbluex.liquidbounce.features.module.modules.exploit.ABlink
 import net.ccbluex.liquidbounce.features.module.modules.movement.Speed
-import net.ccbluex.liquidbounce.features.module.modules.movement.flys.other.UniversoCraftFly
+import net.ccbluex.liquidbounce.features.value.BoolValue
+import net.ccbluex.liquidbounce.features.value.FloatValue
+import net.ccbluex.liquidbounce.features.value.IntegerValue
+import net.ccbluex.liquidbounce.features.value.ListValue
 import net.ccbluex.liquidbounce.injection.access.StaticStorage
 import net.ccbluex.liquidbounce.ui.i18n.LanguageManager
 import net.ccbluex.liquidbounce.utils.*
@@ -19,16 +21,11 @@ import net.ccbluex.liquidbounce.utils.block.PlaceInfo
 import net.ccbluex.liquidbounce.utils.block.PlaceInfo.Companion.get
 import net.ccbluex.liquidbounce.utils.extensions.drawCenteredString
 import net.ccbluex.liquidbounce.utils.extensions.rayTraceWithServerSideRotation
+import net.ccbluex.liquidbounce.utils.math.MathUtils
 import net.ccbluex.liquidbounce.utils.render.RenderUtils
 import net.ccbluex.liquidbounce.utils.timer.MSTimer
 import net.ccbluex.liquidbounce.utils.timer.TickTimer
 import net.ccbluex.liquidbounce.utils.timer.TimeUtils
-import net.ccbluex.liquidbounce.utils.MovementUtils
-import net.ccbluex.liquidbounce.features.value.BoolValue
-import net.ccbluex.liquidbounce.features.value.FloatValue
-import net.ccbluex.liquidbounce.features.value.IntegerValue
-import net.ccbluex.liquidbounce.features.value.ListValue
-import net.ccbluex.liquidbounce.utils.render.SmoothRenderUtils
 import net.minecraft.block.BlockAir
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.RenderHelper
@@ -38,16 +35,13 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemBlock
 import net.minecraft.item.ItemStack
 import net.minecraft.network.play.client.*
-import net.minecraft.network.play.client.C03PacketPlayer
 import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition
-import net.minecraft.network.play.client.C03PacketPlayer.C05PacketPlayerLook
-import net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook
-import net.minecraft.network.play.server.S04PacketEntityEquipment
 import net.minecraft.stats.StatList
 import net.minecraft.util.*
 import org.lwjgl.input.Keyboard
 import java.awt.Color
 import kotlin.math.*
+
 
 @ModuleInfo(name = "Scaffold", category = ModuleCategory.WORLD, keyBind = Keyboard.KEY_G)
 class Scaffold : Module() {
@@ -74,6 +68,7 @@ class Scaffold : Module() {
 
     // Basic stuff
     public val sprintValue = ListValue("Sprint", arrayOf("Always", "Dynamic", "OnGround", "OffGround", "Verus", "OFF"), "Always")
+    private val sprintFix = BoolValue("OmniSprintFix", false).displayable { sprintValue.equals("Verus") }
     private val swingValue = ListValue("Swing", arrayOf("Normal", "Packet", "None"), "Normal")
     private val searchValue = BoolValue("Search", true)
     private val downValue = BoolValue("Down", true)
@@ -86,18 +81,13 @@ class Scaffold : Module() {
     // New feature
     private val edgeDistanceValue = FloatValue("EagleEdgeDistance", 0f, 0f, 0.5f).displayable { !eagleValue.equals("Off") }
 
-    // DiagonalFix
-//    private val diagonalfixValue = ListValue("DiagonalFix", arrayOf("None", "Verus", "Zitter"), "None")
-
     // Expand
     private val expandLengthValue = IntegerValue("ExpandLength", 1, 1, 6)
 
     // Rotations
-    private val rotationsValue = ListValue("Rotations", arrayOf("None", "Better", "Vanilla", "AAC", "Test1", "Test2", "Custom", "Advanced"), "AAC")
-//    private val bypassmodeValue = ListValue("BypassMode", arrayOf("None", "Universocraft"), "None")
-    private val timerboost = ListValue("TimerBoost-Mode", arrayOf("None", "Universocraft", "Verus"), "None")
-    private val timerlol2 = FloatValue("ScaffoldTimer", 1f, 0f, 10f).displayable { timerboost.equals("Verus") }
-    private val timerboosttime = IntegerValue("BoostTime", 1500, 0, 10000).displayable { timerboost.equals("Verus") }
+    private val rotationsValue = ListValue("Rotations", arrayOf("None", "Better", "Vanilla", "AAC", "Universocraft", "Custom", "Advanced"), "Universocraft")
+    private val autoconfig = BoolValue("AutoConfiguration", false).displayable { rotationsValue.equals("Universocraft") }
+    private val timerboost = ListValue("TimerBoost-Mode", arrayOf("None", "Universocraft"), "None")
     private val disableticksputo = IntegerValue("C03Ticks", 30, 20, 100).displayable { timerboost.equals("Verus") }
     private val alwaysRotateValue = BoolValue("AlwaysRotate", true).displayable { !rotationsValue.equals("None") }
     private val towerrotationsValue = ListValue("TowerRotations", arrayOf("None", "Better", "Vanilla", "AAC", "Test1", "Test2", "Custom"), "AAC")
@@ -115,8 +105,6 @@ class Scaffold : Module() {
     private val customtowerYawValue = IntegerValue("CustomTowerYaw", -145, -180, 180).displayable { towerrotationsValue.equals("Custom") }
     private val customtowerPitchValue = FloatValue("CustomTowerPitch", 79f, -90f, 90f).displayable { towerrotationsValue.equals("Custom") }
 
-    // private val tolleyBridgeValue = IntegerValue("TolleyBridgeTick", 0, 0, 10)
-    // private val tolleyYawValue = IntegerValue("TolleyYaw", 0, 0, 90)
     private val silentRotationValue = BoolValue("SilentRotation", true).displayable { !rotationsValue.equals("None") }
     private val minRotationSpeedValue: IntegerValue = object : IntegerValue("MinRotationSpeed", 180, 0, 180) {
         override fun onChanged(oldValue: Int, newValue: Int) {
@@ -217,6 +205,7 @@ class Scaffold : Module() {
     /**
      * MODULE
      */
+
     // Target block
     private var targetPlace: PlaceInfo? = null
 
@@ -256,25 +245,43 @@ class Scaffold : Module() {
     //Other
     private var doSpoof = false
 
-    //Universo
-    private val speed1 = 0.83f
-    private val speed2 = 0.9f
-    private val speed3 = 1.1f
-    private val speed4 = 1.4f
-    private val speed5 = 1.3f
+    //Universocraft values
     private var wasTimer = false
+    val timer = MSTimer()
+    private var ticks = 0
+    private var trans = false
+    private var MTicks = 0
 
-    //test scaffold boost timer
+
+
+    // Scaffold boost timer
     private var disableticks = 0
     private var timerboosttimer = MSTimer()
-    private var timerms = MSTimer()
     private var disabling = false
     private var transactionxd = false
-    private var speedboost = 1.05
+
+    var iacpitchvalue = 80
+
+    // Rotations Bypass - No Change This
+    var pitchvalue = MathUtils.getRandomFloat(82F, 82F)
+    var yawvalue = MathUtils.getRandomFloat(180F, 180F)
+
+
     /**
      * Enable module
      */
+
     override fun onEnable() {
+
+        // AutoConfiguration for Scaffold - Soon in Rev02
+
+        if (rotationsValue.equals("Universocraft") && autoconfig.get()) {
+
+        }
+
+
+
+
         timerboosttimer.reset()
         disableticks = 40
         disabling = false
@@ -304,6 +311,12 @@ class Scaffold : Module() {
                 }
             }
         }
+        when (sameYValue.get()) {
+            "Universocraft" -> {
+                timer.reset()
+                trans = false
+            }
+        }
     }
 
     /**
@@ -313,6 +326,18 @@ class Scaffold : Module() {
      */
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
+
+
+
+        if(alwaysRotateValue.get() && lockRotation == null) {
+            if (rotationsValue.equals("Universocraft")) {
+                if (!GameSettings.isKeyDown(mc.gameSettings.keyBindRight)) mc.gameSettings.keyBindRight.pressed = false
+                if (!GameSettings.isKeyDown(mc.gameSettings.keyBindLeft)) mc.gameSettings.keyBindLeft.pressed = false
+            }
+            val limitedRotation = RotationUtils.limitAngleChange(RotationUtils.serverRotation, Rotation(MovementUtils.movingYaw + yawvalue,  pitchvalue), rotationSpeed)
+            RotationUtils.setTargetRotation(limitedRotation, 20)
+        }
+
 
         if (towerStatus && towerModeValue.get().lowercase() != "aac3.3.9" && towerModeValue.get().lowercase() != "aac4.4constant" && towerModeValue.get().lowercase() != "aac4jump") mc.timer.timerSpeed = towerTimerValue.get()
         if (!towerStatus) mc.timer.timerSpeed = timerValue.get()
@@ -325,13 +350,6 @@ class Scaffold : Module() {
                     canSameY = true
                 }
 
-                "autojump" -> {
-                    canSameY = true
-                    if (MovementUtils.isMoving() && mc.thePlayer.onGround) {
-                        mc.thePlayer.jump()
-                    }
-                }
-
                 "jumpupy" -> {
                     canSameY = false
                     if (MovementUtils.isMoving() && mc.thePlayer.onGround) {
@@ -341,37 +359,57 @@ class Scaffold : Module() {
 
                 "universocraft" -> {
                     canSameY = true
-                    if (wasTimer) {
-                        mc.timer.timerSpeed = 1.00f
-                        wasTimer = false
-                    }
-                    if (Math.abs(mc.thePlayer.movementInput.moveStrafe) < 0.1f) {
-                        mc.thePlayer.jumpMovementFactor = 0.028499f
-                    } else {
-                        mc.thePlayer.jumpMovementFactor = 0.0284f
-                    }
-                    mc.gameSettings.keyBindJump.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindJump)
 
-                    if (MovementUtils.getSpeed() < 0.200f && !mc.thePlayer.onGround) {
-                        MovementUtils.strafe(0.000f)
+                    // Checker
+
+                    if (eagleValue.equals("Silent")) {
+                        edgeDistanceValue.set(0.20f)
                     }
-                    if (mc.thePlayer.onGround && MovementUtils.isMoving()) {
-                        mc.gameSettings.keyBindJump.pressed = false
-                        mc.thePlayer.jump()
-                        if (!mc.thePlayer.isAirBorne) {
-                            mc.thePlayer.motionY = -0.1
-                            return //Prevent flag with Fly
+
+                    if (hitableCheckValue.equals("Simple") || hitableCheckValue.equals("Strict")) {
+                        hitableCheckValue.set("OFF")
+                    }
+                    if (sprintValue.equals("Verus")) {
+                        sprintValue.set("OFF")
+                    }
+
+                    if (timer.hasTimePassed(500)) {
+                        ticks++
+                        if (wasTimer) {
+                            mc.timer.timerSpeed = 1.00f
+                            wasTimer = false
+                            wasTimer = false
                         }
-                        mc.timer.timerSpeed = 1.00f
-                        wasTimer = true
-                        MovementUtils.strafe()
-                        if (MovementUtils.getSpeed() < 0.5f) {
-                            MovementUtils.strafe(0.4142f)
+                        if (Math.abs(mc.thePlayer.movementInput.moveStrafe) < 0.1f) {
+                            mc.thePlayer.jumpMovementFactor = 0.026499f
+                        }else {
+                            mc.thePlayer.jumpMovementFactor = 0.0244f
                         }
-                    } else if (!MovementUtils.isMoving()) {
-                        mc.timer.timerSpeed = 1.00f
-                        mc.thePlayer.motionX = 0.0
-                        mc.thePlayer.motionZ = 0.0
+
+                        mc.gameSettings.keyBindJump.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindJump)
+                        if (MovementUtils.getSpeed() < 0.215f && !mc.thePlayer.onGround) {
+                            MovementUtils.strafe(0.215f)
+                        }
+                        if (mc.thePlayer.onGround && MovementUtils.isMoving()) {
+                            ticks = 0
+                            mc.gameSettings.keyBindJump.pressed = false
+                            mc.thePlayer.jump()
+                            if (!mc.thePlayer.isAirBorne) {
+                                return //Prevent flag with Fly
+                            }
+                            mc.timer.timerSpeed = 1.00f
+                            wasTimer = true
+                            if(MovementUtils.getSpeed() < 0.5f) {
+                                MovementUtils.strafe(0.48f)
+                            }else{
+                                MovementUtils.strafe((MovementUtils.getSpeed()*0.985).toFloat())
+                            }
+                        }else if (!MovementUtils.isMoving()) {
+                            mc.timer.timerSpeed = 1.00f
+                            mc.thePlayer.motionX = 0.0
+                            mc.thePlayer.motionZ = 0.0
+                        }
+
                     }
                 }
 
@@ -398,72 +436,6 @@ class Scaffold : Module() {
                 }
                 mc.netHandler.addToSendQueue(c08)
             }
-//            when (bypassmodeValue.get().lowercase()) {
-//                "none" -> {
-//                    speedModifierValue.value = speedModifierValue.get()
-//                }
-//
-//                "universocraft" -> {
-//                    if (mc.thePlayer.ticksExisted % 20 < 10) {
-//                        speedModifierValue.set(speed1)
-//                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
-//                        mc.timer.timerSpeed = 1f
-//                    } else {
-//                        speedModifierValue.set(speed2)
-//                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
-//                        mc.timer.timerSpeed = 0.9f
-//                    }
-//                    if (mc.thePlayer.ticksExisted % 15 < 10) {
-//                        mc.timer.timerSpeed = 0.95f
-//                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
-//                        speedModifierValue.set(speed3)
-//                    }
-//                    if (mc.thePlayer.ticksExisted % 30 < 10) {
-//                        mc.timer.timerSpeed = 0.8f
-//                        speedModifierValue.set(speed4)
-//                    }
-//                    if (mc.thePlayer.ticksExisted % 25 < 10) {
-//                        mc.timer.timerSpeed = 0.8f
-//                        speedModifierValue.set(speed5)
-//                    }
-//                }
-//            }
-//            when (diagonalfixValue.get().lowercase()) {
-//                "none" -> {
-//
-//                }
-//
-//                "verus" -> {
-//                    if (mc.thePlayer.ticksExisted % 10 < 10) {
-//                        mc.timer.timerSpeed = 1f
-//                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
-//                    } else {
-//                        mc.timer.timerSpeed = 0.9f
-//                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = true
-//                        LiquidBounce.moduleManager[ABlink::class.java]!!.pulseListValue.set("custom")
-//                        LiquidBounce.moduleManager[ABlink::class.java]!!.pulseCustomDelayValue.set(90)
-//                    }
-//                    if (mc.thePlayer.ticksExisted % 20 < 10) {
-//                        mc.timer.timerSpeed = 0.9f
-//                        LiquidBounce.moduleManager[ABlink::class.java]!!.state = true
-//                        LiquidBounce.moduleManager[ABlink::class.java]!!.pulseListValue.set("custom")
-//                        LiquidBounce.moduleManager[ABlink::class.java]!!.pulseCustomDelayValue.set(120)
-//
-//                    }
-//
-//                }
-//
-//                "zitter" -> {
-//                    if (mc.thePlayer.ticksExisted % 40 < 10) {
-//                        mc.timer.timerSpeed = 1f
-//                        zitterModeValue.set("OFF")
-//                    } else {
-//                        mc.timer.timerSpeed = 0.9f
-//                        zitterModeValue.set("Smooth")
-//                    }
-//
-//                }
-//            }
             when (extraClickValue.get().lowercase()) {
                 "emptyc08" -> sendPacket(C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getStackInSlot(slot)))
                 "afterplace" -> {
@@ -579,7 +551,7 @@ class Scaffold : Module() {
                 zitterDirection = !zitterDirection
             }
         }
-        when (timerboost.get().lowercase()) {
+        when (timerboost.get()) {
             "None" -> {
 
             }
@@ -592,9 +564,9 @@ class Scaffold : Module() {
                     mc.timer.timerSpeed = 1.0f
                     mc.thePlayer.ticksExisted = 15
                 }
-                }
             }
         }
+    }
 
     @EventTarget
     fun onPacket(event: PacketEvent) {
@@ -607,10 +579,18 @@ class Scaffold : Module() {
             }
         }
         if (packet is C0FPacketConfirmTransaction || packet is C0BPacketEntityAction) {
-            if (transactionxd) {
-                event.cancelEvent()
-                mc.timer.timerSpeed = 2.3f
+            if (trans) {
+                if (packet is C02PacketUseEntity) {
+                    MTicks = 0
+                }
+                if (packet is C0FPacketConfirmTransaction) {
+                    if (MTicks > 10 && mc.thePlayer.ticksExisted % 10 != 0)
+                        packet.uid = (packet.uid * -1).toShort()
+                    event.cancelEvent()
+                    PacketUtils.sendPacketNoEvent(packet)
+                }
             }
+
 
         }
 
@@ -629,22 +609,17 @@ class Scaffold : Module() {
                     timerboosttimer.reset()
                 }
             }
-            "verus" -> {
-                if (packet is C03PacketPlayer) {
-                    if (disableticks < disableticksputo.get()) {
-                        event.cancelEvent()
-                        if (disableticks == 5)
-                            PacketUtils.sendPacketNoEvent(C05PacketPlayerLook(mc.thePlayer.rotationYaw - 180, 83f, true))
-                        disableticks++
-                    } else if (disableticks == disableticksputo.get()) {
-                        disabling = true
-                        disableticks++
-                        timerboosttimer.reset()
-                    }
-                }
-            }
         }
 
+
+        // Fix OmniSprint
+
+        if (sprintFix.get()) {
+            val packet = event.packet
+            if (packet is C0BPacketEntityAction) {
+                event.cancelEvent()
+            }
+        }
 
 
 
@@ -669,6 +644,16 @@ class Scaffold : Module() {
     fun onMotion(event: MotionEvent) {
         val eventState = event.eventState
         towerStatus = false
+
+        // Fix autojump LMAO Zywl
+        if (sameYValue.equals("Autojump")) {
+            canSameY = true
+            if (MovementUtils.isMoving()) {
+                if (mc.thePlayer.onGround) mc.thePlayer.jump()
+            }
+        }
+
+
         // Tower
         if (motionSpeedEnabledValue.get()) MovementUtils.setMotion(motionSpeedValue.get().toDouble())
         towerStatus = (!stopWhenBlockAboveValue.get() || BlockUtils.getBlock(BlockPos(mc.thePlayer.posX, mc.thePlayer.posY + 2, mc.thePlayer.posZ)) is BlockAir)
@@ -693,10 +678,6 @@ class Scaffold : Module() {
         }
         if (towerStatus) move()
 
-        if(alwaysRotateValue.get() && lockRotation == null) {
-            val limitedRotation = RotationUtils.limitAngleChange(RotationUtils.serverRotation, Rotation(mc.thePlayer.rotationYaw-180, 83f), rotationSpeed)
-            RotationUtils.setTargetRotation(limitedRotation, 20)
-        }
 
         // Lock Rotation
         if (rotationsValue.get() != "None" && keepLengthValue.get()> 0 && lockRotation != null && silentRotationValue.get()) {
@@ -743,10 +724,12 @@ class Scaffold : Module() {
                 if (mc.thePlayer.onGround) {
                     fakeJump()
                     mc.thePlayer.motionY = 0.42
+                    mc.timer.timerSpeed = 0.5f
                 } else if (mc.thePlayer.motionY < 0.19) {
                     mc.thePlayer.setPosition(mc.thePlayer.posX, truncate(mc.thePlayer.posY), mc.thePlayer.posZ)
                     mc.thePlayer.onGround = true
                     mc.thePlayer.motionY = 0.42
+                    mc.timer.timerSpeed = 0.5f
                 }
             }
             "jump" -> {
@@ -970,15 +953,9 @@ class Scaffold : Module() {
 
         if (!rotationsValue.equals("None")) {
             val rayTraceInfo = mc.thePlayer.rayTraceWithServerSideRotation(5.0)
-            val rayTraceInfo2 = mc.thePlayer.rayTraceWithServerSideRotation(20.0)
             when (hitableCheckValue.get().lowercase()) {
                 "simple" -> {
                     if (!rayTraceInfo.blockPos.equals(targetPlace!!.blockPos)) {
-                        return
-                    }
-                }
-                "random" -> {
-                    if (!rayTraceInfo2.blockPos.equals(targetPlace!!.blockPos)) {
                         return
                     }
                 }
@@ -1048,7 +1025,21 @@ class Scaffold : Module() {
      * Disable scaffold module
      */
     override fun onDisable() {
-        // tolleyStayTick=999
+
+
+        // SameY Checker
+
+        if (sameYValue.equals("Universocraft")) {
+            if (sprintValue.equals("OFF")) {
+                sprintValue.set("Verus")
+            }
+            if (eagleValue.equals("Silent")) {
+                edgeDistanceValue.set(0f)
+            }
+            if (hitableCheckValue.equals("OFF")) {
+                hitableCheckValue.set("Simple")
+            }
+        }
 
         //Timer boost Fix lagback
         when (timerboost.get().lowercase()) {
@@ -1059,39 +1050,20 @@ class Scaffold : Module() {
                 mc.timer.timerSpeed = 1f
             }
         }
+
+        when (sameYValue.get()) {
+            "Universocraft" -> {
+            }
+        }
         LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
         if (mc.thePlayer == null) return
         if (!GameSettings.isKeyDown(mc.gameSettings.keyBindSneak)) {
             mc.gameSettings.keyBindSneak.pressed = false
             if (eagleSneaking) mc.netHandler.addToSendQueue(C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SNEAKING))
         }
-//        when (bypassmodeValue.get().lowercase()) {
-//            "none" -> {
-//                speedModifierValue.value = speedModifierValue.get()
-//            }
-//
-//            "universocraft" -> {
-//                speedModifierValue.set(0.85f)
-//
-//            }
-//        }
-//        when (diagonalfixValue.get().lowercase()) {
-//            "none" -> {
-//
-//            }
-//
-//            "verus" -> {
-//                LiquidBounce.moduleManager[ABlink::class.java]!!.state = false
-//                LiquidBounce.moduleManager[ABlink::class.java]!!.pulseCustomDelayValue.set(0)
-//
-//            }
-//            "zitter" -> {
-//                zitterModeValue.set("OFF")
-//
-//            }
-//        }
         if (!GameSettings.isKeyDown(mc.gameSettings.keyBindRight)) mc.gameSettings.keyBindRight.pressed = false
         if (!GameSettings.isKeyDown(mc.gameSettings.keyBindLeft)) mc.gameSettings.keyBindLeft.pressed = false
+
         lockRotation = null
 
         mc.timer.timerSpeed = 1f
@@ -1102,6 +1074,9 @@ class Scaffold : Module() {
             mc.thePlayer.motionX = 0.0
             mc.thePlayer.motionZ = 0.0
         }
+
+        // Fix Lagbacks
+        mc.netHandler.addToSendQueue(C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SNEAKING))
     }
 
     /**
@@ -1111,12 +1086,6 @@ class Scaffold : Module() {
      */
     @EventTarget
     fun onMove(event: MoveEvent) {
-        //if (towerStatus)
-          //  else if (timerboost.equals("Universocraft"))
-            //    (disableticks < wputo.get())
-              //  event.zero()
-
-
         if (safeWalkValue.equals("off") || shouldGoDown) return
         if (safeWalkValue.equals("air") || mc.thePlayer.onGround) event.isSafeWalk = true
     }
@@ -1271,12 +1240,10 @@ class Scaffold : Module() {
                 "vanilla" -> {
                     placeRotation.rotation
                 }
-                "test1" -> {
-                    val caluyaw = ((placeRotation.rotation.yaw / 45).roundToInt() * 45).toFloat()
-                    Rotation(caluyaw, placeRotation.rotation.pitch)
-                }
-                "test2" -> {
-                    Rotation(((MovementUtils.direction * 180f / Math.PI).toFloat() + 135), placeRotation.rotation.pitch)
+                "universocraft" -> {
+                    if (!GameSettings.isKeyDown(mc.gameSettings.keyBindRight)) mc.gameSettings.keyBindRight.pressed = false
+                    if (!GameSettings.isKeyDown(mc.gameSettings.keyBindLeft)) mc.gameSettings.keyBindLeft.pressed = false
+                    Rotation(MovementUtils.movingYaw + yawvalue, pitchvalue)
                 }
                 "custom" -> {
                     Rotation(mc.thePlayer.rotationYaw + customtowerYawValue.get(), customtowerPitchValue.get().toFloat())
@@ -1321,12 +1288,10 @@ class Scaffold : Module() {
                 "vanilla" -> {
                     placeRotation.rotation
                 }
-                "test1" -> {
-                    val caluyaw = ((placeRotation.rotation.yaw / 45).roundToInt() * 45).toFloat()
-                    Rotation(caluyaw, placeRotation.rotation.pitch)
-                }
-                "test2" -> {
-                    Rotation(((MovementUtils.direction * 180f / Math.PI).toFloat() + 135), placeRotation.rotation.pitch)
+                "universocraft" -> {
+                    if (!GameSettings.isKeyDown(mc.gameSettings.keyBindRight)) mc.gameSettings.keyBindRight.pressed = false
+                    if (!GameSettings.isKeyDown(mc.gameSettings.keyBindLeft)) mc.gameSettings.keyBindLeft.pressed = false
+                   Rotation(MovementUtils.movingYaw + yawvalue, pitchvalue)
                 }
                 "custom" -> {
                     Rotation(mc.thePlayer.rotationYaw + customYawValue.get(), customPitchValue.get().toFloat())
@@ -1348,8 +1313,8 @@ class Scaffold : Module() {
 				else -> placeRotation.rotation.yaw
 			}
 			advancedPitch = when (advancedPitchModeValue.get().lowercase()) {
-				"offset" -> placeRotation.rotation.pitch + advancedPitchOffsetValue.get().toFloat()
-				"static" -> advancedPitchStaticValue.get().toFloat()
+				"offset" -> placeRotation.rotation.pitch + advancedPitchOffsetValue.get()
+				"static" -> advancedPitchStaticValue.get()
 				"vanilla" -> placeRotation.rotation.pitch
 				else -> placeRotation.rotation.pitch
 			}

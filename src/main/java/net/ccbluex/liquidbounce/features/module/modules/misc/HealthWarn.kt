@@ -14,7 +14,7 @@ import net.ccbluex.liquidbounce.features.value.IntegerValue
 @ModuleInfo(name = "HealthWarn", category = ModuleCategory.MISC, array = false, defaultOn = true)
 class HealthWarn : Module() {
 
-    private val healthValue = IntegerValue("Health", 7, 1, 20)
+    private val healthValue = IntegerValue("Health", 8, 1, 20)
 
     private var canWarn = true
 
@@ -30,8 +30,7 @@ class HealthWarn : Module() {
     fun onUpdate(event: UpdateEvent) {
         if (mc.thePlayer.health <= healthValue.get()) {
             if (canWarn) {
-                LiquidBounce.hud.addNotification(
-                    Notification("HP Warning", "YOU ARE AT LOW HP!", NotifyType.ERROR, 3000))
+                LiquidBounce.hud.addNotification(Notification("HP Warning", "You are at LOW HP!", NotifyType.ERROR, 3000))
                 canWarn = false
             }
         } else {

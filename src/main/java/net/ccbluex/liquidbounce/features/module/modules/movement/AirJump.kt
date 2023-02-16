@@ -12,6 +12,7 @@ import net.ccbluex.liquidbounce.utils.block.BlockUtils
 import net.minecraft.block.BlockLadder
 import net.minecraft.block.BlockVine
 import net.minecraft.network.play.client.C03PacketPlayer
+import net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook
 import net.minecraft.util.BlockPos
 
 @ModuleInfo(name = "AirJump", category = ModuleCategory.MOVEMENT)

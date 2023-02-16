@@ -9,6 +9,7 @@ import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.utils.RotationUtils
 import net.ccbluex.liquidbounce.utils.render.RenderUtils
 import net.ccbluex.liquidbounce.features.value.BoolValue
+import net.ccbluex.liquidbounce.features.value.IntegerValue
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
@@ -22,6 +23,9 @@ import java.awt.Color
 class Projectiles : Module() {
 
     private val dynamicBowPower = BoolValue("DynamicBowPower", true)
+    private val colorRedValue = IntegerValue("R", 140, 0, 255)
+    private val colorGreenValue = IntegerValue("G", 155, 0, 255)
+    private val colorBlueValue = IntegerValue("B", 140, 0, 255)
 
     @EventTarget
     fun onRender3D(event: Render3DEvent) {
@@ -198,7 +202,7 @@ class Projectiles : Module() {
         RenderUtils.disableGlCap(GL11.GL_DEPTH_TEST, GL11.GL_ALPHA_TEST, GL11.GL_TEXTURE_2D)
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
         GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST)
-        RenderUtils.glColor(if (hitEntity) { Color(255, 140, 140) } else { Color(140, 255, 140) })
+        RenderUtils.glColor(if (hitEntity) { Color(255, 140, 140) } else { Color(colorRedValue.get(), colorGreenValue.get(), colorBlueValue.get()) })
         GL11.glLineWidth(2f)
 
         worldRenderer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION)
@@ -219,7 +223,7 @@ class Projectiles : Module() {
                 2 -> GL11.glRotatef(90F, 1F, 0F, 0F)
             }
 
-            RenderUtils.drawAxisAlignedBB(AxisAlignedBB(-0.5, 0.0, -0.5, 0.5, 0.1, 0.5), if (hitEntity) { Color(255, 140, 140) } else { Color(140, 255, 140) }, true, true, 3f)
+            RenderUtils.drawAxisAlignedBB(AxisAlignedBB(-0.5, 0.0, -0.5, 0.5, 0.1, 0.5), if (hitEntity) { Color(255, 140, 140) } else { Color(colorRedValue.get(), colorGreenValue.get(), colorBlueValue.get()) }, true, true, 3f)
         }
         GL11.glPopMatrix()
         GL11.glDepthMask(true)

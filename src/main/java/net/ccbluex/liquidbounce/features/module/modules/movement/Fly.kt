@@ -45,6 +45,7 @@ class Fly : Module() {
     private val fakeDamageValue = BoolValue("FakeDamage", false)
     private val viewBobbingValue = BoolValue("ViewBobbing", false)
     private val viewBobbingYawValue = FloatValue("ViewBobbingYaw", 0.1f, 0f, 0.5f)
+    var noTimerModify = false
 
     var launchX = 0.0
     var launchY = 0.0
@@ -57,6 +58,7 @@ class Fly : Module() {
     var needReset = true
 
     override fun onEnable() {
+        noTimerModify = false
         antiDesync = false
         needReset = true
         if (mc.thePlayer.onGround && fakeDamageValue.get()) {

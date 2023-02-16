@@ -4,6 +4,7 @@ import net.ccbluex.liquidbounce.event.*
 import net.ccbluex.liquidbounce.features.module.modules.movement.flys.FlyMode
 import net.ccbluex.liquidbounce.utils.timer.TickTimer
 import net.ccbluex.liquidbounce.features.value.FloatValue
+import net.ccbluex.liquidbounce.utils.MovementUtils
 import net.minecraft.block.BlockAir
 import net.minecraft.network.play.client.C03PacketPlayer
 import net.minecraft.util.AxisAlignedBB
@@ -16,6 +17,7 @@ class FunCraftFly : FlyMode("FunCraft") {
         fly.antiDesync = true
         mc.timer.timerSpeed = timescale.get()
         timer.update()
+        MovementUtils.strafe(2f)
 
         if (timer.hasTimePassed(2)) {
             mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 1.0E-5, mc.thePlayer.posZ)
