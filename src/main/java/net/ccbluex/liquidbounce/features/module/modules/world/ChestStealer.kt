@@ -52,6 +52,10 @@ class ChestStealer : Module() {
         }
     }
 
+
+    /*
+    // TODO: This Exploit was made by LuckySynx, all credits to him.
+    */
     private val instantexploit = BoolValue("InstantExploit", false)
 
     private val openDelayRandomValue = BoolValue("OpenDelayRandom", false)
