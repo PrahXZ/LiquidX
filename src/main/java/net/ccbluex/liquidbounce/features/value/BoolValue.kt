@@ -7,7 +7,9 @@ import net.ccbluex.liquidbounce.utils.AnimationHelper
 /**
  * Bool value represents a value with a boolean
  */
-open class BoolValue(name: String, value: Boolean) : Value<Boolean>(name, value) {
+open class BoolValue(name: String, value: Boolean, displayable: () -> Boolean) : Value<Boolean>(name, value) {
+
+    constructor(name: String, value: Boolean): this(name, value, { true } )
 
     val animation = AnimationHelper(this)
     override fun toJson() = JsonPrimitive(value)

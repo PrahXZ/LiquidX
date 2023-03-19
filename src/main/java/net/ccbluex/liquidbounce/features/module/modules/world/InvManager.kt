@@ -16,10 +16,7 @@ import net.ccbluex.liquidbounce.utils.item.ItemUtils
 import net.ccbluex.liquidbounce.utils.misc.RandomUtils
 import net.ccbluex.liquidbounce.utils.timer.MSTimer
 import net.ccbluex.liquidbounce.utils.timer.TimeUtils
-import net.ccbluex.liquidbounce.features.value.BoolValue
-import net.ccbluex.liquidbounce.features.value.FloatValue
-import net.ccbluex.liquidbounce.features.value.IntegerValue
-import net.ccbluex.liquidbounce.features.value.ListValue
+import net.ccbluex.liquidbounce.features.value.*
 import net.minecraft.client.gui.inventory.GuiInventory
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.init.Blocks
@@ -72,7 +69,6 @@ class InvManager : Module() {
     private val nbtWeaponPriority = FloatValue("NBTWeaponPriority", 0f, 0f, 5f).displayable { !nbtGoalValue.equals("NONE") }
     private val ignoreVehiclesValue = BoolValue("IgnoreVehicles", false)
     private val onlyPositivePotionValue = BoolValue("OnlyPositivePotion", false)
-//    private val ignoreDurabilityUnder = FloatValue("IgnoreDurabilityUnder", 0.3f, 0f, 1f)
 
     private val items = arrayOf("None", "Ignore", "Sword", "Bow", "Pickaxe", "Axe", "Food", "Block", "Water", "Gapple", "Pearl", "Potion")
     private val sortSlot1Value = ListValue("SortSlot-1", items, "Sword").displayable { sortValue.get() }
@@ -326,10 +322,6 @@ class InvManager : Module() {
             } else if (item is ItemBow) {
                 val currPower = ItemUtils.getEnchantment(itemStack, Enchantment.power)
 
-                /*items().none { (_, stack) ->
-                    itemStack != stack && stack.item is ItemBow &&
-                            currPower <= ItemUtils.getEnchantment(stack, Enchantment.power)
-                }*/
                 items().none { (_, stack) ->
 		            if (itemStack != stack && stack.item is ItemBow) {
 			            val power = ItemUtils.getEnchantment(stack, Enchantment.power)
@@ -343,19 +335,7 @@ class InvManager : Module() {
             } else if (item is ItemArmor) {
                 val currArmor = ArmorPiece(itemStack, slot)
 
-                /*items().none { (slot, stack) ->
-                    if (stack != itemStack && stack.item is ItemArmor) {
-                        val armor = ArmorPiece(stack, slot)
 
-                        if (armor.armorType != currArmor.armorType) {
-                            false
-                        } else {
-                            ItemUtils.compareArmor(currArmor, armor, nbtArmorPriority.get(), goal) <= 0
-                        }
-                    } else {
-                        false
-                    }
-                }*/
                 items().none { (slot, stack) ->
                     if (stack != itemStack && stack.item is ItemArmor) {
                         val armor = ArmorPiece(stack, slot)

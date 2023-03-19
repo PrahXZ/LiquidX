@@ -2,18 +2,19 @@ package net.ccbluex.liquidbounce.features.module.modules.movement.speeds.verus
 
 import net.ccbluex.liquidbounce.event.MoveEvent
 import net.ccbluex.liquidbounce.features.module.modules.movement.speeds.SpeedMode
-import net.ccbluex.liquidbounce.features.value.FloatValue
-import net.ccbluex.liquidbounce.features.value.ListValue
+import net.ccbluex.liquidbounce.features.value.*
 import net.ccbluex.liquidbounce.utils.MovementUtils
 import net.minecraft.network.play.client.C03PacketPlayer
 
 class VerusSpeeds: SpeedMode("Verus") {
 
     private val modeValue = ListValue("Verus-Mode", arrayOf("Hop", "Ground", "YPort"), "Hop")
-    private val YPortspeedValue = FloatValue("YPortSpeed", 0.61f, 0.1f, 1f).displayable { modeValue.get().equals("YPort") }
+    private val YPortspeedValue = FloatValue("YPortSpeed", 0.61f, 0.1f, 1f).displayable { modeValue.equals("YPort") }
 
     // Variables
     private var firstHop = false
+    var movespeed = 0.0
+
 
     override fun onUpdate() {
         when (modeValue.get()) {
@@ -22,7 +23,9 @@ class VerusSpeeds: SpeedMode("Verus") {
                     mc.gameSettings.keyBindJump.pressed = false
                     if (mc.thePlayer.onGround) {
                         mc.thePlayer.jump()
+                        movespeed -= movespeed / 156.0
                         MovementUtils.strafe(0.48f)
+
                     }
                     MovementUtils.strafe()
                 }

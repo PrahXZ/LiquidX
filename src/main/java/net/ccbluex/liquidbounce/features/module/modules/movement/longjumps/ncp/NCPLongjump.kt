@@ -1,15 +1,10 @@
 package net.ccbluex.liquidbounce.features.module.modules.movement.longjumps.ncp
 
 import net.ccbluex.liquidbounce.event.JumpEvent
-import net.ccbluex.liquidbounce.event.MoveEvent
 import net.ccbluex.liquidbounce.event.UpdateEvent
 import net.ccbluex.liquidbounce.features.module.modules.movement.longjumps.LongJumpMode
 import net.ccbluex.liquidbounce.utils.MovementUtils
-import net.ccbluex.liquidbounce.features.value.FloatValue
-import net.ccbluex.liquidbounce.utils.PacketUtils
-import net.minecraft.init.Blocks
-import net.minecraft.item.ItemStack
-import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement
+import net.ccbluex.liquidbounce.features.value.*
 
 class NCPLongjump : LongJumpMode("NCP") {
     private val ncpBoostValue = FloatValue("${valuePrefix}Boost", 4.25f, 1f, 10f)

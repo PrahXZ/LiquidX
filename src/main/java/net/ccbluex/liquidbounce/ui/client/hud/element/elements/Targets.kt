@@ -42,7 +42,7 @@ open class Targets : Element(-46.0, -40.0, 1F, Side(Side.Horizontal.MIDDLE, Side
     val modeValue = ListValue("Mode", arrayOf("FDP", "Bar", "Chill", "Rice", "Slowly", "Remix", "Novoline", "Novoline2" , "Astolfo", "Liquid", "Flux", "Rise", "Exhibition", "ExhibitionOld", "Zamorozka", "Arris", "Tenacity", "Tenacity5", "TenacityNew", "WaterMelon", "SparklingWater"), "FDP")
     private val modeRise = ListValue("RiseMode", arrayOf("Original", "New1", "New2", "Rise6"), "Rise6").displayable { modeValue.equals("Rise") }
 
-    private val chillFontSpeed = FloatValue("Chill-FontSpeed", 0.5F, 0.01F, 1F).displayable { modeValue.get().equals("chill", true) }
+    private val chillFontSpeed = FloatValue("Chill-FontSpeed", 0.5F, 0.01F, 1F).displayable { modeValue.equals("Chill") }
 
     private var Health: Float = 0F
     private var EndingTarget: Entity? = null
@@ -53,9 +53,9 @@ open class Targets : Element(-46.0, -40.0, 1F, Side(Side.Horizontal.MIDDLE, Side
     val shadowStrength = FloatValue("Shadow-Strength", 1F, 0.01F, 40F).displayable { shadowValue.get() }
     val shadowColorMode = ListValue("Shadow-Color", arrayOf("Background", "Custom", "Bar"), "Background").displayable { shadowValue.get() }
 
-    val shadowColorRedValue = IntegerValue("Shadow-Red", 0, 0, 255).displayable { shadowValue.get() && shadowColorMode.get().equals("custom", true) }
-    val shadowColorGreenValue = IntegerValue("Shadow-Green", 111, 0, 255).displayable { shadowValue.get() && shadowColorMode.get().equals("custom", true) }
-    val shadowColorBlueValue = IntegerValue("Shadow-Blue", 255, 0, 255).displayable { shadowValue.get() && shadowColorMode.get().equals("custom", true) }
+    val shadowColorRedValue = IntegerValue("Shadow-Red", 0, 0, 255).displayable { shadowValue.get() && shadowColorMode.equals("Custom") }
+    val shadowColorGreenValue = IntegerValue("Shadow-Green", 111, 0, 255).displayable { shadowValue.get() && shadowColorMode.equals("Custom") }
+    val shadowColorBlueValue = IntegerValue("Shadow-Blue", 255, 0, 255).displayable { shadowValue.get() && shadowColorMode.equals("Custom") }
 
 
     private val animSpeedValue = IntegerValue("AnimSpeed", 10, 5, 20)
@@ -100,12 +100,12 @@ open class Targets : Element(-46.0, -40.0, 1F, Side(Side.Horizontal.MIDDLE, Side
     val riseMoveTimeValue = IntegerValue("Rise-MoveTime", 20, 5, 40).displayable { modeValue.equals("Rise") }
     val riseFadeTimeValue = IntegerValue("Rise-FadeTime", 20, 5, 40).displayable { modeValue.equals("Rise") }
 
-    val gradientLoopValue = IntegerValue("GradientLoop", 4, 1, 40).displayable { modeValue.get().equals("Rice", true) }
-    val gradientDistanceValue = IntegerValue("GradientDistance", 50, 1, 200).displayable { modeValue.get().equals("Rice", true) }
-    val gradientRoundedBarValue = BoolValue("GradientRoundedBar", true).displayable { modeValue.get().equals("Rice", true) }
+    val gradientLoopValue = IntegerValue("GradientLoop", 4, 1, 40).displayable { modeValue.equals("Rice",) }
+    val gradientDistanceValue = IntegerValue("GradientDistance", 50, 1, 200).displayable { modeValue.equals("Rice") }
+    val gradientRoundedBarValue = BoolValue("GradientRoundedBar", true).displayable { modeValue.equals("Rice") }
 
-    val riceParticle = BoolValue("Rice-Particle", true).displayable { modeValue.get().equals("Rice", true) }
-    val riceParticleSpin = BoolValue("Rice-ParticleSpin", true).displayable { modeValue.get().equals("Rice", true) && riceParticle.get() }
+    val riceParticle = BoolValue("Rice-Particle", true).displayable { modeValue.equals("Rice",) }
+    val riceParticleSpin = BoolValue("Rice-ParticleSpin", true).displayable { modeValue.equals("Rice") && riceParticle.get() }
     val generateAmountValue = IntegerValue("GenerateAmount", 10, 1, 40).displayable { modeValue.get().equals("Rice", true) && riceParticle.get() }
     val riceParticleCircle = ListValue("Circle-Particles", arrayOf("Outline", "Solid", "None"), "Solid").displayable { modeValue.get().equals("Rice", true) && riceParticle.get() }
     val riceParticleRect = ListValue("Rect-Particles", arrayOf("Outline", "Solid", "None"), "Outline").displayable { modeValue.get().equals("Rice", true) && riceParticle.get() }

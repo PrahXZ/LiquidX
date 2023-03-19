@@ -10,10 +10,7 @@ import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.features.module.modules.exploit.ABlink
 import net.ccbluex.liquidbounce.features.module.modules.player.Blink
 import net.ccbluex.liquidbounce.features.module.modules.render.FreeCam
-import net.ccbluex.liquidbounce.features.value.BoolValue
-import net.ccbluex.liquidbounce.features.value.ListValue
-import net.ccbluex.liquidbounce.injection.transformers.ViaForgeSupportTransformer
-import net.minecraft.network.handshake.client.C00Handshake
+import net.ccbluex.liquidbounce.features.value.*
 import net.minecraft.network.play.client.*
 
 @ModuleInfo(name = "PacketFixer", category = ModuleCategory.MISC)
@@ -32,7 +29,6 @@ class PacketFixer : Module() {
     var yaw = 0.0
     var prevSlot = 0
     private var jam = 0
-    private var packetCount = 0
 
     @EventTarget
     fun onPacket(event: PacketEvent) {

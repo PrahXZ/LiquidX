@@ -34,7 +34,7 @@ open class HUD : MinecraftInstance() {
         fun createDefault(): HUD {
             val text1 = Text(x = 4.0, y = 4.0)
             text1.displayString.set("$CLIENT_NAME $CLIENT_VERSION")
-            text1.setColor(Color(126, 77, 79, 255))
+            text1.setColor(Color(18, 151, 177, 255))
             text1.shadow.set(true)
             text1.colorModeValue.set("AnotherRainbow")
             text1.rectValue.set("None")
@@ -43,7 +43,7 @@ open class HUD : MinecraftInstance() {
 
             val text2 = Text(x = 8.0, y = 25.0)
             text2.displayString.set("$CLIENT_RELEASE")
-            text2.setColor(Color(126, 77, 79, 255))
+            text2.setColor(Color(18, 151, 177, 255))
             text2.shadow.set(true)
             text2.colorModeValue.set("AnotherRainbow")
             text2.rectValue.set("None")

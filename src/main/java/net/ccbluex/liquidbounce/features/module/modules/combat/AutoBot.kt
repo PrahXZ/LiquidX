@@ -11,10 +11,7 @@ import net.ccbluex.liquidbounce.utils.Rotation
 import net.ccbluex.liquidbounce.utils.RotationUtils
 import net.ccbluex.liquidbounce.utils.misc.FallingPlayer
 import net.ccbluex.liquidbounce.utils.timer.MSTimer
-import net.ccbluex.liquidbounce.features.value.BoolValue
-import net.ccbluex.liquidbounce.features.value.FloatValue
-import net.ccbluex.liquidbounce.features.value.IntegerValue
-import net.ccbluex.liquidbounce.features.value.ListValue
+import net.ccbluex.liquidbounce.features.value.*
 import net.minecraft.client.gui.inventory.GuiInventory
 import net.minecraft.entity.projectile.EntityFireball
 import net.minecraft.init.Items

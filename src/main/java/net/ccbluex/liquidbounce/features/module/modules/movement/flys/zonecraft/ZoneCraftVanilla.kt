@@ -21,7 +21,7 @@ class ZoneCraftVanilla: FlyMode("ZoneCraftVanilla") {
         val packet = event.packet
         if (packet !is C00PacketKeepAlive) {
             if (event.type === PacketEvent.Type.SEND) {
-                if (mc.thePlayer.ticksExisted % 3 == 0 && packet is C03PacketPlayer) { // Previene el check de desync de morgan :P
+                if (mc.thePlayer.ticksExisted % 3 == 0 && packet is C03PacketPlayer) {
                     PacketUtils.sendPacketNoEvent(C03PacketPlayer(true))
                 }
                 event.cancelEvent()

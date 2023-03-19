@@ -7,8 +7,7 @@ package net.ccbluex.liquidbounce.features.module.modules.movement.speeds.ncp
 
 import net.ccbluex.liquidbounce.features.module.modules.movement.speeds.SpeedMode
 import net.ccbluex.liquidbounce.utils.MovementUtils
-import net.ccbluex.liquidbounce.features.value.FloatValue
-import net.ccbluex.liquidbounce.features.value.TextValue
+import net.ccbluex.liquidbounce.features.value.*
 import kotlin.math.max
 
 class NCPStableSpeed : SpeedMode("NCPStable") {

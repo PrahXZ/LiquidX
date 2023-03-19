@@ -35,7 +35,7 @@ object LiquidBounce {
     const val CLIENT_PREFIX = "§3§lLiquidX §8» "
     const val BIG_NAME = "§3§lLiquidX §f§lClient"
     const val CLIENT_CREATOR = "Prah"
-    const val CLIENT_RELEASE = "Rev01 Ultimate Release"
+    const val CLIENT_RELEASE = "Legacy Release"
     const val CLIENT_IP = "www.liquidx.net"
     val UID = MathUtils.randomNumber(600, 1)
 
@@ -55,17 +55,16 @@ object LiquidBounce {
 
     @JvmField
 
-    val CLIENT_VERSION = "v3.0"
+    val CLIENT_VERSION = "v3.1"
 
 
     @JvmField
     val CLIENT_BRANCH = (gitInfo["git.branch"] ?: "unknown").let {
-        if (it == "main") "Yazmin Edition" else it
+        if (it == "main") "Diana Edition" else it
     }
 
     var isStarting = true
     var isLoadingConfig = true
-    private var uidrandom = 0
 
     // Managers
     lateinit var moduleManager: ModuleManager

@@ -228,11 +228,11 @@ object MovementUtils : MinecraftInstance() {
     }
 
     fun setSpeed(
-        moveEvent: MoveEvent,
-        moveSpeed: Double,
-        pseudoYaw: Float,
-        pseudoStrafe: Double,
-        pseudoForward: Double
+            moveEvent: MoveEvent,
+            moveSpeed: Int,
+            pseudoYaw: Float,
+            pseudoStrafe: Double,
+            pseudoForward: Double
     ) {
         var forward = pseudoForward
         var strafe = pseudoStrafe

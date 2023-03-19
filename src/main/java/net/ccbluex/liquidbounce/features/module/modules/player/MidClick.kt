@@ -35,10 +35,10 @@ class MidClick : Module() {
                 } else {
                     friendsConfig.removeFriend(playerName)
                     LiquidBounce.fileManager.saveConfig(friendsConfig)
-                    ClientUtils.displayChatMessage("§a§l$playerName§c was removed from your friends.")
+                    ClientUtils.displayChatMessage("§b§l$playerName§c was removed from your friends.")
                 }
             } else {
-                ClientUtils.displayChatMessage("§c§lError: §aYou need to select a player.")
+                ClientUtils.displayChatMessage("§4§lError: §fYou need to select a player.")
             }
         }
 

@@ -13,8 +13,7 @@ import net.ccbluex.liquidbounce.utils.particles.Particle;
 import net.ccbluex.liquidbounce.utils.particles.Vec3;
 import net.ccbluex.liquidbounce.utils.render.RenderUtils;
 import net.ccbluex.liquidbounce.utils.timer.ParticleTimer;
-import net.ccbluex.liquidbounce.features.value.BoolValue;
-import net.ccbluex.liquidbounce.features.value.IntegerValue;
+import net.ccbluex.liquidbounce.features.value.*;
 import net.minecraft.entity.EntityLivingBase;
 
 import java.util.List;

@@ -57,18 +57,18 @@ class KeyStrokes : Element(5.0, 25.0, 1.5F, Side.default()) {
         val backGroundColor = Color(backGroundRedValue.get(), backGroundGreenValue.get(), backGroundBlueValue.get(), backGroundAlphaValue.get())
         val textColor = if (outlineRainbow.get()) { ColorUtils.rainbowWithAlpha(textAlphaValue.get()) } else { Color(textRedValue.get(), textGreenValue.get(), textBlueValue.get(), textAlphaValue.get()) }
 
-        if(keyStyleValue.get().equals("Custom")) {
+        if(keyStyleValue.equals("Custom")) {
         for (keyStroke in keys) {
             keyStroke.renderCustom(animSpeedValue.get(), backGroundColor, textColor, highLightPercent.get(), outline.get(), outlineBoldValue.get(), fontValue.get(), blurValue.get(), this.renderX.toFloat(), this.renderY.toFloat(), scale)
         }}
 
-        if(keyStyleValue.get().equals("Jello")) {
+        if(keyStyleValue.equals("Jello")) {
             for (keyStroke in keys) { keyStroke.renderJelloBlur(this.renderX.toFloat(), this.renderY.toFloat(), scale) }
             RenderUtils.drawImage2(ResourceLocation("liquidx/misc/keystrokes.png"), -3.5f, -3.5f, 54, 54)
             for (keyStroke in keys) { keyStroke.renderJelloIndicator(animSpeedValue.get(), backGroundColor, textColor, highLightPercent.get(), this.renderX.toFloat(), this.renderY.toFloat(), scale) }
         }
 
-        if(keyStyleValue.get().equals("Juul")) {
+        if(keyStyleValue.equals("Juul")) {
             for (keyStroke in juulkeys) {
                 keyStroke.renderJuul(animSpeedValue.get(), backGroundColor, textColor, highLightPercent.get(), outline.get(), outlineBoldValue.get(), fontValue.get(), blurValue.get(), this.renderX.toFloat(), this.renderY.toFloat(), scale)
             }

@@ -13,10 +13,7 @@ import net.ccbluex.liquidbounce.features.module.modules.misc.AntiBot
 import net.ccbluex.liquidbounce.features.module.modules.misc.Teams
 import net.ccbluex.liquidbounce.utils.EntityUtils
 import net.ccbluex.liquidbounce.utils.timer.MSTimer
-import net.ccbluex.liquidbounce.features.value.BoolValue
-import net.ccbluex.liquidbounce.features.value.IntegerValue
-import net.ccbluex.liquidbounce.features.value.ListValue
-import net.ccbluex.liquidbounce.features.value.TextValue
+import net.ccbluex.liquidbounce.features.value.*
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.network.play.server.S3FPacketCustomPayload
@@ -27,7 +24,7 @@ class AutoReport : Module() {
     private val commandValue = TextValue("Command", "/reportar %name%")
     private val tipValue = BoolValue("Tip", true)
     private val allDelayValue = IntegerValue("AllDelay", 500, 0, 1000)
-    private val blockBooksValue = BoolValue("BlockBooks", false) // 绕过Hypixel /report举报弹出书
+    private val blockBooksValue = BoolValue("BlockBooks", false)
 
     private val reported = mutableListOf<String>()
     private val delayTimer = MSTimer()

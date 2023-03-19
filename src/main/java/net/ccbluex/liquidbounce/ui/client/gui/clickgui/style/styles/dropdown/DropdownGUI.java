@@ -22,7 +22,7 @@ public class DropdownGUI extends GuiScreen {
     private int dragX;
     private int dragY;
     private int alpha;
-   private final ResourceLocation hudIcon = new ResourceLocation("fdpclient/ui/clickgui/hud.png");
+   private final ResourceLocation hudIcon = new ResourceLocation("liquidx/ui/clickgui/hud.png");
     public DropdownGUI() {
 
     }

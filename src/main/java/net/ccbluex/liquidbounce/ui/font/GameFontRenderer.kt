@@ -70,10 +70,10 @@ class GameFontRenderer(font: Font) : FontRenderer(Minecraft.getMinecraft().gameS
 
         if (shadow) {
             when {
-                HUD.shadowValue.get().equals("LiquidBounce", ignoreCase = true) -> drawText(currentText, x + 1f, currY + 1f, Color(0, 0, 0, 150).rgb, true)
-                HUD.shadowValue.get().equals("Default", ignoreCase = true) -> drawText(currentText, x + 0.5f, currY + 0.5f, Color(0, 0, 0, 130).rgb, true)
-                HUD.shadowValue.get().equals("Autumn", ignoreCase = true) -> drawText(currentText, x + 1f, currY + 1f, Color(20, 20, 20, 200).rgb, true)
-                HUD.shadowValue.get().equals("Outline", ignoreCase = true) -> {
+                HUD.shadowValue.equals("LiquidBounce") -> drawText(currentText, x + 1f, currY + 1f, Color(0, 0, 0, 150).rgb, true)
+                HUD.shadowValue.equals("Default") -> drawText(currentText, x + 0.5f, currY + 0.5f, Color(0, 0, 0, 130).rgb, true)
+                HUD.shadowValue.equals("Autumn") -> drawText(currentText, x + 1f, currY + 1f, Color(20, 20, 20, 200).rgb, true)
+                HUD.shadowValue.equals("Outline") -> {
                     drawText(currentText, x + 0.5f, currY + 0.5f, Color(0, 0, 0, 130).rgb, true)
                     drawText(currentText, x - 0.5f, currY - 0.5f, Color(0, 0, 0, 130).rgb, true)
                     drawText(currentText, x + 0.5f, currY - 0.5f, Color(0, 0, 0, 130).rgb, true)

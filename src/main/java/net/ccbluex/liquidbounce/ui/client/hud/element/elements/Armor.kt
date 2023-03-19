@@ -72,12 +72,12 @@ class Armor(x: Double = -8.0, y: Double = 57.0, scale: Float = 1F,
             GlStateManager.disableCull()
         }
 
-        return if (modeValue.get().equals("Exhibition", true)) {
-            if (alignment.get().equals("Horizontal", true))
+        return if (modeValue.equals("Exhibition")) {
+            if (alignment.equals("Horizontal"))
                 Border(0F, 0F, 80F, 17F)
             else
                 Border(0F, 0F, 18F, 80F)
-        } else if (alignment.get().equals("Horizontal", true))
+        } else if (alignment.equals("Horizontal"))
             Border(0F, 0F, 72F, 17F)
         else
             Border(0F, 0F, 18F, 72F)

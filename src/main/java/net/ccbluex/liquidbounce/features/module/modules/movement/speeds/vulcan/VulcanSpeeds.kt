@@ -1,5 +1,6 @@
 package net.ccbluex.liquidbounce.features.module.modules.movement.speeds.vulcan
 
+import net.ccbluex.liquidbounce.event.MoveEvent
 import net.ccbluex.liquidbounce.features.value.*
 import net.ccbluex.liquidbounce.features.module.modules.movement.speeds.SpeedMode
 import net.ccbluex.liquidbounce.utils.MovementUtils
@@ -7,7 +8,10 @@ import net.minecraft.client.settings.GameSettings
 
 class VulcanSpeeds : SpeedMode("Vulcan") {
 
-    private val modeValue = ListValue("Vulcan-Mode", arrayOf("Hop", "Hop2", "YPort", "YPort2"), "Hop")
+    private val modeValue = ListValue("Vulcan-Mode", arrayOf("Hop", "Hop2", "Ground", "YPort", "YPort2"), "Hop")
+
+    val boostDelayValue = IntegerValue("Boost-Delay", 8, 2, 15).displayable { modeValue.equals("Ground") }
+    val boostSpeedValue = BoolValue("Ground-Boost", true).displayable { modeValue.equals("vulcanground") }
 
 
     // Variable
@@ -15,6 +19,10 @@ class VulcanSpeeds : SpeedMode("Vulcan") {
     private var wasTimer = false
     private var jumpTicks = 0
     private var ticks = 0
+
+    private var jumped = false
+    private var jumpCount = 0
+    private var yMotion = 0.0
 
 
     override fun onEnable() {
@@ -34,6 +42,18 @@ class VulcanSpeeds : SpeedMode("Vulcan") {
         wasTimer = true
         mc.timer.timerSpeed = 1.0f
         portSwitcher = 0
+    }
+
+    override fun onMove(event: MoveEvent) {
+        if (modeValue.equals("Ground")) {
+            if (jumpCount >= boostDelayValue.get() && boostSpeedValue.get()) {
+                event.x *= 1.7181145141919810
+                event.z *= 1.7181145141919810
+                jumpCount = 0
+            } else if (!boostSpeedValue.get()) {
+                jumpCount = 4
+            }
+        }
     }
 
     override fun onUpdate() {
@@ -91,6 +111,31 @@ class VulcanSpeeds : SpeedMode("Vulcan") {
                     mc.timer.timerSpeed = 1.00f
                     mc.thePlayer.motionX = 0.0
                     mc.thePlayer.motionZ = 0.0
+                }
+            }
+            "Ground" -> {
+                if (jumped) {
+                    mc.thePlayer.motionY = -0.1
+                    mc.thePlayer.onGround = false
+                    jumped = false
+                    yMotion = 0.0
+                }
+                mc.thePlayer.jumpMovementFactor = 0.025f
+                if (mc.thePlayer.onGround && MovementUtils.isMoving()) {
+                    if (mc.thePlayer.isCollidedHorizontally || mc.gameSettings.keyBindJump.pressed) {
+                        if (!mc.gameSettings.keyBindJump.pressed) {
+                            mc.thePlayer.jump()
+                        }
+                        return
+                    }
+                    mc.thePlayer.jump()
+                    mc.thePlayer.motionY = 0.0
+                    yMotion = 0.1 + Math.random() * 0.03
+                    MovementUtils.strafe(0.48f + jumpCount * 0.001f)
+                    jumpCount++
+                    jumped = true
+                } else if (MovementUtils.isMoving()) {
+                    MovementUtils.strafe(0.27f + jumpCount * 0.0018f)
                 }
             }
             "YPort" -> {

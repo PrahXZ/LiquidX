@@ -5,19 +5,20 @@ import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.event.EventTarget
 import net.ccbluex.liquidbounce.event.PacketEvent
 import net.ccbluex.liquidbounce.event.Render3DEvent
+import net.ccbluex.liquidbounce.event.UpdateEvent
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.utils.timer.MSTimer
 import net.ccbluex.liquidbounce.utils.timer.TimeUtils
-import net.ccbluex.liquidbounce.features.value.BoolValue
-import net.ccbluex.liquidbounce.features.value.IntegerValue
+import net.ccbluex.liquidbounce.features.value.*
 import net.ccbluex.liquidbounce.utils.math.MathUtils
 import net.minecraft.client.gui.inventory.GuiChest
 import net.minecraft.inventory.Slot
 import net.minecraft.item.Item
 import net.minecraft.item.ItemBlock
 import net.minecraft.item.ItemStack
+import net.minecraft.network.play.client.C0EPacketClickWindow
 import net.minecraft.network.play.server.S2DPacketOpenWindow
 import net.minecraft.network.play.server.S30PacketWindowItems
 import net.minecraft.util.ResourceLocation
@@ -50,6 +51,8 @@ class ChestStealer : Module() {
             nextDelay = TimeUtils.randomDelay(get(), maxDelayValue.get())
         }
     }
+
+    private val instantexploit = BoolValue("InstantExploit", false)
 
     private val openDelayRandomValue = BoolValue("OpenDelayRandom", false)
     private val chestValue = IntegerValue("ChestOpenDelay", 300, 0, 1000).displayable {!openDelayRandomValue.get()}
@@ -168,6 +171,33 @@ class ChestStealer : Module() {
     }
 
     @EventTarget
+    private fun onUpdate(event: UpdateEvent) {
+        if (instantexploit.get()) {
+            if (mc.currentScreen is GuiChest) {
+                val chest = mc.currentScreen as GuiChest
+                val rows = chest.inventoryRows * 9
+                for (i in 0 until rows) {
+                    val slot = chest.inventorySlots.getSlot(i)
+                    if (slot.hasStack) {
+                        mc.thePlayer.sendQueue.addToSendQueue(
+                                C0EPacketClickWindow(
+                                        chest.inventorySlots.windowId,
+                                        i,
+                                        0,
+                                        1,
+                                        slot.stack,
+                                        1.toShort()
+                                )
+                        )
+                    }
+                }
+                mc.thePlayer.closeScreen()
+            }
+
+        }
+    }
+
+    @EventTarget
     private fun onPacket(event: PacketEvent) {
         val packet = event.packet
 
@@ -199,6 +229,7 @@ class ChestStealer : Module() {
 
         return true
     }
+
 
     private val fullInventory: Boolean
         get() = mc.thePlayer.inventory.mainInventory.none { it == null }

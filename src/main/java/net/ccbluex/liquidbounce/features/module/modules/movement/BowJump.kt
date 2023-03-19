@@ -7,10 +7,7 @@ import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.features.module.modules.exploit.ABlink
-import net.ccbluex.liquidbounce.features.value.BoolValue
-import net.ccbluex.liquidbounce.features.value.FloatValue
-import net.ccbluex.liquidbounce.features.value.IntegerValue
-import net.ccbluex.liquidbounce.features.value.ListValue
+import net.ccbluex.liquidbounce.features.value.*
 import net.ccbluex.liquidbounce.ui.font.Fonts
 import net.ccbluex.liquidbounce.utils.MovementUtils.strafe
 import net.ccbluex.liquidbounce.utils.PacketUtils.sendPacketNoEvent
@@ -18,7 +15,6 @@ import net.ccbluex.liquidbounce.utils.render.RenderUtils
 import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.init.Items
 import net.minecraft.item.ItemBow
-import net.minecraft.network.play.client.C00PacketKeepAlive
 import net.minecraft.network.play.client.C03PacketPlayer
 import net.minecraft.network.play.client.C03PacketPlayer.C05PacketPlayerLook
 import net.minecraft.network.play.client.C07PacketPlayerDigging
@@ -34,10 +30,10 @@ import java.awt.Color
 @ModuleInfo(name = "BowJump", category = ModuleCategory.MOVEMENT)
 class BowJump : Module() {
     private val modeValue = ListValue("Mode", arrayOf("Custom", "UniversoSpeed"), "Custom")
-    private val boostValue = FloatValue("Boost", 4.25f, 0f, 10f).displayable { modeValue.get().equals("Custom", true) }
-    private val heightValue = FloatValue("Height", 0.42f, 0f, 10f).displayable { modeValue.get().equals("Custom", true) }
-    private val timerValue = FloatValue("Timer", 1f, 0.1f, 10f).displayable { modeValue.get().equals("Custom", true) }
-    private val delayBeforeLaunch = IntegerValue("DelayBeforeArrowLaunch", 1, 1, 20).displayable { modeValue.get().equals("Custom", true) }
+    private val boostValue = FloatValue("Boost", 4.25f, 0f, 10f).displayable { modeValue.equals("Custom") }
+    private val heightValue = FloatValue("Height", 0.42f, 0f, 10f).displayable { modeValue.equals("Custom") }
+    private val timerValue = FloatValue("Timer", 1f, 0.1f, 10f).displayable { modeValue.equals("Custom") }
+    private val delayBeforeLaunch = IntegerValue("DelayBeforeArrowLaunch", 1, 1, 20).displayable { modeValue.equals("Custom") }
     private val autoDisableValue = BoolValue("AutoDisable", true)
     private val renderValue = BoolValue("RenderStatus", true)
     private var bowState = 0

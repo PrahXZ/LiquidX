@@ -12,10 +12,7 @@ import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.features.special.AutoDisable
 import net.ccbluex.liquidbounce.ui.client.hud.element.elements.Notification
 import net.ccbluex.liquidbounce.ui.client.hud.element.elements.NotifyType
-import net.ccbluex.liquidbounce.features.value.BoolValue
-import net.ccbluex.liquidbounce.features.value.IntegerValue
-import net.ccbluex.liquidbounce.features.value.ListValue
-import net.ccbluex.liquidbounce.features.value.TextValue
+import net.ccbluex.liquidbounce.features.value.*
 import net.ccbluex.liquidbounce.utils.timer.MSTimer
 import net.minecraft.event.ClickEvent
 import net.minecraft.network.play.client.*
@@ -32,7 +29,7 @@ class AutoPlay : Module() {
     private val modeValue = ListValue("Server", arrayOf("RedeSky", "BlocksMC", "Minemora", "Hypixel", "Jartex", "Pika", "Hydracraft", "HyCraft", "MineFC/HeroMC_Bedwars","Universocraft", "Librecraft", "Supercraft"), "RedeSky")
 
     // Universocraft-Mode
-    private val unimode = ListValue("Universocraft-Mode", arrayOf("SW-TSW", "Bedwars", "Eggwars", "HungerGames"), "SW-TSW").displayable { modeValue.get().equals("Universocraft") }
+    private val unimode = ListValue("Universocraft-Mode", arrayOf("SW-TSW", "Bedwars", "Eggwars", "HungerGames"), "SW-TSW").displayable { modeValue.equals("Universocraft") }
 
 
     private val bwModeValue = ListValue("Mode", arrayOf("SOLO", "4v4v4v4"), "4v4v4v4").displayable { modeValue.equals("MineFC/HeroMC_Bedwars") }

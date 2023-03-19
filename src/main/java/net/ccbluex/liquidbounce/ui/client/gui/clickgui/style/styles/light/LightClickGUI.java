@@ -172,8 +172,7 @@ public class LightClickGUI extends GuiScreen implements GuiYesNoCallback {
         oldX = mouseX;
         oldY = mouseY;
 
-        // fdp water mark
-        Fonts.font35.drawString("Made by SkidderMC", startX + 210, startY + 295, new Color(200,200,200).getRGB());
+        Fonts.font35.drawString("Made by Augustus", startX + 210, startY + 295, new Color(200,200,200).getRGB());
 
         // new sexy background
         RenderUtils.drawRoundedRect2((int) startX - 5, (int) startY + 10, (int) startX + 400, (int) startY + 310, 3,
@@ -182,21 +181,12 @@ public class LightClickGUI extends GuiScreen implements GuiYesNoCallback {
                 new Color(250, 250, 250, 255).getRGB());
 
 
-        //drawBorderedRect(startX + 130, startY + 7, startX + 190, startY + 15, 0.5F, -1, new Color(100,100,100).getRGB());
 
-        // search box time
         defaultFont.drawString(searchBox.getText().isEmpty() && !searchBox.isFocused() ? "Search..." : searchBox.getText(), (int) (startX + 3), (int) (startY + 15), new Color(80, 80, 80).getRGB());
 
-        // no module???? holder text
         if(currentModule == null) {
             logoFont.drawStringWithShadow("No Modules Selected", startX + 80, startY + 130, new Color(100,100,100).getRGB());
         }
-//        if(isHovered(startX + 130, startY + 7, startX + 190, startY + 15, mouseX, mouseY) && Mouse.isButtonDown(0))
-//            hovered = true;
-//        else if(!isHovered(startX + 130, startY + 7, startX + 190, startY + 15, mouseX, mouseY) && Mouse.isButtonDown(0))
-//            hovered = false;
-        //   FontManager.logo24.drawCenteredStringWithShadow("L", startX + 5, startY + 8, new Color(49, 86, 255).getRGB(),255);
-        //FontManager.logo24.drawCenteredStringWithShadow("ight", startX + 5 + FontManager.logo24.getStringWidth("L") + 8, startY + 8, new Color(255,255,255).getRGB(),255); // 客户端名字
 
 
 

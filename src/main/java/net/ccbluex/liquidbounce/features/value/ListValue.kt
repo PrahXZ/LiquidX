@@ -34,5 +34,3 @@ open class ListValue(name: String, val values: Array<String>, value: String) : V
         if (element.isJsonPrimitive) changeValue(element.asString)
     }
 }
-
-

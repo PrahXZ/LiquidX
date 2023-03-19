@@ -21,7 +21,7 @@ public class ClientSpoofer extends MinecraftInstance implements Listenable {
         final Packet<?> packet = event.getPacket();
         final net.ccbluex.liquidbounce.features.module.modules.exploit.ClientSpoofer clientSpoof = LiquidBounce.moduleManager.getModule(net.ccbluex.liquidbounce.features.module.modules.exploit.ClientSpoofer.class);
 
-        if (enabled && !Minecraft.getMinecraft().isIntegratedServerRunning() && clientSpoof.modeValue.get().equals("Vanilla")) {
+        if (enabled && !Minecraft.getMinecraft().isIntegratedServerRunning() && clientSpoof.modeValue.equals("Vanilla")) {
             try {
                 if (packet instanceof C17PacketCustomPayload) {
                     final C17PacketCustomPayload customPayload = (C17PacketCustomPayload) packet;
@@ -32,7 +32,7 @@ public class ClientSpoofer extends MinecraftInstance implements Listenable {
             }
         }
 
-        if (enabled && !Minecraft.getMinecraft().isIntegratedServerRunning() && clientSpoof.modeValue.get().equals("LabyMod")) {
+        if (enabled && !Minecraft.getMinecraft().isIntegratedServerRunning() && clientSpoof.modeValue.equals("LabyMod")) {
             try {
                 if (packet instanceof C17PacketCustomPayload) {
                     final C17PacketCustomPayload customPayload = (C17PacketCustomPayload) packet;
@@ -44,7 +44,7 @@ public class ClientSpoofer extends MinecraftInstance implements Listenable {
         }
 
 
-        if (enabled && !Minecraft.getMinecraft().isIntegratedServerRunning() && clientSpoof.modeValue.get().equals("Lunar")) {
+        if (enabled && !Minecraft.getMinecraft().isIntegratedServerRunning() && clientSpoof.modeValue.equals("Lunar")) {
             try {
                 if (packet instanceof C17PacketCustomPayload) {
                     final C17PacketCustomPayload customPayload = (C17PacketCustomPayload) packet;

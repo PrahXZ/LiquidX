@@ -9,12 +9,10 @@ import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.utils.Rotation
 import net.ccbluex.liquidbounce.utils.RotationUtils
 import net.ccbluex.liquidbounce.utils.misc.RandomUtils
-import net.ccbluex.liquidbounce.features.value.BoolValue
-import net.ccbluex.liquidbounce.features.value.ListValue
-import net.ccbluex.liquidbounce.features.value.IntegerValue
+import net.ccbluex.liquidbounce.features.value.*
 
 @ModuleInfo(name = "Derp", category = ModuleCategory.PLAYER)
-class SpinBot : Module() {
+class Derp : Module() {
     private val yawModeValue = ListValue("YawMode", arrayOf("Jitter", "Spin", "Back", "BackJitter"), "Spin")
     private val pitchModeValue = ListValue("PitchMode", arrayOf("Down", "Up", "Jitter", "AnotherJitter"), "Down")
     private val spinSpeedValue = IntegerValue("spinSpeed", 20, 1, 90).displayable { yawModeValue.equals("Spin") }

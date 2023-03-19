@@ -1,51 +1,49 @@
 package net.ccbluex.liquidbounce.features.module.modules.movement.speeds.universo
 
 import net.ccbluex.liquidbounce.event.MoveEvent
+import net.ccbluex.liquidbounce.event.PacketEvent
 import net.ccbluex.liquidbounce.features.module.modules.movement.speeds.SpeedMode
 import net.ccbluex.liquidbounce.utils.MovementUtils
-import net.minecraft.client.settings.GameSettings
+import net.minecraft.network.play.client.C0BPacketEntityAction
+import net.minecraft.network.play.server.S08PacketPlayerPosLook
+import net.minecraft.potion.Potion
 
 class UniversocraftSpeed : SpeedMode("UniversoCraft") {
-	
-    private var wasTimer = false
-    private var ticks = 0
+
+
+    var movespeed = 0.0
 
 
     override fun onEnable() {
-        mc.thePlayer.ticksExisted = 0
-        sendLegacy()
+        if (MovementUtils.isMoving() && mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
+            movespeed = 0.65
+        } else if (MovementUtils.isMoving()) {
+            movespeed = 0.52
+        }
     }
     override fun onUpdate() {
-         ticks++
-         if (wasTimer) {
-            mc.timer.timerSpeed = 1.00f
-            wasTimer = false
-            wasTimer = false
-        }
-        mc.thePlayer.jumpMovementFactor = 0.0265f
-
-        mc.gameSettings.keyBindJump.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindJump)
-        if (MovementUtils.getSpeed() < 0.265f && !mc.thePlayer.onGround) {
-            MovementUtils.strafe(0.225f)
-        }
-        if (mc.thePlayer.onGround ) {
-            ticks = 0
+        if (MovementUtils.isMoving() && mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
             mc.gameSettings.keyBindJump.pressed = false
-            mc.thePlayer.jump()
-	    if (!mc.thePlayer.isAirBorne) {
-                return //Prevent flag with Fly
+            if (mc.thePlayer.onGround) {
+                mc.thePlayer.jump()
+                mc.thePlayer.motionY = 0.42.toFloat().toDouble()
+                movespeed -= movespeed / 156.0
+                MovementUtils.strafe(movespeed.toFloat())
+                mc.netHandler.addToSendQueue(C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SNEAKING))
+            } else {
+                mc.netHandler.addToSendQueue(C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.START_SNEAKING))
             }
-            mc.timer.timerSpeed = 1.00f
-            wasTimer = true
-            if(MovementUtils.getSpeed() < 0.47f) {
-                MovementUtils.strafe(0.47f)
-            }else{
-                MovementUtils.strafe((MovementUtils.getSpeed()*0.985).toFloat())
+            MovementUtils.strafe()
+        } else if (MovementUtils.isMoving()) {
+            mc.gameSettings.keyBindJump.pressed = false
+            if (mc.thePlayer.onGround) {
+                mc.thePlayer.jump()
+                mc.thePlayer.motionY = 0.42.toFloat().toDouble()
+                movespeed -= movespeed / 156.0
+                MovementUtils.strafe(0.48f)
+            } else {
             }
-        }else if (!MovementUtils.isMoving()) {
-            mc.timer.timerSpeed = 1.00f
-            mc.thePlayer.motionX = 0.0
-            mc.thePlayer.motionZ = 0.0
+            MovementUtils.strafe()
         }
     }
 
@@ -54,5 +52,13 @@ class UniversocraftSpeed : SpeedMode("UniversoCraft") {
 
 
     override fun onDisable() {
+        mc.netHandler.addToSendQueue(C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SNEAKING))
+    }
+
+    override fun onPacket(event: PacketEvent) {
+        if (event.packet is S08PacketPlayerPosLook) {
+            mc.netHandler.addToSendQueue(C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SNEAKING))
+        }
     }
 }
+

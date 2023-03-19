@@ -6,7 +6,7 @@ import net.ccbluex.liquidbounce.ui.client.gui.clickgui.fonts.impl.SimpleFontMana
 import net.ccbluex.liquidbounce.ui.client.gui.clickgui.style.styles.tenacity.SideGui.SideGui;
 
 public class info {
-    public static String Name = "FDPCLIENT";
+    public static String Name = "LiquidX";
 
     public static String version = "";
     public static String username;

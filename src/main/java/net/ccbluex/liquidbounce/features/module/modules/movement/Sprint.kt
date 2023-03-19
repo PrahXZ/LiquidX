@@ -7,8 +7,7 @@ import net.ccbluex.liquidbounce.event.UpdateEvent
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
-import net.ccbluex.liquidbounce.features.value.BoolValue
-import net.ccbluex.liquidbounce.features.value.ListValue
+import net.ccbluex.liquidbounce.features.value.*
 import net.ccbluex.liquidbounce.utils.MovementUtils.isMoving
 import net.ccbluex.liquidbounce.utils.Rotation
 import net.ccbluex.liquidbounce.utils.RotationUtils
@@ -37,7 +36,7 @@ class Sprint : Module() {
 
     @EventTarget
     fun onTick(event: TickEvent?) {
-        if (modeValue.get().equals("legit", ignoreCase = true)) {
+        if (modeValue.equals("Legit")) {
             KeyBinding.setKeyBindState(mc.gameSettings.keyBindSprint.keyCode, true)
         }
     }
@@ -50,7 +49,7 @@ class Sprint : Module() {
     }
 
     override fun onDisable() {
-        if (modeValue.get().equals("legit", ignoreCase = true)) {
+        if (modeValue.equals("Legit")) {
             val keyCode = mc.gameSettings.keyBindSprint.keyCode
             KeyBinding.setKeyBindState(keyCode, keyCode > 0 && mc.gameSettings.keyBindSprint.isKeyDown)
         }
@@ -62,7 +61,7 @@ class Sprint : Module() {
     @EventTarget
     fun onUpdate(event: UpdateEvent?) {
 
-        if (modeValue.equals("legit")) {
+        if (modeValue.equals("Legit")) {
             allDirectionsValue.value = false
             blindnessValue.value = false
             foodValue.value = false
@@ -74,7 +73,7 @@ class Sprint : Module() {
         }
 
 
-        if (modeValue.get().equals("custom", ignoreCase = true)) {
+        if (modeValue.equals("Custom")) {
             if (!isMoving() || mc.thePlayer.isSneaking || blindnessValue.get() && mc.thePlayer.isPotionActive(Potion.blindness) || foodValue.get() && !(mc.thePlayer.foodStats.foodLevel > 6.0f || mc.thePlayer.capabilities.allowFlying) || (checkServerSide.get() && (mc.thePlayer.onGround || !checkServerSideGround.get())
                             && !allDirectionsValue.get() && RotationUtils.targetRotation != null) && RotationUtils.getRotationDifference(Rotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch)) > 30) {
                 mc.thePlayer.isSprinting = false

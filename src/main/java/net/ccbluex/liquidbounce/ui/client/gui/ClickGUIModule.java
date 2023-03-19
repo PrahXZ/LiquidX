@@ -16,10 +16,7 @@ import net.ccbluex.liquidbounce.ui.client.gui.clickgui.style.styles.novoline.Cli
 import net.ccbluex.liquidbounce.ui.client.gui.clickgui.style.styles.newVer.NewUi;
 import net.ccbluex.liquidbounce.ui.client.gui.options.modernuiLaunchOption;
 import net.ccbluex.liquidbounce.utils.render.ColorUtils;
-import net.ccbluex.liquidbounce.features.value.BoolValue;
-import net.ccbluex.liquidbounce.features.value.FloatValue;
-import net.ccbluex.liquidbounce.features.value.IntegerValue;
-import net.ccbluex.liquidbounce.features.value.ListValue;
+import net.ccbluex.liquidbounce.features.value.*;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S2EPacketCloseWindow;
 import org.lwjgl.input.Keyboard;

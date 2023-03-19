@@ -105,7 +105,7 @@ public class MainScreen implements Screen {
 
         //     ClickGuiMod clickGUIMod = (ClickGuiMod) Tenacity.INSTANCE.getModuleCollection().get(ClickGuiMod.class);
 
-        if (ClickGUIModule.scrollMode.get().equals("Value")) {
+        if (ClickGUIModule.scrollMode.equals("Value")) {
             Main.allowedClickGuiHeight =  ClickGUIModule.clickHeight.get().floatValue();
         } else {
             ScaledResolution sr = new ScaledResolution(mc);

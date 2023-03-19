@@ -1,23 +1,14 @@
-/*
- * FDPClient Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
- * https://github.com/SkidderMC/FDPClient/
- */
 package net.ccbluex.liquidbounce.features.module.modules.movement
 
-import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.event.*
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.features.module.modules.movement.jesus.JesusMode
 import net.ccbluex.liquidbounce.utils.ClassUtils
-import net.ccbluex.liquidbounce.features.value.BoolValue
-import net.ccbluex.liquidbounce.features.value.FloatValue
-import net.ccbluex.liquidbounce.features.value.ListValue
+import net.ccbluex.liquidbounce.features.value.*
 import net.ccbluex.liquidbounce.utils.block.BlockUtils
 import net.minecraft.block.BlockLiquid
-import net.minecraft.network.play.server.S19PacketEntityStatus
 import net.minecraft.util.AxisAlignedBB
 import net.minecraft.util.BlockPos
 
@@ -106,9 +97,12 @@ class Jesus : Module() {
     override val tag: String
         get() = modeValue.get()
 
-    /**
-     * 读取mode中的value并和本体中的value合并
-     * 所有的value必须在这个之前初始化
-     */
-    override val values = super.values.toMutableList().also { modes.map { mode -> mode.values.forEach { value -> it.add(value.displayable { modeValue.equals(mode.modeName) }) } } }
+    override val values = super.values.toMutableList().also {
+        modes.map {
+            mode -> mode.values.forEach { value ->
+            val displayableFunction = value.displayableFunction
+            it.add(value.displayable { displayableFunction.invoke() && modeValue.equals(mode.modeName) })
+            }
+        }
+    }
 }

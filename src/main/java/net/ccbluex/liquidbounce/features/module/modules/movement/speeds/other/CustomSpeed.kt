@@ -3,10 +3,7 @@ package net.ccbluex.liquidbounce.features.module.modules.movement.speeds.other
 
 import net.ccbluex.liquidbounce.features.module.modules.movement.speeds.SpeedMode
 import net.ccbluex.liquidbounce.utils.MovementUtils
-import net.ccbluex.liquidbounce.features.value.BoolValue
-import net.ccbluex.liquidbounce.features.value.FloatValue
-import net.ccbluex.liquidbounce.features.value.IntegerValue
-import net.ccbluex.liquidbounce.features.value.ListValue
+import net.ccbluex.liquidbounce.features.value.*
 import net.minecraft.client.settings.GameSettings
 
 @Suppress("UnclearPrecedenceOfBinaryExpression")

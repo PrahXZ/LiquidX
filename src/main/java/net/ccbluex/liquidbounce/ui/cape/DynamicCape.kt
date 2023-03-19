@@ -10,7 +10,7 @@ abstract class DynamicCape(override val name: String) : ICape {
     protected val frames = mutableListOf<BufferedImage>()
     protected val delays = mutableListOf<Int>()
     protected var playTime = 0
-    protected val path = "fdpclient/cape/${name.lowercase().replace(" ","_")}_frame"
+    protected val path = "liquidx/cape/${name.lowercase().replace(" ","_")}_frame"
 
     override val cape: ResourceLocation
         get() {

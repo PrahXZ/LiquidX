@@ -12,10 +12,7 @@ import net.ccbluex.liquidbounce.utils.render.ColorUtils.rainbow
 import net.ccbluex.liquidbounce.utils.render.RenderUtils
 import net.ccbluex.liquidbounce.utils.render.shader.shaders.GlowShader
 import net.ccbluex.liquidbounce.utils.render.shader.shaders.OutlineShader
-import net.ccbluex.liquidbounce.features.value.BoolValue
-import net.ccbluex.liquidbounce.features.value.FloatValue
-import net.ccbluex.liquidbounce.features.value.IntegerValue
-import net.ccbluex.liquidbounce.features.value.ListValue
+import net.ccbluex.liquidbounce.features.value.*
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.projectile.EntityArrow
@@ -50,7 +47,7 @@ class ItemESP : Module() {
             }
         }
 
-        if (modeValue.get().equals("LightBox", ignoreCase = true)) {
+        if (modeValue.equals("LightBox")) {
             for (o in mc.theWorld.loadedEntityList) {
                 if (o !is EntityItem) continue
                 val item = o
@@ -72,7 +69,7 @@ class ItemESP : Module() {
                 GL11.glDisable(3042)
             }
         }
-        if (modeValue.get().equals("Exhibition", ignoreCase = true)) {
+        if (modeValue.equals("Exhibition")) {
             entityConvertedPointsMap.clear()
             val pTicks = mc.timer.renderPartialTicks
             for (e2 in mc.theWorld.getLoadedEntityList()) {
@@ -150,7 +147,7 @@ class ItemESP : Module() {
 
     @EventTarget
     fun onRender2D(event: Render2DEvent) {
-        if (modeValue.get().equals("Exhibition", ignoreCase = true)) {
+        if (modeValue.equals("Exhibition")) {
             GlStateManager.pushMatrix()
             for (ent in entityConvertedPointsMap.keys) {
                 val renderPositions = entityConvertedPointsMap[ent]
@@ -304,7 +301,7 @@ class ItemESP : Module() {
             GlStateManager.popMatrix()
             RenderUtils.rectangle(0.0, 0.0, 0.0, 0.0, -1)
         }
-        if (modeValue.get().equals("ShaderOutline", ignoreCase = true)) {
+        if (modeValue.equals("ShaderOutline")) {
             OutlineShader.OUTLINE_SHADER.startDraw(event.partialTicks)
             try {
                 for (entity in mc.theWorld.loadedEntityList) {

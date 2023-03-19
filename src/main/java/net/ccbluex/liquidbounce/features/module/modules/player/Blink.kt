@@ -12,8 +12,7 @@ import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.features.module.modules.render.Breadcrumbs
 import net.ccbluex.liquidbounce.utils.render.RenderUtils
 import net.ccbluex.liquidbounce.utils.timer.MSTimer
-import net.ccbluex.liquidbounce.features.value.BoolValue
-import net.ccbluex.liquidbounce.features.value.IntegerValue
+import net.ccbluex.liquidbounce.features.value.*
 import net.minecraft.client.entity.EntityOtherPlayerMP
 import net.minecraft.network.Packet
 import net.minecraft.network.play.INetHandlerPlayServer

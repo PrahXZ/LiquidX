@@ -25,7 +25,7 @@ repositories {
     maven { url = "https://jitpack.io/" }
 }
 
-version = "3.0"
+version = "3.1"
 group = "org.unlegitmc.fdp"
 archivesBaseName = "LiquidX"
 
@@ -135,11 +135,11 @@ jar {
             "FMLCorePlugin": "net.ccbluex.liquidbounce.injection.forge.TransformerLoader",
             "FMLCorePluginContainsFMLMod": true,
             "ForceLoadAsMod": true,
-            "MixinConfigs": "mixins.fdpclient.json",
+            "MixinConfigs": "mixins.liquidx.json",
             "ModSide": "CLIENT",
             "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
             "TweakOrder": "0",
-            "FMLAT": "fdpclient_at.cfg",
+            "FMLAT": "liquidx_at.cfg",
     )
 
     enabled = false

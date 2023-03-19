@@ -26,7 +26,7 @@ object GuiCapeManager : GuiScreen() {
     val capeList = mutableListOf<ICape>()
 
     init {
-        arrayOf("iota", "JupoHappy", "Daydream", "jupo2", "astomero").forEach {
+        arrayOf("Iota", "Jupo", "Daydream", "Jupo2", "Astomero").forEach {
             try {
                 embeddedCapes.add(loadCapeFromResource(it, "assets/minecraft/liquidx/cape/$it.png"))
             } catch (e: Throwable){

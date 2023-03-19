@@ -10,10 +10,7 @@ import net.ccbluex.liquidbounce.utils.EntityUtils
 import net.ccbluex.liquidbounce.utils.RotationUtils
 import net.ccbluex.liquidbounce.utils.render.ColorUtils
 import net.ccbluex.liquidbounce.utils.render.RenderUtils
-import net.ccbluex.liquidbounce.features.value.BoolValue
-import net.ccbluex.liquidbounce.features.value.FloatValue
-import net.ccbluex.liquidbounce.features.value.IntegerValue
-import net.ccbluex.liquidbounce.features.value.ListValue
+import net.ccbluex.liquidbounce.features.value.*
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.entity.Entity
 import net.minecraft.util.Vec3
@@ -33,7 +30,7 @@ class Tracers : Module() {
 
     private val directLineValue = BoolValue("Directline", false)
     private val fovModeValue = ListValue("FOV-Mode", arrayOf("All", "Back", "Front"), "All")
-    private val fovValue = FloatValue("FOV", 180F, 0F, 180F).displayable { !fovModeValue.get().equals("all", true) }
+    private val fovValue = FloatValue("FOV", 180F, 0F, 180F).displayable { !fovModeValue.equals("All") }
 
     @EventTarget
     fun onRender3D(event: Render3DEvent) {
@@ -47,7 +44,7 @@ class Tracers : Module() {
 
         GL11.glBegin(GL11.GL_LINES)
 
-        for (entity in if (fovModeValue.get().equals("all", true)) mc.theWorld.loadedEntityList else mc.theWorld.loadedEntityList.filter { if (fovModeValue.get().equals("back", true)) RotationUtils.getRotationDifference(it) <= fovValue.get() else RotationUtils.getRotationDifference(it) <= fovValue.get() }) {
+        for (entity in if (fovModeValue.equals("All")) mc.theWorld.loadedEntityList else mc.theWorld.loadedEntityList.filter { if (fovModeValue.equals("Back")) RotationUtils.getRotationDifference(it) <= fovValue.get() else RotationUtils.getRotationDifference(it) <= fovValue.get() }) {
             if (entity != null && entity != mc.thePlayer && EntityUtils.isSelected(entity, false)) {
                 var dist = (mc.thePlayer.getDistanceToEntity(entity) * 2).toInt()
 

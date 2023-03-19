@@ -11,17 +11,14 @@ import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.features.module.modules.movement.speeds.SpeedMode
 import net.ccbluex.liquidbounce.utils.ClassUtils
 import net.ccbluex.liquidbounce.utils.MovementUtils
-import net.ccbluex.liquidbounce.features.value.BoolValue
-import net.ccbluex.liquidbounce.features.value.FloatValue
-import net.ccbluex.liquidbounce.features.value.ListValue
-import net.minecraft.entity.player.EntityPlayer
+import net.ccbluex.liquidbounce.features.value.*
 import org.lwjgl.input.Keyboard
 
 @ModuleInfo(name = "Speed", category = ModuleCategory.MOVEMENT, autoDisable = EnumAutoDisableType.FLAG, keyBind = Keyboard.KEY_V)
 class Speed : Module() {
     private val modes = ClassUtils.resolvePackage("${this.javaClass.`package`.name}.speeds", SpeedMode::class.java)
-        .map { it.newInstance() as SpeedMode }
-        .sortedBy { it.modeName }
+            .map { it.newInstance() as SpeedMode }
+            .sortedBy { it.modeName }
 
     private val mode: SpeedMode
         get() = modes.find { modeValue.equals(it.modeName) } ?: throw NullPointerException() // this should not happen
@@ -65,6 +62,11 @@ class Speed : Module() {
             return
         }
 
+
+        if (hidejumps.get()) {
+            mc.thePlayer.cameraYaw = 0.0F
+        }
+
         mode.onPreMotion()
     }
 
@@ -75,7 +77,7 @@ class Speed : Module() {
         }
 
         mode.onMove(event)
-        LiquidBounce.moduleManager[TargetStrafe::class.java]!!.doMove(event)
+//        LiquidBounce.moduleManager[TargetStrafe::class.java]!!.doMove(event)
     }
 
     @EventTarget
@@ -118,5 +120,12 @@ class Speed : Module() {
      * 读取mode中的value并和本体中的value合并
      * 所有的value必须在这个之前初始化
       */
-    override val values = super.values.toMutableList().also { modes.map { mode -> mode.values.forEach { value -> it.add(value.displayable { modeValue.equals(mode.modeName) }) } } }
+    override val values = super.values.toMutableList().also {
+        modes.map { mode ->
+            mode.values.forEach { value ->
+                val displayableFunction = value.displayableFunction
+                it.add(value.displayable { displayableFunction.invoke() && modeValue.equals(mode.modeName) })
+            }
+        }
+    }
 }

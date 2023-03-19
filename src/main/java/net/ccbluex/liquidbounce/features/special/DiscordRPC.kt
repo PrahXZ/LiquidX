@@ -10,7 +10,6 @@ import net.ccbluex.liquidbounce.LiquidBounce.CLIENT_VERSION
 import net.ccbluex.liquidbounce.LiquidBounce.UID
 import net.ccbluex.liquidbounce.features.module.modules.client.DiscordRPCModule
 import net.ccbluex.liquidbounce.utils.*
-import net.ccbluex.liquidbounce.utils.MinecraftInstance.mc
 import org.json.JSONObject
 import java.time.OffsetDateTime
 import kotlin.concurrent.thread

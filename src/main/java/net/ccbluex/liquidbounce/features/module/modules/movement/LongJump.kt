@@ -8,9 +8,7 @@ import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.features.module.modules.movement.longjumps.LongJumpMode
 import net.ccbluex.liquidbounce.utils.ClassUtils
 import net.ccbluex.liquidbounce.utils.MovementUtils
-import net.ccbluex.liquidbounce.features.value.BoolValue
-import net.ccbluex.liquidbounce.features.value.ListValue
-import net.ccbluex.liquidbounce.features.value.FloatValue
+import net.ccbluex.liquidbounce.features.value.*
 
 @ModuleInfo(name = "LongJump", category = ModuleCategory.MOVEMENT, autoDisable = EnumAutoDisableType.FLAG)
 class LongJump : Module() {
@@ -122,5 +120,12 @@ class LongJump : Module() {
     override val tag: String
         get() = modeValue.get()
 
-    override val values = super.values.toMutableList().also { modes.map { mode -> mode.values.forEach { value -> it.add(value.displayable { modeValue.equals(mode.modeName) }) } } }
+    override val values = super.values.toMutableList().also {
+        modes.map {
+            mode -> mode.values.forEach { value ->
+            val displayableFunction = value.displayableFunction
+            it.add(value.displayable { displayableFunction.invoke() && modeValue.equals(mode.modeName) })
+            }
+        }
+    }
 }

@@ -3,19 +3,14 @@ package net.ccbluex.liquidbounce.features.module.modules.combat
 
 import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.event.*
-import net.ccbluex.liquidbounce.features.module.EnumAutoDisableType
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.features.module.modules.combat.velocitys.VelocityMode
 import net.ccbluex.liquidbounce.utils.ClassUtils
-import net.ccbluex.liquidbounce.features.value.BoolValue
-import net.ccbluex.liquidbounce.features.value.FloatValue
-import net.ccbluex.liquidbounce.features.value.IntegerValue
-import net.ccbluex.liquidbounce.features.value.ListValue
+import net.ccbluex.liquidbounce.features.value.*
 import net.ccbluex.liquidbounce.utils.timer.MSTimer
 import net.minecraft.network.play.server.S12PacketEntityVelocity
-import org.lwjgl.input.Keyboard
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
@@ -176,9 +171,12 @@ class Velocity : Module() {
         else
             modeValue.get()
 
-    /**
-     * 读取mode中的value并和本体中的value合并
-     * 所有的value必须在这个之前初始化
-     */
-    override val values = super.values.toMutableList().also { modes.map { mode -> mode.values.forEach { value -> it.add(value.displayable { modeValue.equals(mode.modeName) }) } } }
+    override val values = super.values.toMutableList().also {
+        modes.map {
+            mode -> mode.values.forEach { value ->
+            val displayableFunction = value.displayableFunction
+            it.add(value.displayable { displayableFunction.invoke() && modeValue.equals(mode.modeName) })
+            }
+        }
+    }
 }

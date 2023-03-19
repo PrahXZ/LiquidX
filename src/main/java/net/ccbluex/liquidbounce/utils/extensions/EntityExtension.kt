@@ -9,6 +9,15 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.resources.DefaultPlayerSkin
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
+import net.minecraft.entity.boss.EntityDragon
+import net.minecraft.entity.monster.EntityGhast
+import net.minecraft.entity.monster.EntityGolem
+import net.minecraft.entity.monster.EntityMob
+import net.minecraft.entity.monster.EntitySlime
+import net.minecraft.entity.passive.EntityAnimal
+import net.minecraft.entity.passive.EntityBat
+import net.minecraft.entity.passive.EntitySquid
+import net.minecraft.entity.passive.EntityVillager
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.AxisAlignedBB
 import net.minecraft.util.MovingObjectPosition
@@ -39,6 +48,21 @@ fun getNearestPointBB(eye: Vec3, box: AxisAlignedBB): Vec3 {
         if (origin[i] > destMaxs[i]) origin[i] = destMaxs[i] else if (origin[i] < destMins[i]) origin[i] = destMins[i]
     }
     return Vec3(origin[0], origin[1], origin[2])
+}
+
+fun Entity.isAnimal(): Boolean {
+    return this is EntityAnimal ||
+            this is EntitySquid ||
+            this is EntityGolem ||
+            this is EntityBat
+}
+
+fun Entity.isMob(): Boolean {
+    return this is EntityMob ||
+            this is EntityVillager ||
+            this is EntitySlime
+            || this is EntityGhast ||
+            this is EntityDragon
 }
 
 fun Entity.rayTrace(blockReachDistance: Double): MovingObjectPosition {

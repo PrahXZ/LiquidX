@@ -1,28 +1,19 @@
-package net.ccbluex.liquidbounce.features.module.modules.movement.speeds.verus
+package net.ccbluex.liquidbounce.features.module.modules.movement.speeds.other
 
 import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.event.MoveEvent
-import net.ccbluex.liquidbounce.event.PacketEvent
-import net.ccbluex.liquidbounce.event.UpdateEvent
 import net.ccbluex.liquidbounce.features.module.modules.exploit.ABlink
 import net.ccbluex.liquidbounce.features.module.modules.movement.speeds.SpeedMode
-import net.ccbluex.liquidbounce.features.value.BoolValue
-import net.ccbluex.liquidbounce.features.value.FloatValue
-import net.ccbluex.liquidbounce.utils.MinecraftInstance
-import net.ccbluex.liquidbounce.utils.MovementUtils
+import net.ccbluex.liquidbounce.features.value.*
 import net.ccbluex.liquidbounce.utils.MovementUtils.isMoving
 import net.ccbluex.liquidbounce.utils.MovementUtils.strafe
-import net.minecraft.network.Packet
-import net.minecraft.network.play.INetHandlerPlayServer
-import net.minecraft.network.play.client.*
-import net.minecraft.network.play.server.S08PacketPlayerPosLook
 
 
 class Librecraft : SpeedMode("Librecraft") {
 
-    private val timerBoostValue = BoolValue("TimerBoost", false)
-    private val timer1 = FloatValue("Timer-1", 2.2f,1f, 4f,)
-    private val timer2 = FloatValue("Timer-2", 1.5f,1f, 2f)
+    private val timerBoostValue = BoolValue("Librecraft-TimerBoost", false)
+    private val timer1 = FloatValue("Timer-1", 2.2f,1f, 4f).displayable { timerBoostValue.get() }
+    private val timer2 = FloatValue("Timer-2", 1.5f,1f, 2f).displayable { timerBoostValue.get() }
     fun onMotion() {}
     override fun onUpdate() {
         if (!mc.thePlayer.isInWeb && !mc.thePlayer.isInLava && !mc.thePlayer.isInWater && !mc.thePlayer.isOnLadder && mc.thePlayer.ridingEntity == null) {

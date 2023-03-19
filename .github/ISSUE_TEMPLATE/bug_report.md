@@ -37,7 +37,7 @@ If your game crashed, please paste your crash report below.
  - OS: [e.g. Windows 10]
  - Minecraft Version: [e.g. 1.8.9]
  - Forge Version: [e.g. 11.15.1.2318]
- - FDPClient Version: [e.g. 2.0-PRE2]
+ - LiquidX Version: [e.g. 3.1 PRE2]
 
 **Other Installed Mods**
 If you have any other mods installed, please list them here along with their version number.

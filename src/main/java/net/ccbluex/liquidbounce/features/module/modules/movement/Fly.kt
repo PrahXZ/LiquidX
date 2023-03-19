@@ -11,9 +11,7 @@ import net.ccbluex.liquidbounce.features.module.modules.movement.flys.FlyMode
 import net.ccbluex.liquidbounce.utils.ClassUtils
 import net.ccbluex.liquidbounce.utils.MovementUtils
 import net.ccbluex.liquidbounce.utils.render.RenderUtils
-import net.ccbluex.liquidbounce.features.value.BoolValue
-import net.ccbluex.liquidbounce.features.value.FloatValue
-import net.ccbluex.liquidbounce.features.value.ListValue
+import net.ccbluex.liquidbounce.features.value.*
 import net.minecraft.network.play.server.S19PacketEntityStatus
 import org.lwjgl.input.Keyboard
 import java.awt.Color
@@ -44,7 +42,7 @@ class Fly : Module() {
     private val markValue = ListValue("Mark", arrayOf("Up", "Down", "Off"), "Up")
     private val fakeDamageValue = BoolValue("FakeDamage", false)
     private val viewBobbingValue = BoolValue("ViewBobbing", false)
-    private val viewBobbingYawValue = FloatValue("ViewBobbingYaw", 0.1f, 0f, 0.5f)
+    private val viewBobbingYawValue = FloatValue("ViewBobbingYaw", 0.1f, 0f, 0.5f).displayable { viewBobbingValue.get() }
     var noTimerModify = false
 
     var launchX = 0.0
@@ -151,9 +149,12 @@ class Fly : Module() {
     override val tag: String
         get() = modeValue.get()
 
-    /**
-     * 读取mode中的value并和本体中的value合并
-     * 所有的value必须在这个之前初始化
-     */
-    override val values = super.values.toMutableList().also { modes.map { mode -> mode.values.forEach { value -> it.add(value.displayable { modeValue.equals(mode.modeName) }) } } }
+    override val values = super.values.toMutableList().also {
+        modes.map {
+            mode -> mode.values.forEach { value ->
+            val displayableFunction = value.displayableFunction
+            it.add(value.displayable { displayableFunction.invoke() && modeValue.equals(mode.modeName) })
+        }
+        }
+    }
 }
