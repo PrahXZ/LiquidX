@@ -4,7 +4,7 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath("com.guardsquare:proguard-gradle:7.1.0")
+        classpath("com.guardsquare:proguard-gradle:7.3.2")
     }
 }
 
@@ -55,7 +55,7 @@ configurations {
 
 dependencies {
     implementation 'org.projectlombok:lombok:1.18.26'
-    implementation 'com.guardsquare:proguard-gradle:7.3.0'
+    implementation 'com.guardsquare:proguard-gradle:7.3.2'
     include("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
         transitive = false
         exclude module: "guava"
