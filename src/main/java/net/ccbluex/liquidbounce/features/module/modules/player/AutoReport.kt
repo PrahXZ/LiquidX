@@ -21,7 +21,7 @@ import net.minecraft.network.play.server.S3FPacketCustomPayload
 @ModuleInfo(name = "AutoReport", category = ModuleCategory.PLAYER)
 class AutoReport : Module() {
     private val modeValue = ListValue("Mode", arrayOf("Hit", "All"), "Hit")
-    private val commandValue = TextValue("Command", "/reportar %name%")
+    private val commandValue = TextValue("Command", "/hackreport %name%")
     private val tipValue = BoolValue("Tip", true)
     private val allDelayValue = IntegerValue("AllDelay", 500, 0, 1000)
     private val blockBooksValue = BoolValue("BlockBooks", false)
